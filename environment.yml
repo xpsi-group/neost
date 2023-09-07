@@ -1,0 +1,17 @@
+name: neost
+channels:
+        - defaults
+        - conda-forge
+dependencies:
+        - numpy
+        - cython ~= 0.29
+        - matplotlib
+        - scipy
+        - pymultinest
+        - pytest
+        - numba
+        - seaborn
+        - getdist
+        - alive-progress
+        - corner
+

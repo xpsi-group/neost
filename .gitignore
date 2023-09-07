@@ -1,0 +1,8 @@
+NEoST.egg-info/
+build/
+dist/
+examples/chains/*
+*.c
+.DS_Store
+.DS_Store?
+__pycache__/
