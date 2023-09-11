@@ -49,7 +49,7 @@ The Nested Equation of State Sampling (NEoST) package is an open-source code tha
 
 Matter in the cores of neutron stars can reach several times the nuclear saturation density. The EoS of matter under such circumstances is not well understood: in addition to extreme levels of neutron-richness there could also exist stable states of strange matter, in the form of either hyperons or deconfined quarks [@Hebeler:2015;@Lattimer:2016;Tolos:2020]. Neutron star properties like mass, radius and tidal deformability depend on the EoS, so measurement of these quantities provides insight into the properties of ultradense nuclear matter.   
 
-Astrophysical data sets that can be used to constrain the EoS take the form of posterior distributions that are derived from separate inference analyses.  Examples include: mass posteriors from pulsar timing analysis of radio pulsars in binary systems [@Fonseca:2021], joint mass-radius posteriors from Pulse Profile Modelling using NICER data [@Riley:2021]; and joint mass-tidal deformability posters from gravitational wave observations of neutron star binary mergers [@GW170817].   NEoST provides a framework for EoS inference that couples these various different types of astrophysical data to either parameterized or tabulated EoS models.
+Astrophysical data sets that can be used to constrain the EoS take the form of posterior distributions that are derived from separate inference analyses.  Examples include: mass posteriors from pulsar timing analysis of radio pulsars in binary systems [@Fonseca:2021], joint mass-radius posteriors from Pulse Profile Modeling using NICER data [@Riley:2021]; and joint mass-tidal deformability posters from gravitational wave observations of neutron star binary mergers [@GW170817].   NEoST provides a framework for EoS inference that couples these various different types of astrophysical data to either parameterized or tabulated EoS models.
  
 # The NEoST package and science use
 
@@ -57,11 +57,18 @@ NEoST is an open source Python package for Bayesian inference of EoS parameters 
 
 NEoST also offers various options for post-processing, including generating plots showing the inferred EoS credible regions in pressure-energy density space, and the associated inferred mass-radius relation credible intervals.
 
-![A schematic representation of the inference process using NEoST.It shows how the track for physical measurements andthe track for theoretical models are fed through the framework, and what the main steps of analysisare after inference is complete.\label{fig:neost}](fig1.png){width=100%}
+![A schematic representation of the inference process using NEoST.
+It shows how the track for physical measurements and
+the track for theoretical models are fed through the framework, and what the main steps of analysis
+are after inference is complete.\label{fig:neost}](fig1.png){width=100%}
 
 NEoST is being used by the NICER collaboration for EoS inference using mass-radius posteriors generated from pulse profile modeling [@Raaijmakers:2019;@Raaijmakers:2020;@Raaijmakers:2021], specifically those generated using the X-PSI package [@Riley:2019;@Riley:2021;@Riley:2023].  It has also been used to study EoS prior sensitivities using synthetic mass-radius posteriors [@Greif:2019] and to study the consequences of a potential dark matter component in neutron stars [@Rutherford:2023].  
 
 [ADD SOMETHING HERE ON THE NUMERICAL DETAILS, DEPENDENCIES ETC.]
+The core routines of NEoST are written in Cython
+[@cython2011], and are dependent on the GNU Scientific Library [GSL,
+@Gough:2009]. High-level object-oriented model construction is performed by a
+user in the Python language.
 
 Release versions of NEoST are freely available on GitHub under the GNU General Public License.  Extensive documentation, step-by-step tutorials, and reproduction
 code for existing data analyses, are available
