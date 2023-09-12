@@ -36,7 +36,7 @@ affiliations:
    - name: SRON Netherlands Institute for Space Research, Niels Bohrweg 4, NL-2333 CA Leiden, the Netherlands
      index: 4
 
-date: 8 September 2023
+date: 12 September 2023
 bibliography: neostjoss.bib
 ---
 
@@ -53,7 +53,7 @@ Astrophysical data sets that can be used to constrain the EoS take the form of p
  
 # The NEoST package and science use
 
-NEoST is an open source Python package for Bayesian inference of EoS parameters (for parameterized  models) or evidence computation (for tabulated models), given astrophysical data sets in the form of posterior distributions.  NEoST samples from the prior distribution of the EoS model parameters and central densities, computes the corresponding mass and radius/tidal deformability and then evaluates the likelihood by applying a kernel density estimation to the posterior distributions of the astrophysical data sets using the nested sampling software MultiNest [@MultiNest_2009;@PyMultiNest], \autoref{fig:neost}.  The full Bayesian inference framework, including notes relating to prior distributions, is described in detail in [@Raaijmakers:2020].  It includes a library of existing EoS models for crust and core, in addition to the possibilit
+NEoST is an open source Python package for Bayesian inference of EoS parameters (for parameterized  models) or evidence computation (for tabulated models), given astrophysical data sets in the form of posterior distributions.  NEoST samples from the prior distribution of the EoS model parameters and central densities, computes the corresponding mass and radius/tidal deformability and then evaluates the likelihood by applying a kernel density estimation to the posterior distributions of the astrophysical data sets using the nested sampling software MultiNest [@MultiNest_2009;@PyMultiNest], \autoref{fig:neost}.  The full Bayesian inference framework, including notes relating to prior distributions, is described in detail in [@Raaijmakers:2020].  It includes a library of existing EoS models for crust and core, and users can easily define their own models. 
 
 NEoST also offers various options for post-processing, including generating plots showing the inferred EoS credible regions in pressure-energy density space, and the associated inferred mass-radius relation credible intervals.
 
@@ -64,7 +64,6 @@ are after inference is complete.\label{fig:neost}](fig1.png){width=100%}
 
 NEoST is being used by the NICER collaboration for EoS inference using mass-radius posteriors generated from pulse profile modeling [@Raaijmakers:2019;@Raaijmakers:2020;@Raaijmakers:2021], specifically those generated using the X-PSI package [@Riley:2019;@Riley:2021;@Riley:2023].  It has also been used to study EoS prior sensitivities using synthetic mass-radius posteriors [@Greif:2019] and to study the consequences of a potential dark matter component in neutron stars [@Rutherford:2023].  
 
-[ADD SOMETHING HERE ON THE NUMERICAL DETAILS, DEPENDENCIES ETC.]
 The core routines of NEoST are written in Cython
 [@cython2011], and are dependent on the GNU Scientific Library [GSL,
 @Gough:2009]. In case the user does not wish to use cythonised code, an alternative set of routines written purely in Python are available as well. High-level object-oriented model construction is performed by a
@@ -75,12 +74,11 @@ code for existing data analyses, are available
 via the GitHub repository, along with a suite of unit tests.  Future plans
 include tutorials documenting different types of astrophysical data sets, EoS models that include a dark matter component, and options for coupling to different samplers. 
 
-[CHECK THIS LIST OF SOFTWARE AND MODIFY IF NEEDED]
 *Software:* Python/C language [@Python2007], GNU Scientific Library [GSL,
 @Gough:2009], NumPy [@Numpy2011], Cython [@cython2011], OpenMP [@openmp], MPI
 for Python [@mpi4py], Matplotlib [@Hunter:2007; @matplotlibv2], IPython
 [@IPython2007], Jupyter [@Kluyver:2016aa], MultiNest [@MultiNest_2009],
-PyMultiNest [@PyMultiNest], GetDist [@Lewis19], SciPy [@Scipy], Seaborn[@Seaborn], corner.py[@corner], alive-progress. 
+PyMultiNest [@PyMultiNest], GetDist [@Lewis19], SciPy [@Scipy], Seaborn[@Seaborn], corner.py[@corner], alive-progress[@aliveprogress]. 
 
 # Acknowledgements
 

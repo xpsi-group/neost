@@ -92,8 +92,8 @@ Sampling
 
 .. image:: _static/NEOST_schematic.png 
 
-NEoST samples from the posterior distribution :math:`p(\boldsymbol{\theta}, \boldsymbol{\varepsilon} \,|\, \boldsymbol{d}, \mathbb{M})`, computes the corresponding :math:`M`, :math:`R`, and :math:`\Lambda`, and then evaluates the likelihood by applying a kernel density estimation (kde, see :doc:`Piecewise Polytropic Example<PP_example>` for more discussion of this aspect) to the posterior distributions of the astrophysical data sets using the nested sampling software `MultiNest <https://github.com/farhanferoz/MultiNest>`_. 
+NEoST samples from the prior distribution :math:`p(\boldsymbol{\theta}, \boldsymbol{\varepsilon} \,|\, \mathbb{M})`, computes the corresponding :math:`M`, :math:`R`, and :math:`\Lambda`, and then evaluates the likelihood by applying a kernel density estimation (kde, see :doc:`Piecewise Polytropic Example<PP_example>` for more discussion of this aspect) to the posterior distributions of the astrophysical data sets using the nested sampling software `MultiNest <https://github.com/farhanferoz/MultiNest>`_. 
 
-The prior distributions :math:`p(\boldsymbol{\theta} \,|\, \mathbb{M})` used for the EoS models must be set:  the default priors are as described in Section 2.3 of `Raaijmakers et al. (2020) <https://ui.adsabs.harvard.edu/abs/2020ApJ...893L..21R/abstract>`_
+The prior distributions :math:`p(\boldsymbol{\theta} \,|\, \mathbb{M})` used for the EoS models must be set:  the default priors are as described in Section 2.3 of `Raaijmakers et al. (2020) <https://ui.adsabs.harvard.edu/abs/2020ApJ...893L..21R/abstract>`_.
 
 
