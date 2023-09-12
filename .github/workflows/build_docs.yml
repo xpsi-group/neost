@@ -1,0 +1,56 @@
+name: Build docs
+
+on:
+  push:
+    branches:
+      - main
+  release:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Conda environment with Micromamba
+      uses: mamba-org/provision-with-micromamba@main
+      with:
+        cache-env: true
+        cache-env-key: env-envkey-${{ github.sha }}-${{ github.run_attempt }}
+        environment-name: neost
+    - name: mamba installs
+      run: |
+        micromamba install flake8 pytest
+    - name: install gsl
+      run: |
+        sudo apt-get install -y libgsl-dev
+    - name : install docs dependencies
+      run: |
+        micromamba install sphinx decorator h5py
+        micromamba install -c conda-forge nbsphinx nbconvert
+        pip install sphinxcontrib-websupport sphinx_rtd_theme
+    - name: install neost package
+      run: |
+        python build.py install
+      shell: bash -l {0}
+    - name : build docs
+      run: |
+        make html
+      working-directory: docs/
+
+    - name: Deploy to GitHub Pages
+      if: success()
+      uses: crazy-max/ghaction-github-pages@v3
+      with:
+        target_branch: gh-pages
+        build_dir: docs/build/html
+        jekyll: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
