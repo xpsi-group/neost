@@ -9,7 +9,7 @@ authors:
       orcid: 0000-0002-9397-786X
       affiliation: 1
     - name: Patrick Timmerman
-      orcid: 
+      orcid: 0009-0003-2793-1569
       affiliation: 2
     - name: Nathan Rutherford
       orcid: 0000-0002-9626-7257
@@ -67,7 +67,7 @@ NEoST is being used by the NICER collaboration for EoS inference using mass-radi
 [ADD SOMETHING HERE ON THE NUMERICAL DETAILS, DEPENDENCIES ETC.]
 The core routines of NEoST are written in Cython
 [@cython2011], and are dependent on the GNU Scientific Library [GSL,
-@Gough:2009]. High-level object-oriented model construction is performed by a
+@Gough:2009]. In case the user does not wish to use cythonised code, an alternative set of routines written purely in Python are available as well. High-level object-oriented model construction is performed by a
 user in the Python language.
 
 Release versions of NEoST are freely available on GitHub under the GNU General Public License.  Extensive documentation, step-by-step tutorials, and reproduction
@@ -80,9 +80,7 @@ include tutorials documenting different types of astrophysical data sets, EoS mo
 @Gough:2009], NumPy [@Numpy2011], Cython [@cython2011], OpenMP [@openmp], MPI
 for Python [@mpi4py], Matplotlib [@Hunter:2007; @matplotlibv2], IPython
 [@IPython2007], Jupyter [@Kluyver:2016aa], MultiNest [@MultiNest_2009],
-PyMultiNest [@PyMultiNest], GetDist [@Lewis19], nestcheck
-[@higson2018nestcheck;@higson2018sampling;@higson2019diagnostic], fgivenx
-[@fgivenx]. 
+PyMultiNest [@PyMultiNest], GetDist [@Lewis19], SciPy [@Scipy], Seaborn[@Seaborn], corner.py[@corner], alive-progress. 
 
 # Acknowledgements
 
