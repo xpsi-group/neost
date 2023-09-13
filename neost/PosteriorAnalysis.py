@@ -111,7 +111,7 @@ def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp
             rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0)
             edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0)
             max_rhoc = edsrho(EOS.max_edsc)
-            pressures_rho[:,i][energydensities<max_rhoc] = rhopres(energydensities[energydensities<max_rhoc]
+            pressures_rho[:,i][energydensities<max_rhoc] = rhopres(energydensities[energydensities<max_rhoc])
             pressures[:,i][energydensities<EOS.max_edsc] = EOS.eos(energydensities[energydensities<EOS.max_edsc])
             
             rhocs = numpy.logspace(14.5, numpy.log10(EOS.max_edsc), 30)
