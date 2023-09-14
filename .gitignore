@@ -2,7 +2,11 @@ NEoST.egg-info/
 build/
 dist/
 examples/chains/*
+examples/chains_example/*.png
+examples/chains_example/*.txt
+examples/chains_example/*.npy
 *.c
 .DS_Store
 .DS_Store?
 __pycache__/
+.ipynb_checkpoints

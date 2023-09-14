@@ -8,7 +8,6 @@ All tutorials listed below may be found as Jupyter notebooks under ``docs/source
 
 **Overview of the available tutorials:**
 
-=======
 * :doc:`Piecewise Polytropic Example<PP_example>` a python script detailing how to perform a basic inference run using the piecewise polytropic equation of state parameterization.
 
 * :doc:`Piecewise Polytropic Prior Example<PP_prior_example>` a python script detailing how to perform prior sampling using the piecewise polytropic equation of state parameterization.
