@@ -58,15 +58,13 @@ Even better, if you have code you'd be interested in contributing, please send a
 and we'll help guide you through the process!). 
 
 For more information, you can take a look at the documentation's 
-`Contributing page <https://xpsi-group.github.io/neost/contributing.html>`_. Please also 
-make sure you take a look at the `Code of Conduct <https://xpsi-group.github.io/neost/code_of_conduct.html>`_. 
-
+`Contributing page <https://xpsi-group.github.io/neost/contributing.html>`_. 
 
 Citing NEoST
 -----------
 If you find this package useful in your research, please provide the appropriate acknowledgment 
 and citation. `Our documentation <https://xpsi-group.github.io/neost/citation.html>`_ provides 
-more detail, including links to appropriate papers and BibTeX entries.
+more detail, including BibTeX entries and links to `appropriate papers <https://xpsi-group.github.io/neost/applications.html>`_.
 
 Copyright and Licensing
 -----------------------
