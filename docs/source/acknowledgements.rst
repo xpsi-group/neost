@@ -18,13 +18,12 @@ Core team
 
 Those involved in code maintenance and development (technical and scientific).
 
-* Daniela Huppenkothen (d.huppenkothen[at]sron.nl), SRON
-* Chanda Prescod-Weinstein, University of New Hampshire
 * Geert Raaijmakers (g.raaijmakers93[at]gmail.com), the original developer of NEoST
+* Patrick Timmerman (patrick.timmerman98[at]gmail.com)
 * Nathan Rutherford (nathan.rutherford[at]unh.edu), University of New Hampshire
 * Tuomo Salmi (t.h.j.salmi[at]uva.nl), University of Amsterdam
-* Patrick Timmerman (patrick.timmerman98[at]gmail.com)
 * Anna Watts (a.l.watts[at]uva.nl), University of Amsterdam
+* Chanda Prescod-Weinstein, University of New Hampshire
 
 Community
 ~~~~~~~~~
@@ -35,6 +34,7 @@ improvements.
 
 * Svenja Greif
 * Kai Hebeler
+* Daniela Huppenkothen
 * Samaya Nissanke
 * Achim Schwenk
 

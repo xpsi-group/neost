@@ -23,9 +23,6 @@ authors:
     - name:  Chanda Prescod-Weinstein
       orcid: 0000-0002-6742-4532
       affiliation: 3
-    - name: Daniela Huppenkothen
-      orcid: 0000-0002-1169-7486
-      affiliation: 4
 affiliations:
    - name: GRAPPA, Anton Pannekoek Institute for Astronomy and Institute of High-Energy Physics, University of Amsterdam, Science Park 904, 1098 XH Amsterdam, Netherlands
      index: 1
@@ -33,17 +30,15 @@ affiliations:
      index: 2
    - name: Department of Physics and Astronomy, University of New Hampshire, Durham, New Hampshire 03824, USA
      index: 3
-   - name: SRON Netherlands Institute for Space Research, Niels Bohrweg 4, NL-2333 CA Leiden, the Netherlands
-     index: 4
 
-date: 12 September 2023
+date: 20 September 2023
 bibliography: neostjoss.bib
 ---
 
 
 # Summary
 
-The Nested Equation of State Sampling (NEoST) package is an open-source code that allows users to infer the parameters of the dense matter Equation of State (EoS) in neutron stars via nested sampling.    It provides a Bayesian inference framework that compares pre-existing EoS models (parameterized or tabulated, for both crust and core) to a variety of user-defined astrophysical input data (real or synthetic), namely mass-radius samples, mass-tidal deformability samples, and mass samples. 
+The Nested Equation of State Sampling (NEoST) package is an open-source code that allows users to infer the parameters of the dense matter Equation of State (EoS) in neutron stars via nested sampling. It provides a Bayesian inference framework that compares pre-existing EoS models (parameterized or tabulated, for both crust and core) to a variety of user-defined astrophysical input data (real or synthetic), namely mass-radius samples, mass-tidal deformability samples, and mass samples. NEoST can also be used to provide a fast solver for the Tolman-Oppenheimer-Volkoff equations for neutron star structure [@TOV1;@TOV2].  
 
 # Statement of need
 
