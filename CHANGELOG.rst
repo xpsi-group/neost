@@ -34,6 +34,28 @@ and this project adheres to
 .. ^^^^^^^^^^^
 
 
+[v0.9.1] - 2023-09-20
+~~~~~~~~~~~~~~~~~~~~~
+
+Summary
+^^^^^^^
+Minor changes to all documentation and tutorials + submitted version of JOSS paper.
+
+Added
+^^^^^
+
+* JOSS paper (submitted version)
+
+Changed
+^^^^^^^
+
+* Updates to all tutorials and documentation.
+
+Attribution
+^^^^^^^^^^^
+
+* NEoST core team
+
 [v0.9.0] - 2023-09-07
 ~~~~~~~~~~~~~~~~~~~~~
 
