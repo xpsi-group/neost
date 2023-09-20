@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tabulated Prior Example &mdash; NEoST 0.9.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/nbsphinx-code-cells.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="neost" href="modules.html" />
+    <link rel="prev" title="Tabulated Example" href="Tabulated_example.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NEoST
+              <img src="_static/neostlogo_small.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.9
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applications.html">Publications</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Team and acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="citation.html">Citation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">Future</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Start_here.html">Start here</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_example.html">Piecewise Polytropic Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_prior_example.html">Piecewise Polytropic Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CS_example.html">Speed of Sound Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CS_prior_example.html">Speed of Sound Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tabulated_example.html">Tabulated Example</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tabulated Prior Example</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">neost</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NEoST</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Tabulated Prior Example</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Tabulated_prior_example.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Tabulated-Prior-Example">
+<h1>Tabulated Prior Example<a class="headerlink" href="#Tabulated-Prior-Example" title="Permalink to this heading"></a></h1>
+<p>The main purpose of this code is to demonstrate how one can fix the prior-likelihood to a constant value and use multinest to sample the prior space log-uniformly. Within this script, one can use the <code class="docutils literal notranslate"><span class="pre">PosteriorAnalysis.py</span></code>script to generate the prior axuiliary data and the prior 95% confidence intervals.</p>
+<p>The following block of code will properly import NEoST and its prerequisites, furthermore it also defines a name for the inference run, this name is what will be prefixed to all of NEoST’s output files.</p>
+<p>The machinary used within this script and the explanation of them is identical to those found in the Piecewise Polytropic, Speed of Sound, and Tabulated Examples.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import neost
+from neost.eos import tabulated
+from neost.Prior import Prior
+from neost.Star import Star
+from neost.Likelihood import Likelihood
+from neost import PosteriorAnalysis
+from scipy.stats import multivariate_normal
+from scipy.stats import gaussian_kde
+import numpy as np
+import matplotlib
+from matplotlib import pyplot
+from pymultinest.solve import solve
+import time
+import os
+#if not os.path.exists(&quot;chains&quot;):
+#   os.mkdir(&quot;chains&quot;)
+import neost.global_imports as global_imports
+
+# Some physical constants
+c = global_imports._c
+G = global_imports._G
+Msun = global_imports._M_s
+pi = global_imports._pi
+rho_ns = global_imports._rhons
+
+# Define name for run
+run_name = &quot;prior-tabulated-&quot;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+using c code
+</pre></div></div>
+</div>
+<p>Below, we define the AP4 tabulated equation of state model, import the likelihood functions of the synthetic sources, and set the variable paramaeters with their respective prior space intervals.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># We&#39;re exploring a tabulated (T) EoS
+eos_name = &#39;tabulated&#39;
+
+baryondensity, pressure_B, energydensity_B = np.loadtxt(&#39;../../examples/ap4_new.dat&#39;, unpack=True) #in units of g/cm^3 for all values
+
+pressure_B = pressure_B*c**2 #(in units of g/(cm s^2))
+
+energydensity_B = energydensity_B
+
+# Defining the base EoS model
+tabulated_example = tabulated.TabulatedEoS(energydensity_B,pressure_B)
+tabulated_example.update({}, max_edsc=True)
+
+# Create the likelihoods for the individual measurements
+# Here just a simple 2D gaussian.
+
+muM = 2.0947   #synthetic source with log_10(central energy density) = 15.240180657118929
+muR = 10.808
+sigM = 0.05*muM # 5% uncertainty in mass
+sigR = 0.05*muR # 5% uncertainty in radius
+test = multivariate_normal(mean=[muM, muR], cov=[[sigM, 0.0], [0.0, sigR]])
+
+muM2 = 1.7090   #synthetic source with log_10(central energy density) = 15.07681219601247
+muR2 = 11.312
+sigM2 = 0.05*muM2 # 5% uncertainty in mass
+sigR2 = 0.05*muR2 # 5% uncertainty in radius
+test2 = multivariate_normal(mean=[muM2, muR2], cov=[[sigM2, 0.0], [0.0, sigR2]])
+
+muM3 = 1.0814   #synthetic source with log_10(central energy density) = 14.913443734906012
+muR3 = 11.4587
+sigM3 = 0.05*muM3 # 5% uncertainty in mass
+sigR3 = 0.05*muR3 # 5% uncertainty in radius
+test3 = multivariate_normal(mean=[muM3, muR3], cov=[[sigM3, 0.0], [0.0, sigR3]])
+
+likelihood_functions = [test.pdf,test2.pdf,test3.pdf]
+likelihood_params = [[&#39;Mass&#39;, &#39;Radius&#39;],[&#39;Mass&#39;, &#39;Radius&#39;],[&#39;Mass&#39;, &#39;Radius&#39;]]
+
+# This is not a GW event so we set chirp mass to None
+chirp_mass = [None, None, None]
+number_stars = len(chirp_mass)
+
+#Only vary the central densities on the sources because there are no parameters to vary in a tabulated equation of state
+variable_params = {}
+for i in range(number_stars):
+    variable_params.update({&#39;rhoc_&#39; + str(i+1):[14.6, 16]})
+</pre></div>
+</div>
+</div>
+<p>Similar to the posterior analysis tutorials, we define the static parameters (which there are none in this example), define and update the variable parameters for each source (one for this case), and define the prior object. Additionally, we define a prior <code class="docutils literal notranslate"><span class="pre">loglike</span></code> function, which defines a constant prior log-likelihood value for each sample drawn of each parameter (<code class="docutils literal notranslate"><span class="pre">pseudo_var</span></code>). This is defined in this way such that each sample has an equal prior likelihood of being drawn, thus we have a
+suffciently uniform and non-informative prior for each parameter in the equation of state.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Define static parameters, empty dict because all params are variable
+static_params={}
+
+# Define prior
+prior = Prior(tabulated_example, variable_params, static_params, chirp_mass)
+
+print(&quot;Bounds of prior are&quot;)
+print(variable_params)
+print(&quot;number of parameters is %d&quot; %len(variable_params))
+
+# Define likelihood, pseudo_var is required as input because NEoST expects to be able to pass the parameter sample drawn from the prior to be passable to the likelihood
+def loglike(pseudo_var):
+    return 1.
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Bounds of prior are
+{&#39;rhoc_1&#39;: [14.6, 16], &#39;rhoc_2&#39;: [14.6, 16], &#39;rhoc_3&#39;: [14.6, 16]}
+number of parameters is 3
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># No prior &amp; likelihood test, there is no likelihood after all
+# print(&quot;Testing prior and likelihood&quot;)
+# cube = np.random.rand(50, len(variable_params))
+# for i in range(len(cube)):
+#     par = prior.inverse_sample(cube[i])
+#     print(likelihood.call(par))
+# print(&quot;Testing done&quot;)
+</pre></div>
+</div>
+</div>
+<p>Here, we implement multinest to uniformly sample the prior space and for each sample from the prior that it draws it assigns a constant prior log-likelihood value of 1. Note, the greatly increased number of livepoints. This is required because each livepoint terminates after 1 iteration.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Then we start the sampling, note the greatly increased number of livepoints, this is required because each livepoint terminates after 1 iteration
+start = time.time()
+result = solve(LogLikelihood=loglike, Prior=prior.inverse_sample, n_live_points=10000, evidence_tolerance=0.1,
+               n_dims=len(variable_params), sampling_efficiency=0.8, outputfiles_basename=&#39;../../examples/chains/&#39; + run_name, verbose=True)
+end = time.time()
+print(end - start)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+  analysing data from ../../examples/chains/prior-tabulated-.txt
+1430.4026911258698
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Compute auxiliary data for posterior analysis
+PosteriorAnalysis.compute_auxiliary_data(&#39;../../examples/chains/&#39; + run_name, tabulated_example,
+                                         variable_params, static_params, chirp_mass)
+
+
+# Make some analysis plots
+PosteriorAnalysis.cornerplot(&#39;../../examples/chains/&#39; + run_name, variable_params)
+PosteriorAnalysis.mass_radius_posterior_plot(&#39;../../examples/chains/&#39; + run_name)
+
+#Will throw an error stating the the underlying equation of state is fixed because there are no parameters to vary
+#for a tabulated EoS
+#PosteriorAnalysis.mass_radius_prior_predictive_plot(&#39;chains/&#39; + run_name,variable_params, label_name=&#39;+ Synthetic dataset&#39;)
+#PosteriorAnalysis.eos_posterior_plot(&#39;chains/&#39; + run_name,variable_params)
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Total number of samples is 10000
+|████████████████████████████████████████| 10000/10000 [100%] in 31:39.5 (5.26/s)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/Tabulated_prior_example_9_1.png" src="_images/Tabulated_prior_example_9_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/Tabulated_prior_example_9_2.png" src="_images/Tabulated_prior_example_9_2.png" />
+</div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Tabulated_example.html" class="btn btn-neutral float-left" title="Tabulated Example" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="modules.html" class="btn btn-neutral float-right" title="neost" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023 the NEoST Core Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

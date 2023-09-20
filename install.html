@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installation &mdash; NEoST 0.9.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Overview" href="overview.html" />
+    <link rel="prev" title="Nested Equation of State Sampling (NEoST)" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NEoST
+              <img src="_static/neostlogo_small.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.9
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisite-python-packages">Prerequisite Python Packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#alternative-instructions-for-prerequisites">Alternative instructions for prerequisites</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-neost">Installing NEoST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applications.html">Publications</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Team and acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="citation.html">Citation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">Future</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Start_here.html">Start here</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_example.html">Piecewise Polytropic Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_prior_example.html">Piecewise Polytropic Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CS_example.html">Speed of Sound Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CS_prior_example.html">Speed of Sound Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tabulated_example.html">Tabulated Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tabulated_prior_example.html">Tabulated Prior Example</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">neost</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NEoST</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Installation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/install.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="installation">
+<span id="install"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h1>
+<p>NEoST is a Python software package that performs neutron star equation
+of state inference process. it is an open source package that was
+and is available on <a class="reference external" href="https://github.com/xpsi-group/neost.git">GitHub</a> and can be cloned as:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/xpsi-group/neost.git<span class="w"> </span>&lt;/path/to/neost&gt;
+</pre></div>
+</div>
+<p>On this page we will describe how to install NEoST and it’s prerequisites
+on your local machine.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For installation on a high-performance computing system, we direct
+the reader to the alternative instructions at the bottom of this page.</p>
+</div>
+<section id="prerequisite-python-packages">
+<span id="conda-env"></span><h2>Prerequisite Python Packages<a class="headerlink" href="#prerequisite-python-packages" title="Permalink to this heading"></a></h2>
+<p>NEoST was developed in Python 3, as such we recommend creating a conda virtual
+environment with anaconda3 according to the instructions below. This will
+ensure installing NEoST won’t break any existing software packages.</p>
+<p id="basic-env">If Python 3 has been installed using the Anaconda Distribution, a new virtual
+Python environment can then be created by entering the following command
+into the terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>NEoST<span class="w"> </span>--clone<span class="w"> </span>base
+</pre></div>
+</div>
+<p>This command will clone the base Python environment into a new environment
+called NEoST. Next, in order to be able to install packages on the new NEoST
+environment enter the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>NEoST
+</pre></div>
+</div>
+<p>This command changes the active virtual environment from the default base
+environment to the new NEoST environment and needs to be entered any time
+NEoST is used.</p>
+<p>A next step is to make sure that a number of packages have a specific
+version of them installed, these are the following packages and versions:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>alive_progress<span class="w"> </span>v2.4.1
+contextlib<span class="w"> </span>v0.6.0.post1
+corner<span class="w"> </span>v2.2.1
+GetDist<span class="w"> </span>v1.3.4
+Matplotlib<span class="w"> </span>v3.3.4
+NumPy<span class="w"> </span>v1.21.2
+SciPy<span class="w"> </span>v1.6.2
+Seaborn<span class="w"> </span>v0.11.1
+</pre></div>
+</div>
+<p>These packages can be installed with the following commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="nv">package_name</span><span class="o">=</span>version
+</pre></div>
+</div>
+<p>Where <cite>package_name</cite> is the name of the package and <cite>version</cite> is the specific
+version you wish to install</p>
+<p>With the new virtual Python environment set up, a number of additional packages
+have to be installed. These packages are GSL, MultiNest, PyMultiNest and Cython.
+Here GSL is the GNU Scientific Library and can be installed on a conda
+environment with the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>gsl
+</pre></div>
+</div>
+<p>MultiNest can be installed in a manner similar to GSL, the required command
+to do so is as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>multinest
+</pre></div>
+</div>
+<p>The same goes for PyMultiNest and Cython, both can be installed on a conda
+environment by entering the following commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>pymultinest
+pip<span class="w"> </span>install<span class="w"> </span>Cython~<span class="o">=</span><span class="m">0</span>.29
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The latest versions of Cython (3.*) are not currently compatible with NEoST.</p>
+</div>
+<p>Testing if these packages have installed correctly can be done by entering
+the following command into a terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;import NAME_OF_PACKAGE&#39;</span>
+</pre></div>
+</div>
+<p>Here NAME_OF_PACKAGE is the name of the package you wish to test, e.g.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;import pymultinest&#39;</span>
+</pre></div>
+</div>
+<p>to test the installation of PyMultiNest.</p>
+<p>There is an extra Python packages that can be installed for full NEoST
+functionality, this can be installed by entering the following command
+into a terminal with the NEoST Python environment active:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>kalepy
+</pre></div>
+</div>
+<p>This package, KalePy, is an optional package containing a more feature-rich
+implementation of a KDE, it is based on the <cite>SciPy.stats.gaussian_kde()</cite> KDE
+and adds extra functionality which may at times be useful. This extra functionality
+does come at a cost however, it does take up more computational power than
+SciPy’s own implementation.</p>
+<section id="alternative-instructions-for-prerequisites">
+<h3>Alternative instructions for prerequisites<a class="headerlink" href="#alternative-instructions-for-prerequisites" title="Permalink to this heading"></a></h3>
+<p>If the provided commands don’t work, or if you are installing NEoST on a
+high-performance computing platform, there are alternative ways to install
+GSL, MultiNest and PyMultiNest. To manually install GSL enter the following
+into a terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget<span class="w"> </span>-v<span class="w"> </span>http://mirror.koddos.net/gnu/gsl/gsl-latest.tar.gz
+tar<span class="w"> </span>-zxvf<span class="w"> </span>gsl-latest.tar.gz
+<span class="nb">cd</span><span class="w"> </span>gsl-latest
+./configure<span class="w"> </span><span class="nv">CC</span><span class="o">=</span>gcc<span class="w"> </span>--prefix<span class="o">=</span><span class="nv">$HOME</span>/gsl
+make
+make<span class="w"> </span>check
+make<span class="w"> </span>install
+make<span class="w"> </span>installcheck
+make<span class="w"> </span>clean
+</pre></div>
+</div>
+<p>With this done GSL will have to be added to your path, this is done with the
+following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$HOME</span>/gsl/bin:<span class="nv">$PATH</span>
+</pre></div>
+</div>
+<p>This command must be given any time GSL is used, therefore it is recommended
+to add this command to your <code class="docutils literal notranslate"><span class="pre">~.bashrc</span></code> file</p>
+<p>In order to manually install MultiNest and PyMultinest, first install the
+prerequisites. These are mpi4py and compilers for c and fortran and can be
+installed with the following commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>mpi4py
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>cmake<span class="w"> </span>libblad-dev<span class="w"> </span>liblapack-dev<span class="w"> </span>libatlas-base-dev
+</pre></div>
+</div>
+<p>When these have finished installing, clone the MultiNest repository, navigate
+to the cloned repository and install MultiNest using the following commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/farhanferoz/MultiNest.git<span class="w"> </span>&lt;path/to/clone&gt;/multinest
+<span class="nb">cd</span><span class="w"> </span>&lt;path/to/clone&gt;/multinest/MultiNest_v3.12_CMake/multinest/
+mkdir<span class="w"> </span>build
+<span class="nb">cd</span><span class="w"> </span>build
+<span class="nv">CC</span><span class="o">=</span>gcc<span class="w"> </span><span class="nv">FC</span><span class="o">=</span>mpif90<span class="w"> </span><span class="nv">CXX</span><span class="o">=</span>g++<span class="w"> </span>cmake<span class="w"> </span>-DCMAKE_<span class="o">{</span>C,CXX<span class="o">}</span><span class="nv">_FLAGS</span><span class="o">=</span><span class="s2">&quot;-O3 -march=native -funroll-loops&quot;</span><span class="w"> </span>-DCMAKE_Fortran_FLAGS<span class="o">=</span><span class="s2">&quot;-O3 -march=native -funroll-loops&quot;</span><span class="w"> </span>..
+make
+ls<span class="w"> </span>../lib/
+</pre></div>
+</div>
+<p>This is the sequence of commands to install MultiNest, the final step now is
+to install the Python interface to MultiNest, PyMultiNest. For this, run the following commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/JohannesBuchner/PyMultiNest.git<span class="w"> </span>&lt;path/to/clone&gt;/pymultinest
+<span class="nb">cd</span><span class="w"> </span>&lt;path/to/clone&gt;/pymultinest
+python<span class="w"> </span>setup.py<span class="w"> </span>install<span class="w"> </span><span class="o">[</span>--user<span class="o">]</span>
+</pre></div>
+</div>
+<p>This will install the package in your NEoST environment if this is the active
+environment. If this is the case, the <code class="docutils literal notranslate"><span class="pre">--user</span></code> flag needs
+to be omitted. Next, PyMultiNest needs to be interfaced with multinest itself,
+this is done by using the following single-line command</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/my/directory/MultiNest/lib/:<span class="nv">$LD_LIBRARY_PATH</span>
+</pre></div>
+</div>
+<p>This command too needs to be given anytime you wish to use PyMultiNest and MultiNest together,
+so it is again recommended to add it to your <code class="docutils literal notranslate"><span class="pre">~.bashrc</span></code> file.</p>
+</section>
+</section>
+<section id="installing-neost">
+<h2>Installing NEoST<a class="headerlink" href="#installing-neost" title="Permalink to this heading"></a></h2>
+<p>With the prerequisites out of the way, NEoST can now be installed. First
+open a new terminal in the directory where NEoST’s source code was extracted
+and enter the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>build.py<span class="w"> </span>install
+</pre></div>
+</div>
+<p>Alternatively, NEoST can also be installed without cythonizing the TOV solvers, this results
+in much slower performance however. To do this, enter the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>numba
+python<span class="w"> </span>build.py<span class="w"> </span>install<span class="w"> </span>--nocython
+</pre></div>
+</div>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading"></a></h2>
+<p>If you wish to compile the documentation you require
+<a class="reference external" href="http://www.sphinx-doc.org/en/master">Sphinx</a> and extensions. To install
+these, run the following commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>sphinx
+conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>nbsphinx
+conda<span class="w"> </span>install<span class="w"> </span>decorator
+conda<span class="w"> </span>install<span class="w"> </span>sphinxcontrib-websupport
+conda<span class="w"> </span>install<span class="w"> </span>sphinx_rtd_theme
+</pre></div>
+</div>
+<p>Note, one can also perform these commands using <code class="docutils literal notranslate"><span class="pre">pip</span></code> instead of <code class="docutils literal notranslate"><span class="pre">conda</span></code>. Now the documentation can be compiled using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>NEoST-main/docs<span class="p">;</span><span class="w"> </span><span class="o">[</span>make<span class="w"> </span>clean<span class="p">;</span><span class="o">]</span><span class="w"> </span>make<span class="w"> </span>html
+</pre></div>
+</div>
+<p>To rebuild the documentation after a change to source code docstrings:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[</span><span class="nv">CC</span><span class="o">=</span>&lt;path/to/compiler/executable&gt;<span class="o">]</span><span class="w"> </span>python<span class="w"> </span>setup.py<span class="w"> </span>install<span class="w"> </span><span class="o">[</span>--user<span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="nb">cd</span>
+docs<span class="p">;</span><span class="w"> </span>make<span class="w"> </span>clean<span class="p">;</span><span class="w"> </span>make<span class="w"> </span>html<span class="p">;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">.html</span></code> files can then found in <code class="docutils literal notranslate"><span class="pre">NEoST-main/docs/build/html</span></code>, along with the
+notebooks for the tutorials in this documentation. The <code class="docutils literal notranslate"><span class="pre">.html</span></code> files can
+naturally be opened in a browser, handily via a Jupyter session (this is
+particularly useful if the edits are to tutorial notebooks).</p>
+<p>Note that if you require links to the source code in the HTML files, you need
+to ensure Sphinx imports the <code class="docutils literal notranslate"><span class="pre">NEoST</span></code> package from the source directory
+instead of from the <code class="docutils literal notranslate"><span class="pre">~/.local/lib</span></code> directory of the user. To enforce this,
+insert the path to the source directory into <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> in the <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>
+script. Then make sure the extension modules are inside the source directory
+– i.e., the package is built in-place (see above).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To build the documentation, all modules need to be imported, and the
+dependencies that are not resolved will print warning messages.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Nested Equation of State Sampling (NEoST)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="overview.html" class="btn btn-neutral float-right" title="Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023 the NEoST Core Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
