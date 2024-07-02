@@ -7,7 +7,6 @@ from matplotlib import pyplot
 import seaborn as sns
 from scipy.interpolate import UnivariateSpline
 from scipy.stats import gaussian_kde
-from alive_progress import alive_bar
 import corner
 
 import neost
@@ -254,55 +253,54 @@ def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp
     
 
 
-    with alive_bar(len(ewposterior)) as bar:
-        for i in range(0, len(ewposterior), 1):
+    for i in range(0, len(ewposterior), 1):
 
-            pr = ewposterior[i][0:len(variable_params)]
-            par = {e:pr[j] for j, e in enumerate(list(variable_params.keys()))}
-            par.update(static_params)
-            EOS.update(par, max_edsc=True)
+        pr = ewposterior[i][0:len(variable_params)]
+        par = {e:pr[j] for j, e in enumerate(list(variable_params.keys()))}
+        par.update(static_params)
+        EOS.update(par, max_edsc=True)
 
-            rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0)
-            edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0)
-            max_rhoc = edsrho(EOS.max_edsc)
-            pressures_rho[:,i][energydensities<max_rhoc] = rhopres(energydensities[energydensities<max_rhoc])
-            pressures[:,i][energydensities<EOS.max_edsc] = EOS.eos(energydensities[energydensities<EOS.max_edsc])
+        rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0)
+        edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0)
+        max_rhoc = edsrho(EOS.max_edsc)
+        pressures_rho[:,i][energydensities<max_rhoc] = rhopres(energydensities[energydensities<max_rhoc])
+        pressures[:,i][energydensities<EOS.max_edsc] = EOS.eos(energydensities[energydensities<EOS.max_edsc])
             
-            rhocs = numpy.logspace(14.5, numpy.log10(EOS.max_edsc), 30)
-            M = numpy.zeros(len(rhocs))
-            R = numpy.zeros(len(rhocs))
-            for j, e in enumerate(rhocs):
-                star = Star(e)
-                star.solve_structure(EOS.energydensities, EOS.pressures)
-                M[j] = star.Mrot
-                R[j] = star.Req
-
-            M, indices = numpy.unique(M, return_index=True)
-            MR = UnivariateSpline(M, R[indices], k=1, s=0, ext=1)
-            rhocM = UnivariateSpline(M, rhocs[indices], k=1, s=0)
-            
-            rhocpar = numpy.array([10**v for k,v in par.items() if 'rhoc' in k])
-            tmp = []
-            for j, e in enumerate(rhocpar):
-                star = Star(e)
-                star.solve_structure(EOS.energydensities, EOS.pressures)
-                tmp.append([e, EOS.eos(e), star.Mrot, star.Req, star.tidal])
-
-                if chirp_masses[j] is not None: 
-                    M2 = m1(chirp_masses[j], tmp[j][2])
-                    rhoc = rhocM(M2)
-                    star = Star(rhoc)
-                    star.solve_structure(EOS.energydensities, EOS.pressures)
-                    tmp.append([rhoc, EOS.eos(rhoc), star.Mrot, star.Req, star.tidal])
-
-            scattered.append(tmp)
-            rhoc = numpy.random.rand() *(numpy.log10(EOS.max_edsc) - 14.6) + 14.6
-            star = Star(10**rhoc)
+        rhocs = numpy.logspace(14.5, numpy.log10(EOS.max_edsc), 30)
+        M = numpy.zeros(len(rhocs))
+        R = numpy.zeros(len(rhocs))
+        for j, e in enumerate(rhocs):
+            star = Star(e)
             star.solve_structure(EOS.energydensities, EOS.pressures)
-            MR_prpr_pp[i] = star.Mrot, star.Req
+            M[j] = star.Mrot
+            R[j] = star.Req
 
-            radii[:,i] = MR(masses)
-            bar()
+        M, indices = numpy.unique(M, return_index=True)
+        MR = UnivariateSpline(M, R[indices], k=1, s=0, ext=1)
+        rhocM = UnivariateSpline(M, rhocs[indices], k=1, s=0)
+            
+        rhocpar = numpy.array([10**v for k,v in par.items() if 'rhoc' in k])
+        tmp = []
+        for j, e in enumerate(rhocpar):
+            star = Star(e)
+            star.solve_structure(EOS.energydensities, EOS.pressures)
+            tmp.append([e, EOS.eos(e), star.Mrot, star.Req, star.tidal])
+
+            if chirp_masses[j] is not None:
+                M2 = m1(chirp_masses[j], tmp[j][2])
+                rhoc = rhocM(M2)
+                star = Star(rhoc)
+                star.solve_structure(EOS.energydensities, EOS.pressures)
+                tmp.append([rhoc, EOS.eos(rhoc), star.Mrot, star.Req, star.tidal])
+
+        scattered.append(tmp)
+        rhoc = numpy.random.rand() *(numpy.log10(EOS.max_edsc) - 14.6) + 14.6
+        star = Star(10**rhoc)
+        star.solve_structure(EOS.energydensities, EOS.pressures)
+        MR_prpr_pp[i] = star.Mrot, star.Req
+
+        radii[:,i] = MR(masses)
+
 
     scattered = numpy.array(scattered)
     # save everything

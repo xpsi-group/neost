@@ -12,7 +12,6 @@ dependencies:
         - pytest
         - numba
         - seaborn
-        - alive-progress
         - corner
         - gsl
         - kalepy
