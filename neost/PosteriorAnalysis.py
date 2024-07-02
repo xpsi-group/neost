@@ -60,6 +60,14 @@ def calc_bands(x, y):
     maxy = maxy[~numpy.all(maxy == 0, axis=1)]
     return miny, maxy
 
+def get_quantiles(array, quantiles=[0.025, 0.5, 0.975]):
+        contours = numpy.nanquantile(array, quantiles) #changed to nanquantile to inorder to ignore the nans that may appear
+        low = contours[0]
+        median = contours[1]
+        high = contours[2]
+        minus = low - median
+        plus = high - median
+        return numpy.round(median,2),numpy.round(plus,2),numpy.round(minus,2)  #returns uncertainties on the array
 
 def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp_masses): 
     ewposterior = numpy.loadtxt(root_name + 'post_equal_weights.dat')
