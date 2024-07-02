@@ -69,6 +69,96 @@ def get_quantiles(array, quantiles=[0.025, 0.5, 0.975]):
         plus = high - median
         return numpy.round(median,2),numpy.round(plus,2),numpy.round(minus,2)  #returns uncertainties on the array
 
+def compute_table_data(root_name, EOS, variable_params, static_params):
+    ewposterior = numpy.loadtxt(root_name + 'post_equal_weights.dat')
+    print("Total number of samples is %d" %(len(ewposterior)))
+    try:
+        Data_array = numpy.loadtxt(root_name + 'table_data.txt')
+        print('M_TOV: ', get_quantiles(Data_array[:,0]))
+        print('R_TOV: ', get_quantiles(Data_array[:,1]))
+        print('eps_cent TOV: ', get_quantiles(Data_array[:,2]))
+        print('rho_cent TOV: ', get_quantiles(Data_array[:,3]))
+        print('P_cent TOV: ', get_quantiles(Data_array[:,4]))
+        print('R_1.4: ', get_quantiles(Data_array[:,5]))
+        print('eps_cent 1.4: ', get_quantiles(Data_array[:,6]))
+        print('rho_cent 1.4: ', get_quantiles(Data_array[:,7]))
+        print('P_cent 1.4: ', get_quantiles(Data_array[:,8]))
+        print('R_2.0: ', get_quantiles(Data_array[:,9]))
+        print('eps_cent 2.0: ', get_quantiles(Data_array[:,10]))
+        print('rho_cent 2.0: ', get_quantiles(Data_array[:,11]))
+        print('P_cent 2.0: ', get_quantiles(Data_array[:,12]))
+        print('Delta R = R_2.0 - R_1.4: ', get_quantiles(Data_array[:,9] - Data_array[:,5]))
+    except OSError:
+        Data_array = numpy.zeros((len(ewposterior),13)) #contains Mtov, Rtov, eps_cent TOV, rho_cent TOV, P_cent TOV,R 1.4, eps_cent 1.4, rho_cent 1.4,
+                                                                #P_cent 1.4, R 2.0, eps_cent 2.0, rho_cent 2.0, P_cent 2.0
+
+        for i in range(0, len(ewposterior), 1):
+            pr = ewposterior[i][0:len(variable_params)]
+            par = {e:pr[j] for j, e in enumerate(list(variable_params.keys()))}
+            par.update(static_params)
+            EOS.update(par, max_edsc=True)
+
+            edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0)
+            max_rhoc = edsrho(EOS.max_edsc) / rho_ns #division by rho_ns gives max_rhoc in terms of n_c/n_0 as mass density and number density only differ by a factor the mass of baryon, which is canceled out in this fraction
+
+            eps = numpy.logspace(14.4, numpy.log10(EOS.max_edsc), 40)
+            M = numpy.zeros(len(eps))
+            R = numpy.zeros(len(eps))
+            for j, e in enumerate(eps):
+                star = Star(e)
+                star.solve_structure(EOS.energydensities, EOS.pressures)
+                M[j] = star.Mrot
+                R[j] = star.Req
+
+            M, indices = numpy.unique(M, return_index=True)
+            MR = UnivariateSpline(M, R[indices], k=1, s=0, ext=1)
+            epsM = UnivariateSpline(M, eps[indices], k=1, s=0,ext = 1)
+
+            R_14 = MR(1.4)
+            if R_14 == 0:
+                R_14 = numpy.nan # set to be nan so they don't impact the quantiles b/c we are using numpy.nanquantiles
+                eps_14 = numpy,nan
+                rho_14 = numpy.nan
+                pres_14 = numpy.nan
+            else:
+                eps_14 = epsM(1.4)
+                rho_14 = edsrho(eps_14) / rho_ns
+                pres_14 = EOS.eos(eps_14)
+
+            R_2 = MR(2.0)
+            if R_2 == 0:
+                R_2 = numpy.nan # see above for reasoning
+                eps_2 = numpy.nan
+                rho_2 = numpy.nan
+                pres_2 = numpy.nan # see above for reasoning
+            else:
+                eps_2 = epsM(2.0)
+                rho_2 = edsrho(eps_2) / rho_ns
+                pres_2 = EOS.eos(eps_2)
+
+            #print(numpy.log10(EOS.max_edsc), numpy.log10(EOS.eos(EOS.max_edsc)),R_14, numpy.log10(eps_14), numpy.log10(pres_14),R_2, numpy.log10(eps_2), numpy.log10(pres_2))
+            Data_array[i] = EOS.max_M, EOS.Radius_max_M, numpy.log10(EOS.max_edsc), max_rhoc, numpy.log10(EOS.eos(EOS.max_edsc)),R_14, numpy.log10(eps_14), rho_14, numpy.log10(pres_14),R_2, numpy.log10(eps_2), rho_2, numpy.log10(pres_2)
+            if i%1000 == 0:
+                print(i)
+            #print(Data_array[i])
+    # save everything
+        numpy.savetxt(root_name + 'table_data.txt', Data_array)
+        print('M_TOV: ', get_quantiles(Data_array[:,0]))
+        print('R_TOV: ', get_quantiles(Data_array[:,1]))
+        print('eps_cent TOV: ', get_quantiles(Data_array[:,2]))
+        print('rho_cent TOV: ', get_quantiles(Data_array[:,3]))
+        print('P_cent TOV: ', get_quantiles(Data_array[:,4]))
+        print('R_1.4: ', get_quantiles(Data_array[:,5]))
+        print('eps_cent 1.4: ', get_quantiles(Data_array[:,6]))
+        print('rho_cent 1.4: ', get_quantiles(Data_array[:,7]))
+        print('P_cent 1.4: ', get_quantiles(Data_array[:,8]))
+        print('R_2.0: ', get_quantiles(Data_array[:,9]))
+        print('eps_cent 2.0: ', get_quantiles(Data_array[:,10]))
+        print('rho_cent 2.0: ', get_quantiles(Data_array[:,11]))
+        print('P_cent 2.0: ', get_quantiles(Data_array[:,12]))
+        print('Delta R = R_2.0 - R_1.4: ', get_quantiles(Data_array[:,9] - Data_array[:,5]))
+
+
 def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp_masses): 
     ewposterior = numpy.loadtxt(root_name + 'post_equal_weights.dat')
     print("Total number of samples is %d" %(len(ewposterior)))
