@@ -193,7 +193,7 @@ def mass_radius_posterior_plot(root_name):
     pyplot.show()
     figure.savefig(root_name + 'MRposterior.png')
 
-def mass_radius_prior_predictive_plot(root_name,variable_params, label_name='updated prior', prior_mrpredictive=None):
+def mass_radius_prior_predictive_plot(root_name,variable_params, label_name='updated prior'):
     fig, ax = pyplot.subplots(1,1, figsize=(9, 6))
 
     num_stars = len(numpy.array([v for k,v in variable_params.items() if 'rhoc' in k]))
@@ -207,14 +207,6 @@ def mass_radius_prior_predictive_plot(root_name,variable_params, label_name='upd
     if flag == True:
         raise Exception("Cannot perform mass_radius_prior_predictive_plot function because EoS is fixed, i.e., tabulated or all EoS params are static params!")
     else:
-        if prior_mrpredictive is not None:
-            MRprior = numpy.load(prior_mrpredictive) 
-            inbins = numpy.histogramdd(MRprior, bins=50, density=True)
-            levels = getdist.densities.getContourLevels(inbins[0], contours=[0.95])
-            sns.kdeplot(x= MRprior[:,1], y=  MRprior[:,0], gridsize=50, 
-                        shade=False, ax=ax, n_levels=levels[::-1], linewidths=2,
-                        alpha=1., cmap=None, colors='black', linestyles='--')
-
         MR_prpr= numpy.loadtxt(root_name + 'MR_prpr.txt')
         inbins = numpy.histogramdd(MR_prpr[:,[1,0]], bins=50, density=True)
         levels = getdist.densities.getContourLevels(inbins[0], contours=[0.68, 0.95])
