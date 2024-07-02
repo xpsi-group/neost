@@ -350,6 +350,8 @@ class BaseEoS():
         eds_c = eds_c[idx]
  
         self.max_M = max(Ms[:,0])
+        index_max_M = numpy.argmax(Ms[:,0])
+        self.Radius_max_M = Ms[:,1][index_max_M]
         self.max_edsc = max(eds_c)
         self.min_edsc = 10**(min_edsc0)
         if Ms[:,0][-1] > 0.9:
