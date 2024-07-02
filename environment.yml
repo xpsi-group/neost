@@ -3,15 +3,16 @@ channels:
         - defaults
         - conda-forge
 dependencies:
-        - numpy
+        - numpy <= 1.26.4
         - cython ~= 0.29
         - matplotlib
         - scipy
         - pymultinest
+        - multinest
         - pytest
         - numba
         - seaborn
-        - getdist
         - alive-progress
         - corner
-
+        - gsl
+        - kalepy
