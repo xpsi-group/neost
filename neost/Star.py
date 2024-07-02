@@ -1,12 +1,12 @@
 from matplotlib import pyplot
+import warnings
 
 try:
     from neost.tovsolvers.TOVr import solveTOVr
     from neost.tovsolvers.TOVh import solveTOVh
-    print('using c code')
 except ImportError:
     from neost.tovsolvers.TOVr_python import solveTOVr
-    print('using python code')
+    warnings.warn('Something is wrong with the C TOV solvers, using Python TOV solver instead. This is much slower.')
 from . import global_imports
 
 c = global_imports._c
