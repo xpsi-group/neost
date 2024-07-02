@@ -158,6 +158,63 @@ def compute_table_data(root_name, EOS, variable_params, static_params):
         print('P_cent 2.0: ', get_quantiles(Data_array[:,12]))
         print('Delta R = R_2.0 - R_1.4: ', get_quantiles(Data_array[:,9] - Data_array[:,5]))
 
+def compute_prior_auxiliary_data(root_name, EOS, variable_params, static_params):
+    ewprior = numpy.loadtxt(root_name + 'post_equal_weights.dat')
+    print("Total number of samples is %d" %(len(ewprior)))
+
+    num_stars = len(numpy.array([v for k,v in variable_params.items() if 'rhoc' in k]))
+
+    if len(list(variable_params.keys())) == num_stars:
+        flag = True
+
+    else:
+        flag = False
+
+    masses = numpy.linspace(.2, 2.9, 50)
+    energydensities = numpy.logspace(14.2, 16, 50)
+
+    if flag == True:
+        pressures = numpy.zeros((len(masses), len(ewprior)))
+        pressures_rho = numpy.zeros((len(masses), len(ewprior)))
+        MR_prpr_pp = numpy.zeros((len(ewprior), 2))
+    else:
+        pressures = numpy.zeros((len(masses), len(ewprior)))
+        pressures_rho = numpy.zeros((len(masses), len(ewprior)))
+        minpres = numpy.zeros((3, len(energydensities)))
+        maxpres = numpy.zeros((3, len(energydensities)))
+        minpres_rho = numpy.zeros((3, len(energydensities)))
+        maxpres_rho = numpy.zeros((3, len(energydensities)))
+        MR_prpr_pp = numpy.zeros((len(ewprior), 2))
+
+    for i in range(0, len(ewprior), 1):
+
+        pr = ewprior[i][0:len(variable_params)]
+        par = {e:pr[j] for j, e in enumerate(list(variable_params.keys()))}
+        par.update(static_params)
+        EOS.update(par, max_edsc=True)
+
+        rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0)
+        edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0)
+        max_rhoc = edsrho(EOS.max_edsc)
+        pressures_rho[:,i][energydensities<max_rhoc] = rhopres(energydensities[energydensities<max_rhoc])
+        pressures[:,i][energydensities<EOS.max_edsc] = EOS.eos(energydensities[energydensities<EOS.max_edsc])
+
+        rhoc = 10**par['rhoc_1'] #just pick one of the central density samples, their distributions will be identical since constant likelihood eval on all sources
+        star = Star(rhoc)
+        star.solve_structure(EOS.energydensities, EOS.pressures)
+        MR_prpr_pp[i] = star.Mrot, star.Req
+    # save everything
+    numpy.save(root_name + 'pressures', pressures)
+    numpy.savetxt(root_name + 'MR_prpr.txt', MR_prpr_pp)
+
+    if flag == False:
+        minpres, maxpres = calc_bands(energydensities, pressures)
+        minpres_rho, maxpres_rho = calc_bands(energydensities, pressures_rho)
+        numpy.save(root_name + 'minpres_rho', minpres_rho)
+        numpy.save(root_name + 'maxpres_rho', maxpres_rho)
+        numpy.save(root_name + 'minpres', minpres)
+        numpy.save(root_name + 'maxpres', maxpres)
+
 
 def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp_masses): 
     ewposterior = numpy.loadtxt(root_name + 'post_equal_weights.dat')
