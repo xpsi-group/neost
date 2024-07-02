@@ -209,14 +209,14 @@ def mass_radius_prior_predictive_plot(root_name,variable_params, label_name='upd
     else:
         if prior_mrpredictive is not None:
             MRprior = numpy.load(prior_mrpredictive) 
-            inbins = numpy.histogramdd(MRprior, bins=50, normed=True)
+            inbins = numpy.histogramdd(MRprior, bins=50, density=True)
             levels = getdist.densities.getContourLevels(inbins[0], contours=[0.95])
             sns.kdeplot(x= MRprior[:,1], y=  MRprior[:,0], gridsize=50, 
                         shade=False, ax=ax, n_levels=levels[::-1], linewidths=2,
                         alpha=1., cmap=None, colors='black', linestyles='--')
 
         MR_prpr= numpy.loadtxt(root_name + 'MR_prpr.txt')
-        inbins = numpy.histogramdd(MR_prpr[:,[1,0]], bins=50, normed=True)
+        inbins = numpy.histogramdd(MR_prpr[:,[1,0]], bins=50, density=True)
         levels = getdist.densities.getContourLevels(inbins[0], contours=[0.68, 0.95])
     
         sns.kdeplot(x = MR_prpr[:,1], y = MR_prpr[:,0], gridsize=50, 
