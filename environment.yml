@@ -3,7 +3,8 @@ channels:
         - defaults
         - conda-forge
 dependencies:
-        - numpy <= 1.26.4
+	- python # Just to ensure we're not using system-wide python. See PEP 668
+        - numpy <= 1.26.4 # Required because cython < 3 is incompatible with numpy 2.0
         - cython ~= 0.29
         - matplotlib
         - scipy
