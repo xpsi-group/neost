@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.interpolate import UnivariateSpline
 from scipy import optimize
-from scipy.integrate import cumtrapz, solve_ivp
+from scipy.integrate import cumulative_trapezoid, solve_ivp
 
 from . base import BaseEoS
 
@@ -71,7 +71,7 @@ class SpeedofSoundEoS(BaseEoS):
                                 bounds=[(-5., 5.)], args=(cs_t))
         self.norm = sol.x
 
-        self._pres_core = (cumtrapz(self.Cs_model_core(self._eds_core / rho_ns,
+        self._pres_core = (cumulative_trapezoid(self.Cs_model_core(self._eds_core / rho_ns,
                            self.norm, negative=0.0), self._eds_core,
                            initial=0.0) * c**2. + self.P_t)
 
