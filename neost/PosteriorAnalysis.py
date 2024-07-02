@@ -2,10 +2,9 @@ import numpy
 import matplotlib
 from matplotlib.lines import Line2D
 import matplotlib.patches as mpatches
+from matplotlib.colors import ListedColormap
 from matplotlib import pyplot
 import seaborn as sns
-import getdist
-from getdist import plots
 from scipy.interpolate import UnivariateSpline
 from scipy.stats import gaussian_kde
 from alive_progress import alive_bar
@@ -209,11 +208,10 @@ def mass_radius_prior_predictive_plot(root_name,variable_params, label_name='upd
     else:
         MR_prpr= numpy.loadtxt(root_name + 'MR_prpr.txt')
         inbins = numpy.histogramdd(MR_prpr[:,[1,0]], bins=50, density=True)
-        levels = getdist.densities.getContourLevels(inbins[0], contours=[0.68, 0.95])
+        levels = [0.05, 0.32, 1]
     
-        sns.kdeplot(x = MR_prpr[:,1], y = MR_prpr[:,0], gridsize=50, 
-                    shade=True, ax=ax, n_levels=numpy.array([levels[1],levels[0], 1.]),
-                    alpha=1., cmap=None, colors=colors[[5,3]])
+        sns.kdeplot(x=MR_prpr[:,1], y=MR_prpr[:,0], gridsize=50, fill=True, ax=ax, levels=levels,
+                    alpha=1., cmap=ListedColormap(colors[[5,3]]))
 
         # add legend, for now 'prior' is always shown
         custom_lines = [Line2D([0], [0], color='black', lw=2, linestyle='--', alpha=1.), 
