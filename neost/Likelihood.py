@@ -66,3 +66,26 @@ class Likelihood():
             return -1e101
 
         return numpy.log(like_total)
+    
+
+    def loglike_prior(self,pr):
+        pr_dict = self.prior.pr
+        constraints = self.prior.EOS.check_constraints()
+        if constraints is False:
+            return -1e101
+
+        star = Star(self.prior.EOS.max_edsc)
+        star.solve_structure(self.prior.EOS.energydensities,
+                                 self.prior.EOS.pressures)
+        if(star.Mrot < 1):
+                return -1e101
+
+        for i in range(self.prior.number_stars):
+            star = Star(10**(pr_dict['rhoc_' + str(i + 1)]), 0.0)
+            star.solve_structure(self.prior.EOS.energydensities,
+                                 self.prior.EOS.pressures)
+            if(star.Mrot < 1.):
+                return -1e101
+            
+        loglike_const = 1.
+        return loglike_const
