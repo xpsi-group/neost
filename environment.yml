@@ -1,4 +1,4 @@
-name: neost
+name: NEoST
 channels:
         - defaults
         - conda-forge
