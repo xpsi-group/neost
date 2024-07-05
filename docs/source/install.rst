@@ -75,7 +75,6 @@ in much slower performance. To do this, enter the following command:
 
 .. code-block:: bash
 
-	conda install numba
 	python build.py install --nocython
 
 Alternative instructions for prerequisites
