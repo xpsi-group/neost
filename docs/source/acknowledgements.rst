@@ -24,6 +24,8 @@ Those involved in code maintenance and development (technical and scientific).
 * Tuomo Salmi (t.h.j.salmi[at]uva.nl), University of Amsterdam
 * Anna Watts (a.l.watts[at]uva.nl), University of Amsterdam
 * Chanda Prescod-Weinstein, University of New Hampshire
+* Isak Svensson (isak.svensson@physik.tu-darmstadt.de), Technische Universität Darmstadt
+* Melissa Mendes (melissa.mendes@physik.tu-darmstadt.de), Technische Universität Darmstadt
 
 Community
 ~~~~~~~~~
