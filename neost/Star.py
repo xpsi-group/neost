@@ -89,7 +89,7 @@ class Star():
 
         ax[1].set_ylim(1e18, 1e36)
         ax[1].set_ylabel('p [dyn/cm$^{2}$]', fontsize=16)
-        ax[0].set_ylabel('m [M$_{\odot}$]', fontsize=16)
+        ax[0].set_ylabel(r'm [M$_{\odot}$]', fontsize=16)
         from matplotlib.ticker import ScalarFormatter
 
         for i in range(2):

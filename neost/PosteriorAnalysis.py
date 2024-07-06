@@ -332,7 +332,7 @@ def mass_radius_posterior_plot(root_name):
     figure, ax = pyplot.subplots(1,1, figsize=(9,6))
     M_max = 0.
     for i in range(len(scatter[0])):
-        corner.hist2d(scatter[:,i][:,3], scatter[:,i][:,2], labels = ['R [km]', 'M [M$_{\odot}$]'], show_titles=True, 
+        corner.hist2d(scatter[:,i][:,3], scatter[:,i][:,2], labels = ['R [km]', r'M [M$_{\odot}$]'], show_titles=True,
                         color=colors[i], smooth=.8, data_kwargs={'ms':5, 'alpha':0.5})
         M_max = max(max(scatter[:,i][:,2]), M_max)
 
