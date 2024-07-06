@@ -68,14 +68,14 @@ and enter the following command:
 
 .. code-block:: bash
 
-	python build.py install
+	pip install .
 
 Alternatively, NEoST can also be installed without cythonizing the TOV solvers, however this results
 in much slower performance. To do this, enter the following command:
 
 .. code-block:: bash
 
-	python build.py install --nocython
+	python setup.py install --nocython
 
 Alternative instructions for prerequisites
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -1,9 +1,9 @@
 """
 To compile to C code, and then compile the C code and link libraries, and
 install as a Python package:
-    --> python build.py install [--user]
+    --> python setup.py install [--user]
 To build extensions in place and not install:
-    --> python build.py build_ext -i
+    --> python setup.py build_ext -i
 The extension is then constructed in the source directory. To import NEoST,
 ensure the sys.path searches the ``src`` directory. If a Python module is
 modified, the package then does not need to be reinstalled for usage, but for
