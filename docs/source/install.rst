@@ -44,11 +44,6 @@ This command will create a new conda environment called NEoST and install all de
 If you don't want to use conda, you can install the dependencies listed in environment.yml
 in your preferred way.
 
-.. note::
-
-	The latest versions of Cython (3.*) are not currently compatible with NEoST.
-	Consequently, Numpy 2.0 is also incompatible with NEoST as older Cython versions rely on Numpy 1.*.
-
 Next, in order to be able to install NEoST itself in the new environment, enter the following:
 
 .. code-block:: bash
