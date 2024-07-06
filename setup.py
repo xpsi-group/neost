@@ -33,8 +33,7 @@ if __name__ == '__main__':
             author_email='A.L.Watts@uva.nl',
             url='',
             license='GNU GPLv3',
-            description="""NEoST: An open-source code for dense matter
-                equation of state inference via nested sampling.""",
+            description="""NEoST: An open-source code for dense matter equation of state inference via nested sampling.""",
             packages=find_packages(),
             install_requires=[],
             include_package_data=True,
