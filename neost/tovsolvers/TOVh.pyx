@@ -68,7 +68,7 @@ cdef double h_adind(double hvar, double eps[], double h[], double pres[], int id
     return adind
 
 
-cdef int TOV_h(double hvar, const double y[], double f[], void *par) nogil:
+cdef int TOV_h(double hvar, const double y[], double f[], void *par) noexcept nogil: # noexcept required for Cython3, it indicates that exceptions raised by this function will not be propagated to calling python functions. A warning will be printed, however.
 
     cdef double eps, ad_index, p
 
