@@ -33,7 +33,7 @@ and this project adheres to
 .. Attribution
 .. ^^^^^^^^^^^
 
-[v0.10 - 2024-07-10]
+[v0.10.0 - 2024-07-10]
 ~~~~~~~~~~~~~~~~~~~~
 
 Summary
