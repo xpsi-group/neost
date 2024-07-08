@@ -18,7 +18,7 @@ Core team
 
 Those involved in code maintenance and development (technical and scientific).
 
-* Melissa Mendes (mmendes[at]theorie.ikp.physik.tu-darmstadt.de), TU Darmstadt
+* Melissa Mendes (melissa.mendes[at]physik.tu-darmstadt.de), TU Darmstadt
 * Geert Raaijmakers (g.raaijmakers93[at]gmail.com), the original developer of NEoST
 * Patrick Timmerman (patrick.timmerman98[at]gmail.com)
 * Nathan Rutherford (nathan.rutherford[at]unh.edu), University of New Hampshire
