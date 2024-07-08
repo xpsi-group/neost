@@ -20,10 +20,10 @@ Those involved in code maintenance and development (technical and scientific).
 
 * Melissa Mendes (melissa.mendes[at]physik.tu-darmstadt.de), TU Darmstadt
 * Geert Raaijmakers (g.raaijmakers93[at]gmail.com), the original developer of NEoST
-* Patrick Timmerman (patrick.timmerman98[at]gmail.com)
 * Nathan Rutherford (nathan.rutherford[at]unh.edu), University of New Hampshire
 * Tuomo Salmi (t.h.j.salmi[at]uva.nl), University of Amsterdam
 * Isak Svensson (isak.svensson[at]physik.tu-darmstadt.de), TU Darmstadt
+* Patrick Timmerman (patrick.timmerman98[at]gmail.com)
 * Anna Watts (a.l.watts[at]uva.nl), University of Amsterdam
 
 Community
@@ -56,4 +56,4 @@ Development of NEoST has been and is being supported by the following grants:
 * ERC Starting Grant No. 639217 CSINEUTRONSTAR and ERC Consolidator Grant No. 865768 AEONS (PI Anna Watts)
 * Nederlandse Organisatie voor Wetenschappelijk Onderzoek VIDI and Projectruimte grants (PI Samaya Nissanke)
 * NASA Grant No. 80NSSC22K0092 (PI Chanda Prescod-Weinstein)
-
+* ERC Advanced Grant No. 101020842 EUSTRONG (PI Achim Schwenk)
