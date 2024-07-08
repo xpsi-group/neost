@@ -38,7 +38,7 @@ jobs:
         pip install sphinxcontrib-websupport sphinx_rtd_theme
     - name: install neost package
       run: |
-        python build.py install
+        python setup.py install
       shell: bash -l {0}
     - name : build docs
       run: |
