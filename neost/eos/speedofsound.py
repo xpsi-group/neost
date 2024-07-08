@@ -58,7 +58,7 @@ class SpeedofSoundEoS(BaseEoS):
         super(SpeedofSoundEoS, self).__init__(crust, rho_t)
 
         self.eos_name = 'speedofsound'
-        self.param_names = ['a1', 'a2', 'a3', 'a4', 'a5']
+        self.param_names = ['a1', 'a2', 'a3/a2', 'a4', 'a5']
         if self.ceft is True:
             self.param_names.append('ceft')
 
@@ -103,7 +103,7 @@ class SpeedofSoundEoS(BaseEoS):
 
     def Cs_model_core(self, x, norm, negative=-1e100):
         mean = self.eos_params['a2']
-        sigma = self.eos_params['a3'] * self.eos_params['a2']
+        sigma = self.eos_params['a3/a2'] * self.eos_params['a2']
         gauss = self.eos_params['a1'] * np.exp(-.5 * (x - mean)**2. /
                                                   sigma**2.)
         back = self.logistic(x, norm, xt=self.eos_params['a4'],
