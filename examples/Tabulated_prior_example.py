@@ -122,7 +122,7 @@ def loglike(pseudo_var):
 # Then we start the sampling, note the greatly increased number of livepoints, this is required because each livepoint terminates after 1 iteration
 start = time.time()
 result = solve(LogLikelihood=loglike, Prior=prior.inverse_sample, n_live_points=100000, evidence_tolerance=0.1,
-               n_dims=len(variable_params), sampling_efficiency=0.8, outputfiles_basename='chains/' + run_name, verbose=True)
+               n_dims=len(variable_params), sampling_efficiency=0.8, outputfiles_basename='chains/' + run_name, verbose=True, resume=False)
 end = time.time()
 print(end - start)
 
