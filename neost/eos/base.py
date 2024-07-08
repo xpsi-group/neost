@@ -60,7 +60,7 @@ class BaseEoS():
         if crust is not None:
             self.BPS = self.get_BPS()
             self.ceft = crust[0:4] == 'ceft'
-    
+
             if self.ceft is True:
 
                 if crust == 'ceft-Hebeler':
@@ -94,6 +94,23 @@ class BaseEoS():
                     self.max_index = 2.586
                     self._rho_start_ceft = 0.5792
                     self._rho_end_BPS = 0.5
+
+                if crust == 'ceft-Keller-N2LO':
+                    self.min_norm = 1.81356
+                    self.max_norm = 3.49759
+                    self.min_index = 2.39119
+                    self.max_index = 3.00198
+                    self._rho_start_ceft = 0.5792
+                    self._rho_end_BPS = 0.5
+
+                if crust == 'ceft-Keller-N3LO':
+                    self.min_norm = 2.207
+                    self.max_norm = 3.056
+                    self.min_index = 2.361
+                    self.max_index = 2.814
+                    self._rho_start_ceft = 0.5792
+                    self._rho_end_BPS = 0.5
+
 
                 if crust == 'ceft-old':
                     self.min_norm = 1.7
@@ -151,9 +168,7 @@ class BaseEoS():
 
     # Compute the crust EoS
     def get_eos_crust(self):
-
         if self.ceft is True:
-
             # TODO: add function that rho_t can be below 0.58*rho_ns
             # attempt at making a different jump off from BPS
             
@@ -169,6 +184,7 @@ class BaseEoS():
             prestrans = prescrust[-1] * (rhotrans / rhocrust[-1])**(
                 numpy.log10(prescEFT[0] / prescrust[-1]) /
                 numpy.log10(rhocEFT[0] / rhocrust[-1]))
+
 
             rholow = numpy.logspace(-2, numpy.log10(self.BPS[0][0] *
                                                     rho_ns), 50)
@@ -305,12 +321,11 @@ class BaseEoS():
             eds = numpy.logspace(14.3, numpy.log10(4e16), 1000) #same as above
         dpde = self.eos.derivative(1)
         cs = dpde(eds)/c**2
-    
-        
         acausal = 1.
 
         if len(eds[cs > acausal]) != 0:
             maximum = eds[numpy.where(eds == min(eds[cs > acausal]))[0] - 1]
+
             if numpy.log10(maximum) < min_edsc0: # g/cm^3
                 maximum = min_edsc0 + 0.01
 
@@ -335,6 +350,8 @@ class BaseEoS():
         eds_c = eds_c[idx]
  
         self.max_M = max(Ms[:,0])
+        index_max_M = numpy.argmax(Ms[:,0])
+        self.Radius_max_M = Ms[:,1][index_max_M]
         self.max_edsc = max(eds_c)
         self.min_edsc = 10**(min_edsc0)
         if Ms[:,0][-1] > 0.9:

@@ -47,7 +47,7 @@ chirp_mass = [None, 1.186]
 number_stars = len(chirp_mass)
 
 # Define variable parameters, same prior as previous papers of Raaijmakers et al.
-variable_params={'ceft':[speedofsound_cs.min_norm, speedofsound_cs.max_norm],'a1':[0.1,1.5],'a2':[1.5,12.],'a3':[0.05,2.],'a4':[1.5,37.],'a5':[0.1,1.]}
+variable_params={'ceft':[speedofsound_cs.min_norm, speedofsound_cs.max_norm],'a1':[0.1,1.5],'a2':[1.5,12.],'a3/a2':[0.05,2.],'a4':[1.5,37.],'a5':[0.1,1.]}
 for i in range(number_stars):
 	variable_params.update({'rhoc_' + str(i+1):[14.6, 16]})
 

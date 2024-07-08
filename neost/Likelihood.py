@@ -47,6 +47,7 @@ class Likelihood():
                                    'Lambda':star.tidal}
                 tmp = list(map(MassRadiusTidal.get, self.likelihood_params[i]))
                 like = self.likelihood_functions[i](tmp)
+                like = self.array_to_scalar(like)
                 likelihoods.append(like)
             else:
                 M2 = star.Mrot
@@ -58,11 +59,44 @@ class Likelihood():
                 point = numpy.array([self.chirp_masses[i], M2 / M1,
                                      MTspline(M1), star.tidal])
                 like = self.likelihood_functions[i](point)
+                like = self.array_to_scalar(like)
                 likelihoods.append(like)
 
         like_total = numpy.prod(numpy.array(likelihoods))
-        # print('lnlike is', like_total)
         if like_total == 0.0:
             return -1e101
 
         return numpy.log(like_total)
+    
+    def array_to_scalar(self, var):
+        # numpy no longer accepts ragged arrays,
+        # check that if var is an array it only has one element and return it
+        if hasattr(var, '__len__'):
+            try:
+                assert(len(var) == 1)
+            except AssertionError:
+                raise ValueError('Malformed likelihood')
+            var = var[0]
+        return var
+
+    def loglike_prior(self,pr):
+        pr_dict = self.prior.pr
+        constraints = self.prior.EOS.check_constraints()
+        if constraints is False:
+            return -1e101
+
+        star = Star(self.prior.EOS.max_edsc)
+        star.solve_structure(self.prior.EOS.energydensities,
+                                 self.prior.EOS.pressures)
+        if(star.Mrot < 1):
+                return -1e101
+
+        for i in range(self.prior.number_stars):
+            star = Star(10**(pr_dict['rhoc_' + str(i + 1)]), 0.0)
+            star.solve_structure(self.prior.EOS.energydensities,
+                                 self.prior.EOS.pressures)
+            if(star.Mrot < 1.):
+                return -1e101
+            
+        loglike_const = 1.
+        return loglike_const

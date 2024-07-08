@@ -1,12 +1,12 @@
 from matplotlib import pyplot
+import warnings
 
 try:
     from neost.tovsolvers.TOVr import solveTOVr
     from neost.tovsolvers.TOVh import solveTOVh
-    print('using c code')
 except ImportError:
     from neost.tovsolvers.TOVr_python import solveTOVr
-    print('using python code')
+    warnings.warn('C TOV solvers either not installed or broken, using Python TOV solver instead. This is much slower.')
 from . import global_imports
 
 c = global_imports._c
@@ -89,7 +89,7 @@ class Star():
 
         ax[1].set_ylim(1e18, 1e36)
         ax[1].set_ylabel('p [dyn/cm$^{2}$]', fontsize=16)
-        ax[0].set_ylabel('m [M$_{\odot}$]', fontsize=16)
+        ax[0].set_ylabel(r'm [M$_{\odot}$]', fontsize=16)
         from matplotlib.ticker import ScalarFormatter
 
         for i in range(2):

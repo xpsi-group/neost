@@ -106,6 +106,24 @@ def initial_conditions(epscent, pcent, adindcent=2.):
                 - **intial**   (*array*): A np array storing the initial conditions.
 
         """
+        if hasattr(pcent, '__len__') or hasattr(epscent, '__len__'):
+            # pcent and epscent are sometimes scalars and sometimes arrays of length 1,
+            # causing ragged arrays which numpy no longer accepts.
+            # Therefore, check if:
+            # 1. Either of them are arrays
+            # 2. If so, that both of them are
+            # 3. That they have the same shape
+            # 4. And that that shape is (1,).
+            # If this is true, convert them to scalars to avoid ragged arrays.
+            try:
+                assert(hasattr(pcent, '__len__') and hasattr(epscent, '__len__'))
+                assert(pcent.shape == epscent.shape)
+                assert(pcent.shape == (1,))
+            except AssertionError:
+                raise ValueError('The python TOV solver has tried to create a ragged numpy array. This is no longer supported.')
+            pcent = pcent[0]
+            epscent = epscent[0]
+
         r = 4.441e-16
         dr = 10.
 

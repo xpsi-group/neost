@@ -64,7 +64,7 @@ cdef double pressure_adind(double pressure, double eps[], double pres[], int idx
     return adind
 
 
-cdef int TOV(double r, const double y[], double f[], void * par) nogil:
+cdef int TOV(double r, const double y[], double f[], void * par) noexcept nogil: # noexcept required for Cython3, it indicates that exceptions raised by this function will not be propagated to calling python functions. A warning will be printed, however.
 #All inputs are assumed to be in geometrized units
     cdef double p
     cdef double eps

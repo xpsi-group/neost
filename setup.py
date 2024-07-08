@@ -1,9 +1,9 @@
 """
 To compile to C code, and then compile the C code and link libraries, and
 install as a Python package:
-    --> python build.py install [--user]
+    --> python setup.py install [--user]
 To build extensions in place and not install:
-    --> python build.py build_ext -i
+    --> python setup.py build_ext -i
 The extension is then constructed in the source directory. To import NEoST,
 ensure the sys.path searches the ``src`` directory. If a Python module is
 modified, the package then does not need to be reinstalled for usage, but for
@@ -28,13 +28,12 @@ if __name__ == '__main__':
         sys.argv.remove('--nocython')
         setup(
             name='NEoST',
-            version='0.9.0',
+            version='0.10.0',
             author='NEoST core team',
             author_email='A.L.Watts@uva.nl',
             url='',
             license='GNU GPLv3',
-            description="""NEoST: An open-source code for dense matter
-                equation of state inference via nested sampling.""",
+            description="""NEoST: An open-source code for dense matter equation of state inference via nested sampling.""",
             packages=find_packages(),
             install_requires=[],
             include_package_data=True,
@@ -147,7 +146,7 @@ if __name__ == '__main__':
 
         setup(
             name='NEoST',
-            version='0.9.0',
+            version='0.10.0',
             author='NEoST core team',
             author_email='A.L.Watts@uva.nl',
             url='',

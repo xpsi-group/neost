@@ -1,6 +1,6 @@
 import numpy as np
 from math import pow
-from scipy.interpolate import UnivariateSpline
+from scipy.interpolate import UnivariateSpline,interp1d
 from scipy.integrate import odeint
 
 from . base import BaseEoS
@@ -80,7 +80,13 @@ class PolytropicEoS(BaseEoS):
                                self._pres_core / dyncm2_to_MeVfm3])
 
         eps0 = self._eds_crust[-1]
-        prho = UnivariateSpline(totalrho, totalpres, k=2, s=0)
+        prho = 0
+        totalrho,indicies = np.unique(totalrho,return_index = True)
+        totalpres = totalpres[indicies]
+        try:
+            prho = UnivariateSpline(totalrho, totalpres, k=2, s=0)
+        except ValueError:
+            prho = interp1d(totalrho,totalpres,kind = 'linear',fill_value = 'extrapolate')
 
         result = odeint(self.edens, eps0,
                         totalrho[totalrho >= self._rho_crust[-1]],

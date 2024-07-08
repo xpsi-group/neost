@@ -1,17 +1,19 @@
-name: neost
+name: NEoST
 channels:
         - defaults
         - conda-forge
 dependencies:
+        - python # Just to ensure we're not using system-wide python. See PEP 668
         - numpy
-        - cython ~= 0.29
+        - cython
         - matplotlib
         - scipy
         - pymultinest
+        - multinest
         - pytest
         - numba
         - seaborn
-        - getdist
-        - alive-progress
         - corner
-
+        - gsl
+        - kalepy
+        - jupyter # Optional, only required for running the example notebooks in docs/source/
