@@ -24,15 +24,15 @@ ensure installing NEoST won't break any existing software packages.
 
 .. _basic_env:
 
-If Python 3 has been installed using the Anaconda Distribution, a new virtual
-Python environment can then be created by navigating to the NEoST base directory
-and entering the following command into the terminal:
+Assuming a conda base environment has been installed and activated (see conda
+installation instructions), a new virtual Python environment can then be created
+by navigating to the NEoST base directory and entering the following command into the terminal:
 
 .. code-block:: bash
 
 	conda env create -f environment.yml
 
-This command will create a new conda environment called NEoST and install all dependencies.
+This command will create a new conda environment called neost and install all dependencies.
 If you don't want to use conda, you can install the dependencies listed in environment.yml
 in your preferred way.
 
@@ -40,24 +40,24 @@ Next, in order to be able to install NEoST itself in the new environment, enter 
 
 .. code-block:: bash
 
-	conda activate NEoST
+	conda activate neost
 
 This command changes the active virtual environment from the default base
-environment to the new NEoST environment and needs to be entered any time
+environment to the new neost environment and needs to be entered any time
 NEoST is used.
 
 Installing NEoST
 ----------------
 
-With the prerequisites out of the way, NEoST can now be installed. First
-open a new terminal in the directory where NEoST's source code was extracted
-and enter the following command:
+With the prerequisites out of the way, NEoST can now be installed. First (if
+you haven't done so already) navigate to the directory where NEoST's source
+code was extracted and activate the conda environment. Then install NEoST with
 
 .. code-block:: bash
 
 	pip install .
 
-Alternatively, NEoST can also be installed without cythonizing the TOV solvers, however this results
+Alternatively, NEoST can be installed without cythonizing the TOV solvers, however this results
 in much slower performance. To do this, enter the following command:
 
 .. code-block:: bash
@@ -150,6 +150,7 @@ these, run the following commands:
     conda install decorator
     conda install sphinxcontrib-websupport
     conda install sphinx_rtd_theme
+    conda install pandoc
 
 Note, one can also perform these commands using ``pip`` instead of ``conda``. Now the documentation can be compiled using:
 
