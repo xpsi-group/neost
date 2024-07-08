@@ -85,5 +85,5 @@ PosteriorAnalysis.compute_auxiliary_data('chains/' + run_name, polytropes_pp,
 # Make some analysis plots
 PosteriorAnalysis.cornerplot('chains/' + run_name, variable_params)
 PosteriorAnalysis.mass_radius_posterior_plot('chains/' + run_name)
-PosteriorAnalysis.mass_radius_prior_predictive_plot('chains/' + run_name,variable_params label_name='+ J0740 dataset')
+PosteriorAnalysis.mass_radius_prior_predictive_plot('chains/' + run_name,variable_params, label_name='+ J0740 dataset')
 PosteriorAnalysis.eos_posterior_plot('chains/' + run_name, variable_params)
