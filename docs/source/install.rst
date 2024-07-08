@@ -4,8 +4,8 @@ Installation
 ============
 
 NEoST is a Python software package that performs neutron star equation
-of state inference process. it is an open source package that was
-and is available on `GitHub`_ and can be cloned as:
+of state inference process. It is an open source package that is available
+on `GitHub`_ and can be cloned as:
 
 .. _GitHub: https://github.com/xpsi-group/neost.git
 
@@ -13,15 +13,7 @@ and is available on `GitHub`_ and can be cloned as:
 
 	git clone https://github.com/xpsi-group/neost.git </path/to/neost>
 
-On this page we will describe how to install NEoST and it's prerequisites
-on your local machine.
-
-.. note::
-	
-	For installation on a high-performance computing system, we direct
-	the reader to the alternative instructions at the bottom of this page.
-
-.. _conda_env:
+On this page we will describe how to install NEoST and its prerequisites.
 
 Prerequisite Python Packages
 ----------------------------

@@ -68,6 +68,7 @@ Changed
 ^^^^^^^
 * Cython TOV solvers no longer print "using c code". Python TOV solvers, on the other hand, now raise a warning when they are in use.
 * Renamed build.py to setup.py to enable installing with pip
+* Updated core team membership
 
 Deprecated
 ^^^^^^^^^^
