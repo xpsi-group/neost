@@ -34,7 +34,7 @@ and this project adheres to
 .. ^^^^^^^^^^^
 
 [v0.10.0 - 2024-07-10]
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 Summary
 ^^^^^^^
@@ -42,7 +42,7 @@ Updates to the code and documentation for the 2024 ApJL paper, compatibility imp
 
 Fixed
 ^^^^^
-Compatibility issues:
+* Compatibility issues:
 * A couple of numpy "ragged arrays" problems, which numpy no longer supports. Two in neost/Likelihood.py, and one in the initial_conditions() function in neost/tovsolvers/TOVr_python.py. The ragged arrays were previously constructed similar to np.array([x1, [x2], x3, [x4]]) whereas in this version they are constructed like np.array([x1, x2, x3, x4]).
 * Cython 3 compilation issue.
 * Use "density" instead of "normed" in numpy.histogramdd.
@@ -61,7 +61,6 @@ Added
 Removed
 ^^^^^^^
 * Dependencies: getdist, alive_progress
-
 * Functionality: the option to plot two distributions at the same time using neost.PosteriorAnalysis.mass_radius_prior_predictive_plot().
 
 Changed
@@ -72,7 +71,7 @@ Changed
 
 Deprecated
 ^^^^^^^^^^
-Scipy < 1.6 no longer supported due to the name change of scipy.integrate.cumtrapz.
+* Scipy < 1.6 no longer supported due to the name change of scipy.integrate.cumtrapz.
 
 Attribution
 ^^^^^^^^^^^
