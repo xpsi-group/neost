@@ -68,5 +68,5 @@ more detail, including BibTeX entries and links to `appropriate papers <https://
 
 Copyright and Licensing
 -----------------------
-All content © 2016-2024 the authors.
+All content © 2020-2024 the authors.
 The code is distributed under the GNU General Public License v3.0; see `LICENSE <LICENSE>`_ for details.

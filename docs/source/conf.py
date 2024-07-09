@@ -69,7 +69,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'NEoST'
-copyright = '2016-2024 the NEoST Core Team'
+copyright = '2020-2024 the NEoST Core Team'
 author = 'NEoST Core Team'
 
 # The version info for the project you're documenting, acts as replacement for
