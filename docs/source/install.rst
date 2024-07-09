@@ -64,14 +64,15 @@ in much slower performance. To do this, enter the following command:
 
 	python setup.py install --nocython
 
-Alternative instructions for prerequisites
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-There are alternative ways to install GSL, MultiNest and PyMultiNest.
-To manually install GSL enter the following
-into a terminal:
+.. Alternative instructions for prerequisites
+.. ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code-block:: bash
+.. There are alternative ways to install GSL, MultiNest and PyMultiNest.
+.. To manually install GSL enter the following
+.. into a terminal:
+
+.. code-block .. :: bash
 
 	wget -v http://mirror.koddos.net/gnu/gsl/gsl-latest.tar.gz
 	tar -zxvf gsl-latest.tar.gz
@@ -83,29 +84,29 @@ into a terminal:
 	make installcheck
 	make clean
 
-With this done GSL will have to be added to your path, this is done with the
-following command:
+.. With this done GSL will have to be added to your path, this is done with the
+.. following command:
 
-.. code-block:: bash
+.. code-block .. :: bash
 
 	export PATH=$HOME/gsl/bin:$PATH
 
-This command must be given any time GSL is used, therefore it is recommended
-to add this command to your ``~.bashrc`` file.
+.. This command must be given any time GSL is used, therefore it is recommended
+.. to add this command to your ``~.bashrc`` file.
 
-In order to manually install MultiNest and PyMultinest, first install the
-prerequisites. These are mpi4py and compilers for c and fortran and can be
-installed with the following commands:
+.. In order to manually install MultiNest and PyMultinest, first install the
+.. prerequisites. These are mpi4py and compilers for c and fortran and can be
+.. installed with the following commands:
 
-.. code-block:: bash
+.. code-block .. :: bash
 
 	conda install -c conda-forge mpi4py
 	sudo apt-get install cmake libblad-dev liblapack-dev libatlas-base-dev
 
-When these have finished installing, clone the MultiNest repository, navigate
-to the cloned repository and install MultiNest using the following commands:
+.. When these have finished installing, clone the MultiNest repository, navigate
+.. to the cloned repository and install MultiNest using the following commands:
 
-.. code-block:: bash
+.. code-block .. :: bash
 
 	git clone https://github.com/farhanferoz/MultiNest.git <path/to/clone>/multinest
 	cd <path/to/clone>/multinest/MultiNest_v3.12_CMake/multinest/
@@ -115,35 +116,35 @@ to the cloned repository and install MultiNest using the following commands:
 	make
 	ls ../lib/
 
-This is the sequence of commands to install MultiNest, the final step now is
-to install the Python interface to MultiNest, PyMultiNest. For this, run the following commands:
+.. This is the sequence of commands to install MultiNest, the final step now is
+.. to install the Python interface to MultiNest, PyMultiNest. For this, run the following commands:
 
-.. code-block:: bash
+.. code-block .. :: bash
 
 	git clone https://github.com/JohannesBuchner/PyMultiNest.git <path/to/clone>/pymultinest
 	cd <path/to/clone>/pymultinest
 	python setup.py install [--user]
 
-This will install the package in your NEoST environment if this is the active
-environment. If this is the case, the ``--user`` flag needs
-to be omitted. Next, PyMultiNest needs to be interfaced with multinest itself,
-this is done by using the following single-line command
+.. This will install the package in your NEoST environment if this is the active
+.. environment. If this is the case, the ``--user`` flag needs
+.. to be omitted. Next, PyMultiNest needs to be interfaced with multinest itself,
+.. this is done by using the following single-line command
 
-.. code-block:: bash
+.. code-block .. :: bash
 
 	export LD_LIBRARY_PATH=/my/directory/MultiNest/lib/:$LD_LIBRARY_PATH
 
-This command too needs to be given anytime you wish to use PyMultiNest and MultiNest together,
-so it is again recommended to add it to your ``~.bashrc`` file.
+.. This command too needs to be given anytime you wish to use PyMultiNest and MultiNest together,
+.. so it is again recommended to add it to your ``~.bashrc`` file.
 
-Documentation
--------------
+.. Documentation
+.. -------------
 
-If you wish to compile the documentation you require
-`Sphinx <http://www.sphinx-doc.org/en/master>`_ and extensions. To install
-these, run the following commands:
+.. If you wish to compile the documentation you require
+.. `Sphinx <http://www.sphinx-doc.org/en/master>`_ and extensions. To install
+.. these, run the following commands:
 
-.. code-block:: bash
+.. code-block .. :: bash
 
     conda install sphinx
     conda install -c conda-forge nbsphinx
@@ -152,32 +153,32 @@ these, run the following commands:
     conda install sphinx_rtd_theme
     conda install pandoc
 
-Note, one can also perform these commands using ``pip`` instead of ``conda``. Now the documentation can be compiled using:
+.. Note, one can also perform these commands using ``pip`` instead of ``conda``. Now the documentation can be compiled using:
 
-.. code-block:: bash
+.. code-block .. :: bash
 
     cd NEoST-main/docs; [make clean;] make html
 
-To rebuild the documentation after a change to source code docstrings:
+.. To rebuild the documentation after a change to source code docstrings:
 
-.. code-block:: bash
+.. code-block .. :: bash
 
     [CC=<path/to/compiler/executable>] python setup.py install [--user]; cd
     docs; make clean; make html; cd ..
 
-The ``.html`` files can then found in ``NEoST-main/docs/build/html``, along with the
-notebooks for the tutorials in this documentation. The ``.html`` files can
-naturally be opened in a browser, handily via a Jupyter session (this is
-particularly useful if the edits are to tutorial notebooks).
+.. The ``.html`` files can then found in ``NEoST-main/docs/build/html``, along with the
+.. notebooks for the tutorials in this documentation. The ``.html`` files can
+.. naturally be opened in a browser, handily via a Jupyter session (this is
+.. particularly useful if the edits are to tutorial notebooks).
 
-Note that if you require links to the source code in the HTML files, you need
-to ensure Sphinx imports the ``NEoST`` package from the source directory
-instead of from the ``~/.local/lib`` directory of the user. To enforce this,
-insert the path to the source directory into ``sys.path`` in the ``conf.py``
-script. Then make sure the extension modules are inside the source directory
--- i.e., the package is built in-place (see above).
+.. Note that if you require links to the source code in the HTML files, you need
+.. to ensure Sphinx imports the ``NEoST`` package from the source directory
+.. instead of from the ``~/.local/lib`` directory of the user. To enforce this,
+.. insert the path to the source directory into ``sys.path`` in the ``conf.py``
+.. script. Then make sure the extension modules are inside the source directory
+.. -- i.e., the package is built in-place (see above).
 
-.. note::
+.. note ..::
 
    To build the documentation, all modules need to be imported, and the
    dependencies that are not resolved will print warning messages.
