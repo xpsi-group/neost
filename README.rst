@@ -47,9 +47,10 @@ How to get in touch or get involved
 
 We always welcome contributions and feedback! We are especially interested in 
 hearing from you if
+
 * something breaks,
 * you spot bugs, 
-* if there is missing functionality, or you have suggestions for future development,
+* there is missing functionality, or you have suggestions for future development.
 
 To get in touch, please `open an issue <https://github.com/xpsi-group/neost/issues>`_.
 Even better, if you have code you'd be interested in contributing, please send a 
@@ -67,5 +68,5 @@ more detail, including BibTeX entries and links to `appropriate papers <https://
 
 Copyright and Licensing
 -----------------------
-All content © 2016-2024 the authors.
+All content © 2020-2024 the authors.
 The code is distributed under the GNU General Public License v3.0; see `LICENSE <LICENSE>`_ for details.
