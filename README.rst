@@ -33,8 +33,7 @@ For more details on current and planned capabilities, check out the
 Installation and Testing
 ------------------------
 
-NEoST has a complex set of dependencies, and is therefore currently best 
-installed from source. The documentation provides
+NEoST is best installed from source. The documentation provides
 `step-by-step installation instructions <https://xpsi-group.github.io/neost/install.html>`_
 for Linux and for limited MacOS systems.
 
@@ -68,5 +67,5 @@ more detail, including BibTeX entries and links to `appropriate papers <https://
 
 Copyright and Licensing
 -----------------------
-All content © 2016-2023 the authors. 
+All content © 2016-2024 the authors.
 The code is distributed under the GNU General Public License v3.0; see `LICENSE <LICENSE>`_ for details.

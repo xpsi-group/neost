@@ -73,7 +73,7 @@ print("Testing done")
 # Then we start the sampling with MultiNest
 start = time.time()
 result = solve(LogLikelihood=likelihood.call, Prior=prior.inverse_sample, n_live_points=5000, evidence_tolerance=0.1,
-               n_dims=len(variable_params), sampling_efficiency=0.8, outputfiles_basename='chains/' + run_name, verbose=True)
+               n_dims=len(variable_params), sampling_efficiency=0.8, outputfiles_basename='chains/' + run_name, verbose=True, resume=False)
 end = time.time()
 print(end - start)
 
