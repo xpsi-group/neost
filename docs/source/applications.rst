@@ -11,6 +11,11 @@ NICER collaboration papers
 
 NEoST has been used in several Equation of State studies by the NICER collaboration, using inferred masses and radii from the `X-PSI team <https://xpsi-group.github.io/xpsi/index.html>`_
 
+**Rutherford et al. 2024** `(ApJ Letters in press) <https://ui.adsabs.harvard.edu/abs/2024arXiv240706790R/abstract>`_ *Constraining the dense matter equation of state with new NICER mass-radius measurements and new chiral effective field theory inputs*. See also the associated `Zenodo repository`__.
+
+.. _Zenodo24: https://doi.org/10.5281/zenodo.10871353
+__ Zenodo24_
+
 **Raaijmakers et al. 2021** `(ApJ Letters, 918, L29) <https://ui.adsabs.harvard.edu/abs/2021ApJ...918L..29R/abstract>`_  *Constraints on the Dense Matter Equation of State and Neutron Star Properties from NICER's Mass-Radius Estimate of PSR J0740+6620 and Multimessenger Observations*. See also the associated `Zenodo repository`__.
 
 .. _Zenodo21: https://doi.org/10.5281/zenodo.4696231
