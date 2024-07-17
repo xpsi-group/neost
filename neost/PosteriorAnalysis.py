@@ -136,18 +136,19 @@ def compute_table_data(root_name, EOS, variable_params, static_params):
                 pres_2 = EOS.eos(eps_2)
 
             row = [EOS.max_M, EOS.Radius_max_M, numpy.log10(EOS.max_edsc), max_rhoc, numpy.log10(EOS.eos(EOS.max_edsc)),R_14, numpy.log10(eps_14), rho_14, numpy.log10(pres_14),R_2, numpy.log10(eps_2), rho_2, numpy.log10(pres_2)]
-            for i in range(len(row)):
+            for k in range(len(row)):
                 # Some of the values in row may be arrays of shape (1,),
                 # which causes the line "Data_array[i] = row" to fail for numpy > 1.23.5.
                 # Some values are ndarrays with shape () which is fine, so check for that.
                 # If the value is an array and doesn't have the shape (),
                 # then check that its shape is indeed (1,) and extract the value.
-                if hasattr(row[i], "shape") and row[i].shape != ():
-                    assert(row[i].shape == (1,))
-                    row[i] = row[i][0]
-            Data_array[i, :] = row
+                if hasattr(row[k], "shape") and row[k].shape != ():
+                    assert(row[k].shape == (1,))
+                    row[k] = row[k][0]
+            Data_array[i,:] = row
             if i%1000 == 0:
                 print(i)
+                print('Checking to ensure no zero entries: \n', Data_array[i])
         # save everything
         numpy.savetxt(root_name + 'table_data.txt', Data_array)
         print('M_TOV: ', get_quantiles(Data_array[:,0]))
