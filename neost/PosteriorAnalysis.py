@@ -145,7 +145,7 @@ def compute_table_data(root_name, EOS, variable_params, static_params):
                 if hasattr(row[i], "shape") and row[i].shape != ():
                     assert(row[i].shape == (1,))
                     row[i] = row[i][0]
-            Data_array[i] = row
+            Data_array[i, :] = row
             if i%1000 == 0:
                 print(i)
         # save everything
