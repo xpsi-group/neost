@@ -146,9 +146,6 @@ def compute_table_data(root_name, EOS, variable_params, static_params):
                     assert(row[k].shape == (1,))
                     row[k] = row[k][0]
             Data_array[i,:] = row
-            if i%1000 == 0:
-                print(i)
-                print('Checking to ensure no zero entries: \n', Data_array[i])
         # save everything
         numpy.savetxt(root_name + 'table_data.txt', Data_array)
         print('M_TOV: ', get_quantiles(Data_array[:,0]))
