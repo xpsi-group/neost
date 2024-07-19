@@ -116,7 +116,7 @@ def compute_table_data(root_name, EOS, variable_params, static_params):
             R_14 = MR(1.4)
             if R_14 == 0:
                 R_14 = numpy.nan # set to be nan so they don't impact the quantiles b/c we are using numpy.nanquantiles
-                eps_14 = numpy,nan
+                eps_14 = numpy.nan
                 rho_14 = numpy.nan
                 pres_14 = numpy.nan
             else:
