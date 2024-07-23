@@ -116,7 +116,7 @@ def compute_table_data(root_name, EOS, variable_params, static_params):
             R_14 = MR(1.4)
             if R_14 == 0:
                 R_14 = numpy.nan # set to be nan so they don't impact the quantiles b/c we are using numpy.nanquantiles
-                eps_14 = numpy,nan
+                eps_14 = numpy.nan
                 rho_14 = numpy.nan
                 pres_14 = numpy.nan
             else:
@@ -135,12 +135,18 @@ def compute_table_data(root_name, EOS, variable_params, static_params):
                 rho_2 = edsrho(eps_2) / rho_ns
                 pres_2 = EOS.eos(eps_2)
 
-            #print(numpy.log10(EOS.max_edsc), numpy.log10(EOS.eos(EOS.max_edsc)),R_14, numpy.log10(eps_14), numpy.log10(pres_14),R_2, numpy.log10(eps_2), numpy.log10(pres_2))
-            Data_array[i] = EOS.max_M, EOS.Radius_max_M, numpy.log10(EOS.max_edsc), max_rhoc, numpy.log10(EOS.eos(EOS.max_edsc)),R_14, numpy.log10(eps_14), rho_14, numpy.log10(pres_14),R_2, numpy.log10(eps_2), rho_2, numpy.log10(pres_2)
-            if i%1000 == 0:
-                print(i)
-            #print(Data_array[i])
-    # save everything
+            row = [EOS.max_M, EOS.Radius_max_M, numpy.log10(EOS.max_edsc), max_rhoc, numpy.log10(EOS.eos(EOS.max_edsc)),R_14, numpy.log10(eps_14), rho_14, numpy.log10(pres_14),R_2, numpy.log10(eps_2), rho_2, numpy.log10(pres_2)]
+            for k in range(len(row)):
+                # Some of the values in row may be arrays of shape (1,),
+                # which causes the line "Data_array[i] = row" to fail for numpy > 1.23.5.
+                # Some values are ndarrays with shape () which is fine, so check for that.
+                # If the value is an array and doesn't have the shape (),
+                # then check that its shape is indeed (1,) and extract the value.
+                if hasattr(row[k], "shape") and row[k].shape != ():
+                    assert(row[k].shape == (1,))
+                    row[k] = row[k][0]
+            Data_array[i,:] = row
+        # save everything
         numpy.savetxt(root_name + 'table_data.txt', Data_array)
         print('M_TOV: ', get_quantiles(Data_array[:,0]))
         print('R_TOV: ', get_quantiles(Data_array[:,1]))
