@@ -1,0 +1,19 @@
+[build-system]
+requires = ['setuptools', 'numpy', 'Cython']
+build-backend = 'setuptools.build_meta'
+
+[project]
+name = 'NEoST'
+authors = [{name = 'NEoST core team', email='A.L.Watts@uva.nl'}]
+version = '0.10.0'
+dependencies = ['numpy', 'scipy', 'matplotlib', 'numba', 'seaborn', 'corner', 'pymultinest', 'pytest']
+license = {file = 'LICENCE'}
+description = 'NEoST: An open-source code for dense matter equation of state inference via nested sampling.'
+readme = 'README.md'
+classifiers = ['Intended Audience :: Science/Research',
+              'Operating System :: Mac OS X, Linux',
+              'License :: OSI Approved :: GNU GPLv3 License',
+              'Programming Language :: Python']
+
+[tool.setuptools]
+packages = ['neost', 'neost.eos', 'neost.tovsolvers']
