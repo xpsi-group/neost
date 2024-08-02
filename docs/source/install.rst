@@ -97,12 +97,15 @@ With the prerequisites out of the way, NEoST can now be installed. First navigat
 
 .. code-block:: bash
 
+	make install
+
+or, equivalently,
+
+.. code-block:: bash
+
 	pip install .
 
-NEoST can optionally be installed without cythonizing the TOV solvers, at the expense of
-much slower performance. If you wish to do this, rename or delete the ``setup.py`` file before running the pip install command.
-We only recommend using the Python TOV solvers if the cythonized solvers fail to compile or run.
-Note that the unit tests in the ``tests/`` directory fail if the Python solvers are used; this is expected.
+NEoST can optionally be installed without cythonizing the TOV solvers, at the expense of much slower performance. If you wish to do this, rename or delete the ``setup.py`` file before running ``make install``.  We only recommend using the Python TOV solvers if the cythonized solvers fail to compile or run.  Note that the unit tests in the ``tests/`` directory fail if the Python solvers are used; this is expected.
 
 Building the documentation
 ==========================

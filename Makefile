@@ -1,6 +1,6 @@
 .PHONY: build
-build: 
+install:
 	pip install .
 
 clean:
-	rm -r ./build/ ./dist/ ./NEoST.egg-info/
+	rm -rf ./build/ ./dist/ ./NEoST.egg-info/
