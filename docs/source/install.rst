@@ -113,6 +113,37 @@ much slower performance. If you wish to do this, rename or delete the ``setup.py
 We only recommend using the Python TOV solvers if the cythonized solvers fail to compile or run.
 Note that the unit tests in the ``tests/`` directory fail if the Python solvers are used; this is expected.
 
+Building the documentation
+==========================
+
+Building the documentation is completely optional and not required for running NEoST.
+If you do wish to compile the documentation locally you will require
+`Sphinx <http://www.sphinx-doc.org/en/master>`_ and extensions.
+
+If you have installed NEoST in a conda environment, you can install the documentation build dependencies using
+
+.. code-block:: bash
+
+	conda install sphinx nbsphinx decorator sphinxcontrib-websupport sphinx_rtd_theme pandoc
+
+If you haven't used conda, you can install them using
+
+.. code-block:: bash
+
+	pip install sphinx nbsphinx decorator sphinxcontrib-websupport sphinx_rtd_theme
+
+Unfortunately, the ``pandoc`` version available in pip does not seem to work, so you'll have to install pandoc separately using, e.g., your system's package manager. See also `Pandoc <https://pandoc.org/installing.html>`_.
+
+Once the dependencies are installed you can compile the documentation by navigating to the ``docs`` directory and executing
+
+.. code-block:: bash
+
+	make html
+
+The ``.html`` files can then found in ``docs/build/html``, along with the
+notebooks for the tutorials in this documentation. The ``.html`` files can
+naturally be opened in a browser, handily via a Jupyter session (this is
+particularly useful if the edits are to tutorial notebooks).
 
 .. Alternative instructions for prerequisites
 .. ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
