@@ -4,9 +4,7 @@
 Installation
 ============
 
-NEoST is a Python software package that performs neutron star equation
-of state inference process. It is an open source package that is available
-on `GitHub`_ and can be cloned as:
+NEoST is a Python software package that performs neutron star equation of state inference process. It is an open source package that is available on `GitHub`_ and can be cloned as:
 
 .. _GitHub: https://github.com/xpsi-group/neost.git
 
@@ -19,21 +17,16 @@ On this page we will describe how to install NEoST and its prerequisites.
 Creating an environment and installing NEoST's dependencies
 ===========================================================
 
-NEoST was developed in Python 3. We recommend installing NEoST and its dependencies in a virtual
-environment. There are two main options for creating an environment and installing the dependencies:
-Python's first-party package installer, pip, and the third-party Conda package manager.
+NEoST was developed in Python 3. We recommend installing NEoST and its dependencies in a virtual environment. There are two main options for creating an environment and installing the dependencies: Python's first-party package installer, pip, and the third-party Conda package manager.
 
 You need pip in both cases. It is likely already installed. If not, follow the official instructions for installing it.
 
 Using pip
 ---------
 
-Two of NEoST's dependencies, GSL (GNU Scientific Library) and MultiNest, are not available in the Python package index (PyPI),
-and need to be installed separately.
+Two of NEoST's dependencies, GSL (GNU Scientific Library) and MultiNest, are not written in Python and are as such not available in the Python package index (PyPI). They need to be installed separately.
 
-GSL is widely available and can almost always be installed with your operating system's package manager,
-or loaded with something like ``module load gsl`` on a computing cluster.
-Alternatively you can compile it yourself using the official instructions.
+GSL is widely available and can almost always be installed with your operating system's package manager, or loaded with something like ``module load gsl`` on a computing cluster.  Alternatively you can compile it yourself using the official instructions, see `Downloading GSL <https://www.gnu.org/software/gsl/#downloading>`_.
 
 However you choose to obtain GSL, make sure it works by executing
 
@@ -58,11 +51,9 @@ You then need to add ``<path/to>/MultiNest/lib`` to an environment variable call
 
 	export LD_LIBRARY_PATH=<path/to>/MultiNest/lib:$LD_LIBRARY_PATH
 
-Of course, exchange ``<path/to>`` for the actual path where you cloned MultiNest. You can add the export command
-to your ``$HOME/.bashrc`` file if you don't want to execute it in every new terminal you're running NEoST in.
+Of course, exchange ``<path/to>`` for the actual path where you cloned MultiNest. You can add the export command to your ``$HOME/.bashrc`` file if you don't want to execute it in every new terminal in which you're running NEoST.
 
-The next step is to create a virtual environment and install NEoST. In Python, the official way to create
-a virtual environment is by using the venv module:
+The next step is to create a virtual environment and install NEoST. In Python, the official way to create a virtual environment is by using the venv module:
 
 .. code-block:: bash
 
@@ -74,21 +65,20 @@ where you should substitute path/to/environment for a location of your choice. T
 
 	source path/to/environment/bin/activate
 
+To install NEoST itself, see Installing NEoST below.
+
 Using Conda
 -----------
 
 .. _basic_env:
 
-Assuming a conda base environment has been installed and activated (see conda
-installation instructions), a new virtual environment can then be created
-by navigating to the NEoST base directory and executing
+Assuming a Conda base environment has been installed and activated (see Conda installation instructions, e.g., `Miniconda <https://docs.anaconda.com/miniconda/>`_), a new virtual environment can then be created by navigating to the NEoST base directory and executing
 
 .. code-block:: bash
 
 	conda env create -f environment.yml
 
-This will create a new conda environment called neost and install all dependencies (including GSL and MultiNest).
-Once the environment has been created, activate it with
+This will create a new Conda environment called neost and install all dependencies (including GSL and MultiNest).  Once the environment has been created, activate it with
 
 .. code-block:: bash
 
@@ -98,11 +88,12 @@ This changes the active virtual environment from the default base
 environment to the new neost environment and needs to be entered any time
 NEoST is used.
 
+To install NEoST itself, see Installing NEoST below.
+
 Installing NEoST
 ================
 
-With the prerequisites out of the way, NEoST can now be installed. First navigate to
-the directory with NEoST's source code, if you haven't done so already, and install NEoST with
+With the prerequisites out of the way, NEoST can now be installed. First navigate to the NEoST base directory, if you haven't done so already, and install NEoST with
 
 .. code-block:: bash
 
