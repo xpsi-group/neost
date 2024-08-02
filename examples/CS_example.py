@@ -8,8 +8,6 @@ from neost import PosteriorAnalysis
 from scipy.stats import multivariate_normal
 from scipy.stats import gaussian_kde
 import numpy as np
-import matplotlib
-from matplotlib import pyplot
 from pymultinest.solve import solve
 import time
 import os
