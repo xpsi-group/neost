@@ -6,7 +6,7 @@ build-backend = 'setuptools.build_meta'
 name = 'NEoST'
 authors = [{name = 'NEoST core team', email='A.L.Watts@uva.nl'}]
 version = '0.10.0'
-dependencies = ['numpy', 'scipy', 'matplotlib', 'numba', 'seaborn', 'corner', 'pymultinest', 'pytest']
+dependencies = ['numpy', 'scipy', 'matplotlib', 'numba', 'seaborn', 'corner', 'pymultinest', 'pytest', 'kalepy']
 license = {file = 'LICENCE'}
 description = 'NEoST: An open-source code for dense matter equation of state inference via nested sampling.'
 readme = 'README.md'
