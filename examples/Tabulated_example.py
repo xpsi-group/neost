@@ -13,8 +13,6 @@ from matplotlib import pyplot
 from pymultinest.solve import solve
 import time
 import os
-#if not os.path.exists("chains"): 
-   # os.mkdir("chains")
 
 import neost.global_imports as global_imports
 
