@@ -1,4 +1,4 @@
-from matplotlib import pyplot
+import matplotlib.pyplot as plt
 import warnings
 
 try:
@@ -80,7 +80,7 @@ class Star():
             Plot the internal mass and pressure structure of the star.
         """
 
-        fig, ax = pyplot.subplots(1,2, figsize=(14,6))
+        fig, ax = plt.subplots(1,2, figsize=(14,6))
         ax[0].plot(self.radius_grid_baryon, self.mass_dist_baryon,
                    c='#005ABD', lw=2.5, label='Baryonic')
         ax[1].plot(self.radius_grid_baryon, self.pres_dist_baryon, c='#005ABD',
@@ -99,5 +99,5 @@ class Star():
             ax[i].set_xlim(0.9, 150)
             ax[i].xaxis.set_major_formatter(ScalarFormatter())
         ax[0].legend(prop={'size':16})
-        pyplot.tight_layout()
-        pyplot.show()
+        plt.tight_layout()
+        plt.show()

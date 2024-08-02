@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 
 from neost import global_imports
 
@@ -36,7 +36,7 @@ class Prior():
 
         if 'rho_t1' and 'rho_t2' in self.variable_params.keys():
             # forced identifiability prior #
-            pr['rho_t1'] = ((1. - numpy.sqrt(hypercube['rho_t1'])) *
+            pr['rho_t1'] = ((1. - np.sqrt(hypercube['rho_t1'])) *
                             (self.variable_params['rho_t1'][1] - 
                             self.variable_params['rho_t1'][0]) +
                             self.variable_params['rho_t1'][0])
@@ -53,15 +53,15 @@ class Prior():
 
         for i in range(self.number_stars):
             if self.chirp_masses[i] is None:
-                logminedsc = numpy.log10(self.EOS.min_edsc)
-                logmaxedsc = numpy.log10(self.EOS.max_edsc)
+                logminedsc = np.log10(self.EOS.min_edsc)
+                logmaxedsc = np.log10(self.EOS.max_edsc)
                 pr.update({'rhoc_' + str(i + 1):hypercube['rhoc_' + str(i + 1)]
                           * (logmaxedsc - logminedsc) + logminedsc})
             else:
                 logminedsc, logmaxedsc = self.EOS.get_minmax_edsc_chirp(
                     self.chirp_masses[i])
-                logminedsc = numpy.log10(logminedsc)
-                logmaxedsc = numpy.log10(logmaxedsc)
+                logminedsc = np.log10(logminedsc)
+                logmaxedsc = np.log10(logmaxedsc)
                 pr.update({'rhoc_' + str(i + 1):hypercube['rhoc_' + str(i + 1)]
                           * (logmaxedsc - logminedsc) + logminedsc})
         self.MRT = self.EOS.massradius
