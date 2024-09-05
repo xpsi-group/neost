@@ -23,6 +23,12 @@ authors:
     - name:  Chanda Prescod-Weinstein
       orcid: 0000-0002-6742-4532
       affiliation: 3
+    - name:  Isak Svensson
+      orcid: 0000-0002-9211-5555
+      affiliation: 4
+    - name:  Melissa Mendes
+      orcid: 0000-0002-5250-0723
+      affiliation: 4
 affiliations:
    - name: GRAPPA, Anton Pannekoek Institute for Astronomy and Institute of High-Energy Physics, University of Amsterdam, Science Park 904, 1098 XH Amsterdam, Netherlands
      index: 1
@@ -30,8 +36,10 @@ affiliations:
      index: 2
    - name: Department of Physics and Astronomy, University of New Hampshire, Durham, New Hampshire 03824, USA
      index: 3
+   - name: Technische Universit\"at Darmstadt, Department of Physics, 64289 Darmstadt, Germany; ExtreMe Matter Institute EMMI, GSI Helmholtzzentrum f\"ur Schwerionenforschung GmbH, 64291 Darmstadt, Germany; Max-Planck-Institut f\"ur Kernphysik, Saupfercheckweg 1, 69117 Heidelberg, Germany
+     index: 4
 
-date: 20 September 2023
+date: 5 September 2024
 bibliography: neostjoss.bib
 ---
 
@@ -44,7 +52,7 @@ The Nested Equation of State Sampling (NEoST) package is an open-source code tha
 
 Matter in the cores of neutron stars can reach several times the nuclear saturation density. The EoS of matter under such circumstances is not well understood: in addition to extreme levels of neutron-richness there could also exist stable states of strange matter, in the form of either hyperons or deconfined quarks [@Hebeler:2015;@Lattimer:2016;@Tolos:2020]. Neutron star properties like mass, radius and tidal deformability depend on the EoS, so measurement of these quantities provides insight into the properties of ultradense nuclear matter.   
 
-Astrophysical data sets that can be used to constrain the EoS take the form of posterior distributions that are derived from separate inference analyses.  Examples include: mass posteriors from pulsar timing analysis of radio pulsars in binary systems [@Fonseca:2021], joint mass-radius posteriors from Pulse Profile Modeling using NICER data [@Riley:2021;@Miller:2021]; and joint mass-tidal deformability posters from gravitational wave observations of neutron star binary mergers [@GW170817].   NEoST provides a framework for EoS inference that couples these various different types of astrophysical data to either parameterized or tabulated EoS models.
+Astrophysical data sets that can be used to constrain the EoS take the form of posterior distributions that are derived from separate inference analyses.  Examples include: mass posteriors from pulsar timing analysis of radio pulsars in binary systems [@Fonseca:2021], joint mass-radius posteriors from Pulse Profile Modeling using NICER data [@Riley:2021;@Miller:2021]; and joint mass-tidal deformability posters from gravitational wave observations of neutron star binary mergers [@GW170817].   NEoST provides a framework for EoS inference that couples these various different types of astrophysical data to either parameterized or tabulated EoS models, e.g. [@Keller:2024].
  
 # The NEoST package and science use
 
@@ -57,7 +65,7 @@ It shows how the track for physical measurements and
 the track for theoretical models are fed through the framework, and what the main steps of analysis
 are after inference is complete.\label{fig:neost}](fig1.png){width=100%}
 
-NEoST is being used by the NICER collaboration for EoS inference using mass-radius posteriors generated from pulse profile modeling [@Raaijmakers:2019;@Raaijmakers:2020;@Raaijmakers:2021], specifically those generated using the X-PSI package [@Riley:2019;@Riley:2021;@Riley:2023].  It has also been used to study EoS prior sensitivities using synthetic mass-radius posteriors [@Greif:2019] and to study the consequences of a potential dark matter component in neutron stars [@Rutherford:2023].  
+NEoST is being used for EoS inference using mass-radius posteriors generated from pulse profile modeling of NICER data [@Raaijmakers:2019;@Raaijmakers:2020;@Raaijmakers:2021;@Rutherford:2024], specifically those generated using the X-PSI package [@Riley:2019;@Riley:2021;@Salmi:2022;@Riley:2023;@Vinciguerra:2024;@Choudhury:2024].  It has also been used to study EoS prior sensitivities using synthetic mass-radius posteriors [@Greif:2019] and to study the consequences of a potential dark matter component in neutron stars [@Rutherford:2023].  
 
 The core routines of NEoST are written in Cython
 [@cython2011], and are dependent on the GNU Scientific Library [GSL,
@@ -77,7 +85,7 @@ PyMultiNest [@PyMultiNest], GetDist [@Lewis19], SciPy [@Scipy], Seaborn[@Seaborn
 
 # Acknowledgements
 
-GR and ALW acknowledge support from ERC Starting Grant No. 639217 CSINEUTRONSTAR.  PT, TS and ALW acknowledge support from ERC Consolidator Grant No. 865768 AEONS (PI ALW).  GR acknowledges support from Nederlandse Organisatie voor Wetenschappelijk Onderzoek VIDI and Projectruimte grants (PI Samaya Nissanke).  NR and CPW are supported by NASA Grant No. 80NSSC22K0092 (PI Chanda Prescod-Weinstein)   More detailed acknowledgements are written in the project
+GR and ALW acknowledge support from ERC Starting Grant No. 639217 CSINEUTRONSTAR.  PT, TS and ALW acknowledge support from ERC Consolidator Grant No. 865768 AEONS (PI ALW).  GR acknowledges support from Nederlandse Organisatie voor Wetenschappelijk Onderzoek VIDI and Projectruimte grants (PI Samaya Nissanke).  NR and CPW are supported by NASA Grant No. 80NSSC22K0092 (PI Chanda Prescod-Weinstein).  IS and MM acknowledge support from ERC Advanced Grant No. 101020842 (PI Achim Schwenk).  More detailed acknowledgements are written in the project
 documentation [hosted on GitHub](https://xpsi-group.github.io/neost/acknowledgements.html).
 
 # References
