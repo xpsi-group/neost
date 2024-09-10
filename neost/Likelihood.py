@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 from scipy.interpolate import UnivariateSpline
 
 from neost.Star import Star
@@ -56,20 +56,20 @@ class Likelihood():
                     return -1e101
                 MTspline = UnivariateSpline(self.prior.MRT[:,0],
                                             self.prior.MRT[:,2], k=1, s=0)
-                point = numpy.array([self.chirp_masses[i], M2 / M1,
+                point = np.array([self.chirp_masses[i], M2 / M1,
                                      MTspline(M1), star.tidal])
                 like = self.likelihood_functions[i](point)
                 like = self.array_to_scalar(like)
                 likelihoods.append(like)
 
-        like_total = numpy.prod(numpy.array(likelihoods))
+        like_total = np.prod(np.array(likelihoods))
         if like_total == 0.0:
             return -1e101
 
-        return numpy.log(like_total)
+        return np.log(like_total)
     
     def array_to_scalar(self, var):
-        # numpy no longer accepts ragged arrays,
+        # np no longer accepts ragged arrays,
         # check that if var is an array it only has one element and return it
         if hasattr(var, '__len__'):
             try:

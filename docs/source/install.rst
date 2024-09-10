@@ -1,69 +1,143 @@
 .. _install:
 
+============
 Installation
 ============
 
-NEoST is a Python software package that performs neutron star equation
-of state inference process. It is an open source package that is available
-on `GitHub`_ and can be cloned as:
+NEoST is a Python software package that performs neutron star equation of state inference process. It is an open source package that is available on `GitHub`_ and can be cloned as:
 
 .. _GitHub: https://github.com/xpsi-group/neost.git
 
 .. code-block:: bash
 
-	git clone https://github.com/xpsi-group/neost.git </path/to/neost>
+	git clone https://github.com/xpsi-group/neost.git
 
 On this page we will describe how to install NEoST and its prerequisites.
 
-Prerequisite Python Packages
-----------------------------
+Creating an environment and installing NEoST's dependencies
+===========================================================
 
-NEoST was developed in Python 3, as such we recommend creating a conda virtual
-environment with anaconda3 or miniconda3 according to the instructions below. This will
-ensure installing NEoST won't break any existing software packages.
+NEoST was developed in Python 3. We recommend installing NEoST and its dependencies in a virtual environment. There are two main options for creating an environment and installing the dependencies: Python's first-party package installer, pip, and the third-party Conda package manager.
+
+You need pip in both cases. It is likely already installed. If not, follow the official instructions for installing it.
+
+Using pip
+---------
+
+Two of NEoST's dependencies, GSL (GNU Scientific Library) and MultiNest, are not written in Python and are as such not available in the Python package index (PyPI). They need to be installed separately.
+
+GSL is widely available and can almost always be installed with your operating system's package manager, or loaded with something like ``module load gsl`` on a computing cluster.  Alternatively you can compile it yourself using the official instructions, see `Downloading GSL <https://www.gnu.org/software/gsl/#downloading>`_.
+
+However you choose to obtain GSL, make sure it works by executing
+
+.. code-block:: bash
+
+	gsl-config --version
+
+which should print the installed GSL version.
+
+MultiNest, on the other hand, must likely be compiled manually. Follow these steps (which assume that you have ``git``, a ``C++`` compiler, ``cmake``, and ``make`` installed):
+
+.. code-block:: bash
+
+	git clone https://github.com/JohannesBuchner/MultiNest
+	cd MultiNest/build
+	cmake ..
+	make
+
+You then need to add ``<path/to>/MultiNest/lib`` to an environment variable called ``LD_LIBRARY_PATH`` using
+
+.. code-block:: bash
+
+	export LD_LIBRARY_PATH=<path/to>/MultiNest/lib:$LD_LIBRARY_PATH
+
+Of course, exchange ``<path/to>`` for the actual path where you cloned MultiNest. You can add the export command to your ``$HOME/.bashrc`` file if you don't want to execute it in every new terminal in which you're running NEoST.
+
+The next step is to create a virtual environment and install NEoST. In Python, the official way to create a virtual environment is by using the venv module:
+
+.. code-block:: bash
+
+	python -m venv path/to/environment
+
+where you should substitute path/to/environment for a location of your choice. Then activate the environment with
+
+.. code-block:: bash
+
+	source path/to/environment/bin/activate
+
+To install NEoST itself, see Installing NEoST below.
+
+Using Conda
+-----------
 
 .. _basic_env:
 
-Assuming a conda base environment has been installed and activated (see conda
-installation instructions), a new virtual Python environment can then be created
-by navigating to the NEoST base directory and entering the following command into the terminal:
+Assuming a Conda base environment has been installed and activated (see Conda installation instructions, e.g., `Miniconda <https://docs.anaconda.com/miniconda/>`_), a new virtual environment can then be created by navigating to the NEoST base directory and executing
 
 .. code-block:: bash
 
 	conda env create -f environment.yml
 
-This command will create a new conda environment called neost and install all dependencies.
-If you don't want to use conda, you can install the dependencies listed in environment.yml
-in your preferred way.
-
-Next, in order to be able to install NEoST itself in the new environment, enter the following:
+This will create a new Conda environment called neost and install all dependencies (including GSL and MultiNest).  Once the environment has been created, activate it with
 
 .. code-block:: bash
 
 	conda activate neost
 
-This command changes the active virtual environment from the default base
+This changes the active virtual environment from the default base
 environment to the new neost environment and needs to be entered any time
 NEoST is used.
 
-Installing NEoST
-----------------
+To install NEoST itself, see Installing NEoST below.
 
-With the prerequisites out of the way, NEoST can now be installed. First (if
-you haven't done so already) navigate to the directory where NEoST's source
-code was extracted and activate the conda environment. Then install NEoST with
+Installing NEoST
+================
+
+With the prerequisites out of the way, NEoST can now be installed. First navigate to the NEoST base directory, if you haven't done so already, and install NEoST with
+
+.. code-block:: bash
+
+	make install
+
+or, equivalently,
 
 .. code-block:: bash
 
 	pip install .
 
-Alternatively, NEoST can be installed without cythonizing the TOV solvers, however this results
-in much slower performance. To do this, enter the following command:
+NEoST can optionally be installed without cythonizing the TOV solvers, at the expense of much slower performance. If you wish to do this, rename or delete the ``setup.py`` file before running ``make install``.  We only recommend using the Python TOV solvers if the cythonized solvers fail to compile or run.  Note that the unit tests in the ``tests/`` directory fail if the Python solvers are used; this is expected.
+
+Building the documentation
+==========================
+
+Building the documentation is completely optional and not required for running NEoST.
+If you do wish to compile the documentation locally you will require
+`Sphinx <http://www.sphinx-doc.org/en/master>`_ and extensions.
+
+If you have installed NEoST in a conda environment, you can install the documentation build dependencies using
 
 .. code-block:: bash
 
-	python setup.py install --nocython
+	conda install sphinx nbsphinx decorator sphinxcontrib-websupport sphinx_rtd_theme pandoc
 
+If you haven't used conda, you can install them using
+
+.. code-block:: bash
+
+	pip install sphinx nbsphinx decorator sphinxcontrib-websupport sphinx_rtd_theme
+
+Unfortunately, the ``pandoc`` version available in pip does not seem to work, so you'll have to install pandoc separately using, e.g., your system's package manager. See also `Pandoc <https://pandoc.org/installing.html>`_.
+
+Once the dependencies are installed you can compile the documentation by navigating to the ``docs`` directory and executing
+
+.. code-block:: bash
+
+	make html
+
+The ``.html`` files can then found in ``docs/build/html``, along with the
+notebooks for the tutorials in this documentation. The ``.html`` files can
+naturally be opened in a browser, handily via a Jupyter session (this is
+particularly useful if the edits are to tutorial notebooks).
 
 .. Alternative instructions for prerequisites
 .. ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

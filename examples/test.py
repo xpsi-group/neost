@@ -5,7 +5,7 @@ from neost.Star import Star
 from neost.Likelihood import Likelihood
 from neost import PosteriorAnalysis
 from scipy.stats import multivariate_normal
-import numpy
+import numpy as np
 import matplotlib
 from matplotlib import pyplot
 from pymultinest.solve import solve
@@ -61,7 +61,7 @@ print("number of parameters is %d" %len(variable_params))
 
 # First we test if everything is working as expected
 print("Testing prior and likelihood")
-cube = numpy.random.rand(50, len(variable_params))
+cube = np.random.rand(50, len(variable_params))
 for i in range(len(cube)):
     par = prior.inverse_sample(cube[i])
     print(likelihood.call(par))

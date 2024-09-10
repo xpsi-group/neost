@@ -1,8 +1,8 @@
-import numpy
+import numpy as np
 from scipy.interpolate import UnivariateSpline
 from scipy import optimize
 from scipy.integrate import odeint
-from matplotlib import pyplot
+import matplotlib.pyplot as plt
 
 from .. Star import Star
 from .. import global_imports
@@ -173,8 +173,8 @@ class BaseEoS():
             # attempt at making a different jump off from BPS
             
             rhocrust = self.BPS[:,0][self.BPS[:,0] <= self._rho_end_BPS]
-            rhotrans = numpy.linspace(self._rho_end_BPS, self._rho_start_ceft, 10)
-            rhocEFT = numpy.linspace(self._rho_start_ceft, 
+            rhotrans = np.linspace(self._rho_end_BPS, self._rho_start_ceft, 10)
+            rhocEFT = np.linspace(self._rho_start_ceft, 
                                      self.rho_t / rho_ns, 10)
 
             prescrust = self.BPS[:,1][self.BPS[:,0] <= self._rho_end_BPS]
@@ -182,20 +182,20 @@ class BaseEoS():
                                            self.min_norm, self.max_norm,
                                            self.min_index, self.max_index)
             prestrans = prescrust[-1] * (rhotrans / rhocrust[-1])**(
-                numpy.log10(prescEFT[0] / prescrust[-1]) /
-                numpy.log10(rhocEFT[0] / rhocrust[-1]))
+                np.log10(prescEFT[0] / prescrust[-1]) /
+                np.log10(rhocEFT[0] / rhocrust[-1]))
 
 
-            rholow = numpy.logspace(-2, numpy.log10(self.BPS[0][0] *
+            rholow = np.logspace(-2, np.log10(self.BPS[0][0] *
                                                     rho_ns), 50)
-            epslow = numpy.logspace(-2, numpy.log10(self.BPS[0][2] /
+            epslow = np.logspace(-2, np.log10(self.BPS[0][2] /
                                                     gcm3_to_MeVfm3), 50)
             preslow = ((epslow / (self.BPS[0][0] * rho_ns))**(5. / 3.) *
                        self.BPS[0][1] / dyncm2_to_MeVfm3)
 
-            self._rho_crust = numpy.hstack([rhocrust, rhotrans[1:-1], 
+            self._rho_crust = np.hstack([rhocrust, rhotrans[1:-1], 
                                             rhocEFT]) * rho_ns
-            self._pres_crust = numpy.hstack([prescrust, prestrans[1:-1], 
+            self._pres_crust = np.hstack([prescrust, prestrans[1:-1], 
                                              prescEFT]) / dyncm2_to_MeVfm3
 
             eps0 = self.BPS[:,2][self.BPS[:,0] == self._rho_end_BPS] / gcm3_to_MeVfm3
@@ -207,11 +207,11 @@ class BaseEoS():
                             args=tuple([prho]))
             eds_crust = result.flatten()[1::]
 
-            self._eds_crust = numpy.hstack([epslow[0:-1], 
+            self._eds_crust = np.hstack([epslow[0:-1], 
                                             self.BPS[:,2][self.BPS[:,0] <= self._rho_end_BPS]
                                             / gcm3_to_MeVfm3, eds_crust])
-            self._pres_crust = numpy.hstack([preslow[0:-1], self._pres_crust])
-            self._rho_crust = numpy.hstack([rholow[0:-1], self._rho_crust])
+            self._pres_crust = np.hstack([preslow[0:-1], self._pres_crust])
+            self._rho_crust = np.hstack([rholow[0:-1], self._rho_crust])
 
         if self.ceft is False:
 
@@ -219,9 +219,9 @@ class BaseEoS():
             prescrust = self.BPS[:,1][self.BPS[:,0] <= self.rho_t / rho_ns]
             edscrust = self.BPS[:,2][self.BPS[:,0] <= self.rho_t / rho_ns]
 
-            rholow = numpy.logspace(-2, numpy.log10(self.BPS[0][0] * 
+            rholow = np.logspace(-2, np.log10(self.BPS[0][0] * 
                                                     rho_ns), 50)
-            epslow = numpy.logspace(-2, numpy.log10(self.BPS[0][2] /
+            epslow = np.logspace(-2, np.log10(self.BPS[0][2] /
                                                     gcm3_to_MeVfm3), 50)
             preslow = ((epslow / (self.BPS[0][0] * rho_ns))**(5. / 3.) *
                        self.BPS[0][1])
@@ -229,10 +229,10 @@ class BaseEoS():
             self._rho_crust = rhocrust * rho_ns
             self._pres_crust = prescrust / dyncm2_to_MeVfm3
 
-            self._eds_crust = numpy.hstack([epslow[0:-1], 
+            self._eds_crust = np.hstack([epslow[0:-1], 
                                             edscrust / gcm3_to_MeVfm3])
-            self._pres_crust = numpy.hstack([preslow[0:-1], self._pres_crust])
-            self._rho_crust = numpy.hstack([rholow[0:-1], self._rho_crust])
+            self._pres_crust = np.hstack([preslow[0:-1], self._pres_crust])
+            self._rho_crust = np.hstack([rholow[0:-1], self._rho_crust])
 
         eos_crust = UnivariateSpline(self._eds_crust, 
                                      self._pres_crust, k=1, s=0)
@@ -249,17 +249,17 @@ class BaseEoS():
     # Analytic representation of the SLy EoS, used for crust
     def SLYfit(self, rho):
 
-        a = numpy.array([6.22, 6.121, 0.005925, 0.16326, 6.48, 11.4971, 19.105,
+        a = np.array([6.22, 6.121, 0.005925, 0.16326, 6.48, 11.4971, 19.105,
                          0.8938, 6.54, 11.4950, -22.775, 1.5707, 4.3, 14.08,
                          27.80, -1.653, 1.50, 14.67])
         part1 = ((a[0] + a[1] * rho + a[2] * rho**3.) / (1. + a[3] * rho) *
-                 1. / (numpy.exp(a[4] * (rho - a[5])) + 1.))
+                 1. / (np.exp(a[4] * (rho - a[5])) + 1.))
         part2 = ((a[6] + a[7] * rho) * 1. / 
-                 (numpy.exp(a[8] * (a[9] - rho)) + 1.))
+                 (np.exp(a[8] * (a[9] - rho)) + 1.))
         part3 = ((a[10] + a[11] * rho) * 1. /
-                 (numpy.exp(a[12] * (a[13] - rho)) + 1.))
+                 (np.exp(a[12] * (a[13] - rho)) + 1.))
         part4 = ((a[14] + a[15] * rho) * 1. /
-                 (numpy.exp(a[16] * (a[17] - rho)) + 1.))
+                 (np.exp(a[16] * (a[17] - rho)) + 1.))
         pres = part1 + part2 + part3 + part4
         return pres
 
@@ -273,39 +273,39 @@ class BaseEoS():
         return drhode
 
     def PofE(self,E, epsgrid, presgrid):
-        idx = numpy.searchsorted(epsgrid, E)
+        idx = np.searchsorted(epsgrid, E)
         if idx == 0:
             pres = presgrid[0] * pow(E / epsgrid[0], 5. / 3.)
         if idx == len(epsgrid): 
             pres = presgrid[-1] * pow(E / epsgrid[-1], 5. / 3.)
         else:
-            ci = numpy.log(presgrid[idx] / presgrid[idx - 1]) / numpy.log(epsgrid[idx] / epsgrid[idx - 1])
+            ci = np.log(presgrid[idx] / presgrid[idx - 1]) / np.log(epsgrid[idx] / epsgrid[idx - 1])
             pres = presgrid[idx - 1] * (E / epsgrid[idx - 1])**ci
         return pres
 
     def CofE(self, E, epsgrid, presgrid):
-        idx = numpy.searchsorted(epsgrid, E)
-        ci = (numpy.log(presgrid[idx] / presgrid[idx - 1]) /
-              numpy.log(epsgrid[idx] / epsgrid[idx - 1]))
+        idx = np.searchsorted(epsgrid, E)
+        ci = (np.log(presgrid[idx] / presgrid[idx - 1]) /
+              np.log(epsgrid[idx] / epsgrid[idx - 1]))
         return ((presgrid[idx - 1] * epsgrid[idx - 1]**(-1) * ci *
                 (E / epsgrid[idx - 1])**(ci - 1.)) / c**2.)
 
     def EofP(self, P, epsgrid, presgrid):
-        idx = numpy.searchsorted(presgrid, P)
+        idx = np.searchsorted(presgrid, P)
         if idx == 0:
             eds = epsgrid[0] * pow(P / presgrid[0], 3. / 5.)
         if idx == len(epsgrid): 
             eds = epsgrid[-1] * pow(P / presgrid[-1], 3. / 5.)
         else:
-            ci = (numpy.log(presgrid[idx] / presgrid[idx - 1]) /
-                  numpy.log(epsgrid[idx] / epsgrid[idx - 1]))
+            ci = (np.log(presgrid[idx] / presgrid[idx - 1]) /
+                  np.log(epsgrid[idx] / epsgrid[idx - 1]))
             eds = epsgrid[idx - 1] * pow(P / presgrid[idx - 1], 1. / ci)
         return eds
 
     def EofRho(self, rho, rhos, eps):
-        idx = numpy.searchsorted(rhos, rho)
-        ci = (numpy.log(eps[idx] / eps[idx - 1]) /
-              numpy.log(rhos[idx] / rhos[idx - 1]))
+        idx = np.searchsorted(rhos, rho)
+        ci = (np.log(eps[idx] / eps[idx - 1]) /
+              np.log(rhos[idx] / rhos[idx - 1]))
         return eps[idx - 1] * (rho / rhos[idx - 1])**ci
 
 
@@ -314,26 +314,26 @@ class BaseEoS():
 
         min_edsc0 = 14.3
         if self.rho_t is not None:
-            eds = numpy.logspace(numpy.log10(self.rho_t), 
-                                 numpy.log10(4e16), 1000) #eds is in units of g/cm^3,  
+            eds = np.logspace(np.log10(self.rho_t), 
+                                 np.log10(4e16), 1000) #eds is in units of g/cm^3,  
                                                                 
         else:
-            eds = numpy.logspace(14.3, numpy.log10(4e16), 1000) #same as above
+            eds = np.logspace(14.3, np.log10(4e16), 1000) #same as above
         dpde = self.eos.derivative(1)
         cs = dpde(eds)/c**2
         acausal = 1.
 
         if len(eds[cs > acausal]) != 0:
-            maximum = eds[numpy.where(eds == min(eds[cs > acausal]))[0] - 1]
+            maximum = eds[np.where(eds == min(eds[cs > acausal]))[0] - 1]
 
-            if numpy.log10(maximum) < min_edsc0: # g/cm^3
+            if np.log10(maximum) < min_edsc0: # g/cm^3
                 maximum = min_edsc0 + 0.01
 
         else:
             maximum = max(eds)
  
-        eds_c = numpy.logspace(min_edsc0, numpy.log10(maximum), 50) # g/cm^3
-        Ms = numpy.zeros((len(eds_c),3))
+        eds_c = np.logspace(min_edsc0, np.log10(maximum), 50) # g/cm^3
+        Ms = np.zeros((len(eds_c),3))
         
         for i, e in enumerate(eds_c):
             star = Star(e)
@@ -344,13 +344,13 @@ class BaseEoS():
 
         Ms = Ms[Ms[:,0] > 0.0]
         eds_c = eds_c[0:len(Ms)]
-        test, idx = numpy.unique(Ms[:,0], return_index=True)
+        test, idx = np.unique(Ms[:,0], return_index=True)
         Ms = Ms[idx]
 
         eds_c = eds_c[idx]
  
         self.max_M = max(Ms[:,0])
-        index_max_M = numpy.argmax(Ms[:,0])
+        index_max_M = np.argmax(Ms[:,0])
         self.Radius_max_M = Ms[:,1][index_max_M]
         self.max_edsc = max(eds_c)
         self.min_edsc = 10**(min_edsc0)
@@ -393,13 +393,13 @@ class BaseEoS():
             Plot the EoS.
         """
 
-        fig, ax = pyplot.subplots(1,1, figsize=(8,6))
+        fig, ax = plt.subplots(1,1, figsize=(8,6))
         if self.crust is not None:
-            rho_crust = numpy.logspace(13., numpy.log10(self.rho_t),
+            rho_crust = np.logspace(13., np.log10(self.rho_t),
                                        100)  #rho_crust is in units of g/cm^3 
                                                         
-            rho_core = numpy.logspace(numpy.log10(self.rho_t), 
-                                      numpy.log10(8e15), 100) #same as above, but for rho_core
+            rho_core = np.logspace(np.log10(self.rho_t), 
+                                      np.log10(8e15), 100) #same as above, but for rho_core
 
             miny = min(self.eos(rho_crust)) #   units of g/(cm s^2)
                                                         
@@ -425,15 +425,15 @@ class BaseEoS():
         ax.set_xlabel(r'$\varepsilon$ [g/cm$^3$]', fontsize=15)
         ax.set_ylabel(r'Pressure [dyn/cm$^2$]', fontsize=15)
         ax.legend(prop={'size': 12})
-        pyplot.tight_layout()
+        plt.tight_layout()
         fig.savefig('testEoS_cgs.png')
-        pyplot.show()
+        plt.show()
 
     def plot_massradius(self):
         """
             Plot the mass-radius curve.
         """
-        fig, ax = pyplot.subplots(1,1, figsize=(8,6))
+        fig, ax = plt.subplots(1,1, figsize=(8,6))
 
         ax.scatter(self.massradius[:,1], self.massradius[:,0], c='black')
         ax.tick_params(axis='both', which='major', labelsize=14)
@@ -441,12 +441,12 @@ class BaseEoS():
         ax.set_ylabel(r'Mass [M$_{\odot}$]', fontsize=15)
         ax.set_xlim(8, 16)
         ax.set_ylim(0.2, 3.)
-        pyplot.tight_layout()
+        plt.tight_layout()
         fig.savefig('testEoS_MR_cgs.png')
-        pyplot.show()
+        plt.show()
 
     def get_BPS(self):
-        BPS = numpy.array([[2.97500000e-14, 6.30300000e-24, 4.40700000e-12], [3.06900000e-14, 6.30300000e-23, 4.54700000e-12], [4.36900000e-14, 7.55100000e-22, 6.47200000e-12],
+        BPS = np.array([[2.97500000e-14, 6.30300000e-24, 4.40700000e-12], [3.06900000e-14, 6.30300000e-23, 4.54700000e-12], [4.36900000e-14, 7.55100000e-22, 6.47200000e-12],
                            [6.18700000e-14, 8.73700000e-21, 9.15000000e-12], [1.70000000e-13, 1.06100000e-19, 2.51600000e-11], [7.93700000e-13, 3.63200000e-18, 1.18300000e-10],
                            [4.33100000e-12, 1.18600000e-16, 6.41600000e-10], [3.93400000e-11, 6.08100000e-15, 5.82500000e-09], [9.88100000e-11, 3.10000000e-14, 1.46300000e-08],
                            [2.48300000e-10, 1.51700000e-13, 3.67500000e-08], [6.23500000e-10, 7.18300000e-13, 9.22800000e-08], [1.56600000e-09, 3.28600000e-12, 2.31900000e-07],

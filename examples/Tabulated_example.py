@@ -6,15 +6,10 @@ from neost.Likelihood import Likelihood
 from scipy.stats import multivariate_normal
 from scipy.stats import gaussian_kde
 from neost import PosteriorAnalysis
-import numpy
-import random
-import matplotlib
-from matplotlib import pyplot
+import numpy as np
 from pymultinest.solve import solve
 import time
 import os
-#if not os.path.exists("chains"): 
-   # os.mkdir("chains")
 
 import neost.global_imports as global_imports
 
@@ -28,7 +23,7 @@ rho_ns = global_imports._rhons
 
 eos_name = 'tabulated'
 
-baryondensity, pressure_B, energydensity_B = numpy.loadtxt('ap4_new.dat', unpack=True) #in units of g/cm^3
+baryondensity, pressure_B, energydensity_B = np.loadtxt('ap4_new.dat', unpack=True) #in units of g/cm^3
 
 pressure_B = pressure_B*c**2 #(in units of g/(cm s^2))
 
@@ -85,7 +80,7 @@ print("number of parameters is %d" %len(variable_params))
 
 # First we test if everything is working as expected
 print("Testing prior and likelihood")
-cube = numpy.random.rand(50, len(variable_params))
+cube = np.random.rand(50, len(variable_params))
 for i in range(len(cube)):
     par = prior.inverse_sample(cube[i])
 print("Testing done")
