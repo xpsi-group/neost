@@ -33,6 +33,38 @@ and this project adheres to
 .. Attribution
 .. ^^^^^^^^^^^
 
+[v1.0.0 - 2024-09-11]
+~~~~~~~~~~~~~~~~~~~~~~
+
+Summary
+^^^^^^^
+Modernized installation, use standard python abbreviations "np" and "plt", updated JOSS paper, minor bug fixes
+
+Fixed
+^^^^^
+* A numpy ragged-array issue in PosteriorAnalysis.compute_table_data()
+
+Added
+^^^^^
+* Rutherford 2024 paper to publication list
+* New main installation script: pyproject.toml
+* Simple makefile that can install NEoST and also clean up generated files to simplify installation troubleshooting
+* Reinstated tested instructions for compiling the documentation
+
+Removed
+^^^^^^^
+* Unused imports and commented-out code
+
+Changed
+^^^^^^^
+* The content and purpose of setup.py. This file is no longer the main installation script; its only purpose is to compile the Cython TOV solvers. To not compile these in case of issues, simply rename or delete setup.py.
+* Installation instructions when not using conda
+
+Attribution
+^^^^^^^^^^^
+* NEoST core team
+
+
 [v0.10.0 - 2024-07-10]
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -42,7 +74,8 @@ Updates to the code and documentation for the 2024 ApJL paper, compatibility imp
 
 Fixed
 ^^^^^
-* Compatibility issues:
+Compatibility issues:
+
 * A couple of numpy "ragged arrays" problems, which numpy no longer supports. Two in neost/Likelihood.py, and one in the initial_conditions() function in neost/tovsolvers/TOVr_python.py. The ragged arrays were previously constructed similar to np.array([x1, [x2], x3, [x4]]) whereas in this version they are constructed like np.array([x1, x2, x3, x4]).
 * Cython 3 compilation issue.
 * Use "density" instead of "normed" in numpy.histogramdd.
