@@ -40,7 +40,7 @@ for i, eps in enumerate(central_densities):
     star = Star(eps,epsdm_cent)
     star.solve_structure(EOS.energydensities, EOS.pressures, EOS.energydensities_dm, EOS.pressures_dm,EOS.dm_halo, EOS.two_fluid_tidal)
 
-    #Just to get the purely baryonic Tidal def
+    #Just to get the purely baryonic Tidal def and mass
     star2 = Star(eps)
     star2.solve_structure(EOS.energydensities, EOS.pressures)
     MR[i] = star.Mrot, star.Req,star.tidal, star2.Mrot,star2.tidal,star.Mdm
