@@ -1,15 +1,11 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
 import numpy as np
 from scipy.integrate import solve_ivp
 from scipy.interpolate import UnivariateSpline,interp1d
 from numba import jit,njit,float64,boolean
 import warnings
-import time
 
 
 
@@ -17,9 +13,6 @@ import time
 def EofP(P, epsgrid, presgrid):
     epsgrid = epsgrid[::-1]
     presgrid = presgrid[::-1]
-    #if P<=0:
-    #    eds = 0
-    #else:
     idx = np.searchsorted(presgrid, P)
     if idx == 0:
         eds = epsgrid[0] * pow(P / presgrid[0], 3. / 5.)
@@ -35,9 +28,6 @@ def EofP(P, epsgrid, presgrid):
 def PofE(E, epsgrid, presgrid):
     epsgrid = epsgrid[::-1]
     presgrid = presgrid[::-1]
-    #if E<=0:
-    #    pres = 0
-    #else:
     idx = np.searchsorted(epsgrid, E)
     if idx == 0:
         pres = presgrid[0] * pow(E / epsgrid[0], 5. / 3.)
@@ -48,9 +38,6 @@ def PofE(E, epsgrid, presgrid):
         pres = presgrid[idx - 1] * (E / epsgrid[idx - 1])**ci
     
     return pres
-
-
-# In[5]:
 
 
 # This will be the block that will break up the array made by TOVdm
@@ -84,7 +71,6 @@ def solveTidal(Array,dm_halo):
         Two-fluid deformability calculation function.
 
     """
-    start = time.time()
     depsb =  Array[:,2][0]*10**-10
     depsdm = Array[:,4][0]*10**-10
     
@@ -98,12 +84,6 @@ def solveTidal(Array,dm_halo):
     Pdm_array = Array[:,5]
     
     Pressures_total = Pb_array + Pdm_array
-    
-
-        
-    
-    
-    #Numerically computes dpressure/deps #PofE(eps+deps/2,epsgrid,presgrid)
     
     
     def dp_deps(eps,deps,epsgrid,presgrid):
@@ -164,13 +144,13 @@ def solveTidal(Array,dm_halo):
         return tidal_def
 
     try:
-        M = UnivariateSpline(radius,Mass_Total,k=1,s=0) 
-        P = UnivariateSpline(radius,Pressures_total,k=1,s=0)
+        M = UnivariateSpline(radius,Mass_Total,k=1,s=0,ext=1) 
+        P = UnivariateSpline(radius,Pressures_total,k=1,s=0,ext=1)
                 
-        epsb_r = UnivariateSpline(radius,epsb_array,k=1,s=0)
-        pb_r = UnivariateSpline(radius,Pb_array,k=1,s=0)
-        epsdm_r = UnivariateSpline(radius,epsdm_array,k=1,s=0)
-        pdm_r =  UnivariateSpline(radius,Pdm_array,k=1,s=0)
+        epsb_r = UnivariateSpline(radius,epsb_array,k=1,s=0,ext=1)
+        pb_r = UnivariateSpline(radius,Pb_array,k=1,s=0,ext=1)
+        epsdm_r = UnivariateSpline(radius,epsdm_array,k=1,s=0,ext=1)
+        pdm_r =  UnivariateSpline(radius,Pdm_array,k=1,s=0,ext=1)
                 
     except ValueError:
         M = interp1d(radius,Mass_Total,kind = 'linear',bounds_error = False,fill_value = [0]) 
@@ -188,22 +168,16 @@ def solveTidal(Array,dm_halo):
 # is monotonically increasing and not strictly increasing as UnivariateSpline requires. However, univariatespline is much faster than 
 # interp1d, so I wanted to the code the switch between the two methods depending on if radius is monotonically increasing or strictly increasing, 
         else:             
-            ysolution = solve_ivp(dy_dr,(radius[0],R),[2.0], method = 'RK23',atol = 0.00001, rtol = 0.00001)
+            ysolution = solve_ivp(dy_dr,(radius[0],R),[2.0], method = 'RK45',atol = 0.00001, rtol = 0.00001)
             y2 = ysolution.y[0][-1]
             tidal_def = tidal_deformability(y2,Mns,R)
             
     else:
                     
-        ysolution = solve_ivp(dy_dr,(radius[0],R),[2.0], method = 'RK23',atol = 0.00001, rtol = 0.00001)
+        ysolution = solve_ivp(dy_dr,(radius[0],R),[2.0], method = 'RK45',atol = 0.00001, rtol = 0.00001)
         y2 = ysolution.y[0][-1]
         tidal_def = tidal_deformability(y2,Mns,R)
         
-        
-    
-    end = time.time()
-    #print ("Time elapsed:", end - start)
-
-
     
     return tidal_def
 
