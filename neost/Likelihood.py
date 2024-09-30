@@ -53,7 +53,7 @@ class Likelihood():
                     Req = star.Req
                     Rdm_halo = star.Rdm_halo
                     tidal = star.tidal
-                #print('adm: ', Mgrav, Req, Rdm_halo,np.log10(pr_dict['mchi']), np.log10(pr_dict['gchi_over_mphi']), pr_dict['adm_fraction'])
+                
                 
             if self.prior.EOS.adm_type == 'Fermionic':
                 #Hard cut-off imposed as all stars within these boxes have masses well below 1 Msun [~0.4 Msun down to ~0.001 Msun], thus this will save computation time if the code doesn't even have to compute them.
@@ -125,7 +125,6 @@ class Likelihood():
 
         
         like_total = np.prod(np.array(likelihoods))
-        # print('lnlike is', like_total)
         if like_total == 0.0:
             return -1e101
 
