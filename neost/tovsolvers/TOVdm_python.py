@@ -75,7 +75,7 @@ def solveTOVdm(epscent, epscent_dm, eps, pres, eps_dm, pres_dm, dm_halo, two_flu
     
 
     #Scaling the baryonic and dark matter equations of state from cgs (g/cm^3 for the energy densities and g/(cm s^2) for pressure) to geometrized units
-    eps = eps* G / c**2. #eps, pres, eps_dm, pres_dm are all scaled to geometrized units
+    eps = eps* G / c**2.
     pres = pres* G / c**4.
     eps_dm = eps_dm* G / c**2.
     pres_dm = pres_dm* G / c**4.
@@ -86,10 +86,9 @@ def solveTOVdm(epscent, epscent_dm, eps, pres, eps_dm, pres_dm, dm_halo, two_flu
 
     # set maxmium radius to integrate out to (in cm) inside the neutron star
     rmax = 2.5e6 # 25 km
-    #Gtt = np.empty((0, 2), float)
+    #Gtt = np.empty((0, 2), float) #uncomment if you want Gtt
     Array = []
-    
-    #Array = np.append(Array, np.array([1e-5,0.,epscent * G / c**2., pcent,epscent_dm * G/c**2., pcent_dm]),axis = 0)
+
 
     # Define the stopping criterium for the single fluid, i.e. pressure is zero
     def press_zero(r, Z, epsgrid, presgrid):
@@ -100,7 +99,6 @@ def solveTOVdm(epscent, epscent_dm, eps, pres, eps_dm, pres_dm, dm_halo, two_flu
     sol_in = solve_ivp(TOV_complete, t_span=(1e-5, rmax), y0=np.array([0., 0., pcent, pcent_dm, 0.0]),
                        method='RK45', t_eval=None, args=(eps_dm, pres_dm, eps, pres), max_step=500.,atol = 1e-5, rtol = 1e-5)
     #Gtt = np.append(Gtt, np.array([sol_in.t, sol_in.y[4]]).T, axis=0)
-    #print(sol_in.y[0][-1]* pow(c,2) / G)
     Pdm = sol_in.y[3][-1]
     Pb = sol_in.y[2][-1]
 
