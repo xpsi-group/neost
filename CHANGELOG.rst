@@ -33,6 +33,33 @@ and this project adheres to
 .. Attribution
 .. ^^^^^^^^^^^
 
+[v2.0.0 - 2024-10-01]
+~~~~~~~~~~~~~~~~~~~~~
+Summary
+^^^^^^^
+Included the functionality of NEoST to allow for the possibility of fermionic or bosonic asymmetric dark matter (ADM) using the Nelson et al. 2018 ADM model.
+
+Added
+^^^^^ 
+* Two-fluid TOV solver in both python and cython that allows for an additional ADM component in the GR stellar structure equations. (TOVdm.pyx and TOVdm_python.py)
+* Included the two-fluid tidal-deformability equations.
+* Prior and posterior examples which include the possibility of ADM
+* A simple tutorial showing how to compute the ADM admixed neutron star mass-radius and mass-tidal relations in NEoST.
+
+Changed
+^^^^^^^
+* ADM functionality in base.py with "fchi_calc" and "find_epsdm_cent" functions. 
+* Calling functions in Star.py to access ADM mass and radius
+* ADM EOS in polytropes.py, speedofsound.py, and tablualted.py
+* ADM functionality in Likelihood.py with hard-cut offs included to eliminate non-physical parts of the ADM EOS parameter space. 
+* ADM functionality in PosteriorAnalysis.py
+* ADM sampling in Prior.py such that 'mchi' (ADM particle mass) and 'gchi_over_mphi' (effective ADM self-repulsion strength) are sampled log-uniformly.
+
+Attribution
+^^^^^^^^^^^
+* NEoST core team
+
+
 [v1.0.0 - 2024-09-11]
 ~~~~~~~~~~~~~~~~~~~~~~
 
