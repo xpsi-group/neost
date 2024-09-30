@@ -33,6 +33,11 @@ class Star():
             epscent (float): The central energy density of the
             model star in cgs units.
 
+            epscent_dm (float): The central ADM energy density of the star in cgs units. 
+
+            enthalpy (bool): Compute the TOV equations in terms of enthalpy. 
+            
+
         """
         self.epscent = epscent
         self.epscent_dm = epscent_dm
@@ -54,9 +59,8 @@ class Star():
         Args:
             :param eos (object): The interpolated EoS object, which inputs a density
                           and outputs a pressure, both in geometrized units.
-            :param Pmin (float): The pressure at the surface of the star, or the
-                          minimum pressure for which the EoS is defined.
-                          Should be given in geometrized units.
+            :param dm_halo (bool): If True, allow for ADM halos when solving the two-fluid TOV equations.
+            :param two_fluid_tidal (bool): If True, compute the two-fluid tidal deforamability with ADM.
             :param atol (float): The absolute tolerance for the ODE solver.
             :param rtol (float): The relative tolerance for the ODE solver.
             :param hmax (float): The maximum step size allowed for the ODE solver,
@@ -72,8 +76,7 @@ class Star():
                 self.Mb, self.Rns, self.tidal = solveTOVh(self.epscent,eps, pres)
             else:
                 raise Exception("two-fluid enthalpy solve currently not available")
-               #two-fluid enthalpy tov solver not available currently
-               #self.Mb, self.Rns, self.tidal, self.Mdm_core, self.radius_dm_core = solveTOVdmh(self.epscent, self.epscent_dm, eps, pres, eps_dm, pres_dm) 
+                
             
         else:
             if self.epscent_dm == 0.0:
