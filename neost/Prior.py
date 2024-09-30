@@ -9,10 +9,6 @@ pi = global_imports._pi
 rho_ns = global_imports._rhons
 
 
-# TODO: put a constraint that the pr and hypercube must
-# be same length as bounds
-
-
 class Prior():
 
     def __init__(self, EOS, variable_params, static_params, chirp_masses):
