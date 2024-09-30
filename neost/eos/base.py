@@ -169,8 +169,6 @@ class BaseEoS():
     # Compute the crust EoS
     def get_eos_crust(self):
         if self.ceft is True:
-            # TODO: add function that rho_t can be below 0.58*rho_ns
-            # attempt at making a different jump off from BPS
             
             rhocrust = self.BPS[:,0][self.BPS[:,0] <= self._rho_end_BPS]
             rhotrans = np.linspace(self._rho_end_BPS, self._rho_start_ceft, 10)
