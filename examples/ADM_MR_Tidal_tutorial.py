@@ -13,7 +13,7 @@ from scipy.stats import multivariate_normal
 from neost import PosteriorAnalysis
 import numpy
 import matplotlib
-from matplotlib import pyplot
+from matplotlib import pyplot as plt
 import timeit
 import neost.global_imports as global_imports
 from matplotlib.patches import Ellipse
@@ -70,8 +70,8 @@ ax.legend(lns,labs,loc='best', fontsize=16)
 
 #for axis in ['top', 'bottom', 'left', 'right']:
     #ax.spines[axis].set_linewidth(1.5)
-pyplot.tight_layout()
-pyplot.show()
+plt.tight_layout()
+plt.show()
 plt.savefig('chains/' + 'MR_example.png',dpi = 300,facecolor = 'white')
 
 
@@ -88,6 +88,9 @@ ax.tick_params(width=2, labelsize=12, direction='in')
 lns = lns1+lns2
 labs = [l.get_label() for l in lns]
 ax.legend(lns,labs,loc='best', fontsize=16)
+plt.tight_layout()
+plt.show()
+plt.savefig('chains/' + 'MTidal_example.png',dpi = 300,facecolor = 'white')
 #ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.,fontsize=22)
 
 #for axis in ['top', 'bottom', 'left', 'right']:
