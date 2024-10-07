@@ -6,7 +6,7 @@ import os
 from setuptools import Extension, setup
 import subprocess as sub
 import sys
-import os
+
 # 3rd party
 import numpy as np
 
