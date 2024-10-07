@@ -90,9 +90,32 @@ NEoST is used.
 
 To install NEoST itself, see Installing NEoST below.
 
+Installing on MAC M1 chips (arm-64)
+-----------------------------------
+Errors may occur when installing Multinest/PyMultinest on MAC M1 chips as there are no arm-64 coda builds for `Multinest <https://anaconda.org/conda-forge/multinest>`_. Although, we do not have any definite solutions, we can offer a possible troubleshooting method that has worked in the past.
+
+The first step is to remove PyMultinest from the enviroment.yml file and re-run
+
+.. code-block:: bash
+
+	conda env create -f environment.yml
+
+Then activate the conda enviroment via
+
+.. code-block:: bash
+	
+	conda activate neost
+
+Once that is complete try to install PyMultinest using pip
+
+.. code-block:: bash
+
+	pip install PyMultinest
+
+If this works you may proceed to the Installing NEoST instructions as normal. However, if this fails or works but installing Multinest fails, we recomend using the following procedure from `NMMA <https://nuclear-multimessenger-astronomy.github.io/nmma/#for-arm64-macs>`_ to install PyMultinest/Multinest. You may also have a glance at the Alternative instructions for prerequisites for installing PyMultinest/Multinest as well.
+
 Installing NEoST
 ================
-
 With the prerequisites out of the way, NEoST can now be installed. First navigate to the NEoST base directory, if you haven't done so already, and install NEoST with
 
 .. code-block:: bash
@@ -106,6 +129,9 @@ or, equivalently,
 	pip install .
 
 NEoST can optionally be installed without cythonizing the TOV solvers, at the expense of much slower performance. If you wish to do this, rename or delete the ``setup.py`` file before running ``make install``.  We only recommend using the Python TOV solvers if the cythonized solvers fail to compile or run.  Note that the unit tests in the ``tests/`` directory fail if the Python solvers are used; this is expected.
+
+
+
 
 Building the documentation
 ==========================
@@ -139,14 +165,12 @@ notebooks for the tutorials in this documentation. The ``.html`` files can
 naturally be opened in a browser, handily via a Jupyter session (this is
 particularly useful if the edits are to tutorial notebooks).
 
-.. Alternative instructions for prerequisites
-.. ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Alternative instructions for prerequisites
+===========================================
 
-.. There are alternative ways to install GSL, MultiNest and PyMultiNest.
-.. To manually install GSL enter the following
-.. into a terminal:
+There are alternative ways to install GSL, MultiNest and PyMultiNest. To manually install GSL enter the following into a terminal:
 
-.. code-block .. :: bash
+.. code-block:: bash
 
 	wget -v http://mirror.koddos.net/gnu/gsl/gsl-latest.tar.gz
 	tar -zxvf gsl-latest.tar.gz
@@ -158,29 +182,24 @@ particularly useful if the edits are to tutorial notebooks).
 	make installcheck
 	make clean
 
-.. With this done GSL will have to be added to your path, this is done with the
-.. following command:
+With this done GSL will have to be added to your path, this is done with the following command:
 
-.. code-block .. :: bash
+.. code-block:: bash
 
 	export PATH=$HOME/gsl/bin:$PATH
 
-.. This command must be given any time GSL is used, therefore it is recommended
-.. to add this command to your ``~.bashrc`` file.
+This command must be given any time GSL is used, therefore it is recommended to add this command to your ``~.bashrc`` file.
 
-.. In order to manually install MultiNest and PyMultinest, first install the
-.. prerequisites. These are mpi4py and compilers for c and fortran and can be
-.. installed with the following commands:
+In order to manually install MultiNest and PyMultinest, first install the prerequisites. These are mpi4py and compilers for c and fortran and can be installed with the following commands:
 
-.. code-block .. :: bash
+.. code-block:: bash
 
 	conda install -c conda-forge mpi4py
 	sudo apt-get install cmake libblad-dev liblapack-dev libatlas-base-dev
 
-.. When these have finished installing, clone the MultiNest repository, navigate
-.. to the cloned repository and install MultiNest using the following commands:
+When these have finished installing, clone the MultiNest repository, navigate to the cloned repository and install MultiNest using the following commands:
 
-.. code-block .. :: bash
+.. code-block:: bash
 
 	git clone https://github.com/farhanferoz/MultiNest.git <path/to/clone>/multinest
 	cd <path/to/clone>/multinest/MultiNest_v3.12_CMake/multinest/
@@ -190,26 +209,22 @@ particularly useful if the edits are to tutorial notebooks).
 	make
 	ls ../lib/
 
-.. This is the sequence of commands to install MultiNest, the final step now is
-.. to install the Python interface to MultiNest, PyMultiNest. For this, run the following commands:
 
-.. code-block .. :: bash
+This is the sequence of commands to install MultiNest, the final step now is to install the Python interface to MultiNest, PyMultiNest. For this, run the following commands:
 
-	git clone https://github.com/JohannesBuchner/PyMultiNest.git <path/to/clone>/pymultinest
+.. code-block:: bash
+
+	git clone https://github.com/JohannesBuchner/PyMultiNest.git 
 	cd <path/to/clone>/pymultinest
 	python setup.py install [--user]
 
-.. This will install the package in your NEoST environment if this is the active
-.. environment. If this is the case, the ``--user`` flag needs
-.. to be omitted. Next, PyMultiNest needs to be interfaced with multinest itself,
-.. this is done by using the following single-line command
+This will install the package in your NEoST environment if this is the active environment. If this is the case, the ``--user`` flag needs to be omitted. Next, PyMultiNest needs to be interfaced with multinest itself, this is done by using the following single-line command
 
-.. code-block .. :: bash
+.. code-block:: bash
 
 	export LD_LIBRARY_PATH=/my/directory/MultiNest/lib/:$LD_LIBRARY_PATH
 
-.. This command too needs to be given anytime you wish to use PyMultiNest and MultiNest together,
-.. so it is again recommended to add it to your ``~.bashrc`` file.
+This command too needs to be given anytime you wish to use PyMultiNest and MultiNest together, so it is again recommended to add it to your ``~.bashrc`` file.
 
 .. Documentation
 .. -------------
