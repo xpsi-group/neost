@@ -2,6 +2,7 @@
 # It is not necessary at all if only Python TOV solvers are to be used.
 
 # Standard libraries
+import os
 from setuptools import Extension, setup
 import subprocess as sub
 import sys
