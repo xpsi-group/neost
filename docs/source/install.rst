@@ -90,7 +90,7 @@ NEoST is used.
 
 To install NEoST itself, see Installing NEoST below.
 
-Installing on MAC M1 chips (arm-64)
+Installing on MAC M-series chips (arm-64)
 -----------------------------------
 Errors may occur when installing Multinest/PyMultinest on MAC M1 chips as there are no arm-64 coda builds for `Multinest <https://anaconda.org/conda-forge/multinest>`_. Although, we do not have any definite solutions, we can offer a possible troubleshooting method that has worked in the past.
 
