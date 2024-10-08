@@ -1,6 +1,6 @@
 .PHONY: build
 install:
-	pip install .
+	python3 -m pip install .
 
 clean:
 	rm -rf ./build/ ./dist/ ./NEoST.egg-info/
