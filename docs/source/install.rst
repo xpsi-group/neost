@@ -17,7 +17,7 @@ On this page we will describe how to install NEoST and its prerequisites.
 Creating an environment and installing NEoST's dependencies
 ===========================================================
 
-NEoST was developed in Python 3. We recommend installing NEoST and its dependencies in a virtual environment. There are two main options for creating an environment and installing the dependencies: Python's first-party package installer, pip, and the third-party Conda package manager.
+NEoST was developed in Python 3. We recommend installing NEoST and its dependencies in a virtual environment. There are two main options for creating an environment and installing the dependencies: Python's first-party package installer, pip, and the third-party Conda package manager. Using conda may be easier because while conda can install MultiNest, pip cannot. The downside is that you will have to install conda.
 
 You need pip in both cases. It is likely already installed. If not, follow the official instructions for installing it.
 
@@ -91,10 +91,11 @@ NEoST is used.
 To install NEoST itself, see Installing NEoST below.
 
 Installing on MAC M-series chips (arm-64)
------------------------------------
-Errors may occur when installing Multinest/PyMultinest on MAC M1 chips as there are no arm-64 coda builds for `Multinest <https://anaconda.org/conda-forge/multinest>`_. Although, we do not have any definite solutions, we can offer a possible troubleshooting method that has worked in the past.
+-----------------------------------------
 
-The first step is to remove PyMultinest from the enviroment.yml file and re-run
+Errors may occur when installing MultiNest/PyMultiNest on MAC M-series chips as there are no arm-64 coda builds for `MultiNest <https://anaconda.org/conda-forge/multinest>`_. Although we do not have any definite solutions, we can offer a possible troubleshooting method that has worked in the past.
+
+The first step is to remove PyMultiNest from the enviroment.yml file and re-run
 
 .. code-block:: bash
 
@@ -106,13 +107,13 @@ Then activate the conda enviroment via
 	
 	conda activate neost
 
-Once that is complete try to install PyMultinest using pip
+Once that is complete, try to install PyMultiNest using pip:
 
 .. code-block:: bash
 
-	pip install PyMultinest
+	pip install pymultinest
 
-If this works you may proceed to the Installing NEoST instructions as normal. However, if this fails or works but installing Multinest fails, we recomend using the following procedure from `NMMA <https://nuclear-multimessenger-astronomy.github.io/nmma/#for-arm64-macs>`_ to install PyMultinest/Multinest. You may also have a glance at the Alternative instructions for prerequisites for installing PyMultinest/Multinest as well.
+If this works you may proceed to the Installing NEoST instructions as normal. However, if this fails, or works but installing MultiNest fails, we recomend using the following procedure from `NMMA <https://nuclear-multimessenger-astronomy.github.io/nmma/#for-arm64-macs>`_ to install PyMultiNest/MultiNest. You may also have a glance at the Alternative instructions for prerequisites for installing PyMultiNest/MultiNest as well.
 
 Installing NEoST
 ================
@@ -152,7 +153,7 @@ If you haven't used conda, you can install them using
 
 	pip install sphinx nbsphinx decorator sphinxcontrib-websupport sphinx_rtd_theme
 
-Unfortunately, the ``pandoc`` version available in pip does not seem to work, so you'll have to install pandoc separately using, e.g., your system's package manager. See also `Pandoc <https://pandoc.org/installing.html>`_.
+Unfortunately, the ``pandoc`` version available in pip does not seem to work, so you may have to install pandoc separately using, e.g., your system's package manager. See also `Pandoc <https://pandoc.org/installing.html>`_.
 
 Once the dependencies are installed you can compile the documentation by navigating to the ``docs`` directory and executing
 
@@ -165,32 +166,12 @@ notebooks for the tutorials in this documentation. The ``.html`` files can
 naturally be opened in a browser, handily via a Jupyter session (this is
 particularly useful if the edits are to tutorial notebooks).
 
-Alternative instructions for prerequisites
-===========================================
+Alternative instructions for MultiNest
+======================================
 
-There are alternative ways to install GSL, MultiNest and PyMultiNest. To manually install GSL enter the following into a terminal:
+In case you cannot install MultiNest using either conda or the instructions for manual compilation given above, you could try these older alternative instructions. These have worked in the past, but we are not sure if they still work.
 
-.. code-block:: bash
-
-	wget -v http://mirror.koddos.net/gnu/gsl/gsl-latest.tar.gz
-	tar -zxvf gsl-latest.tar.gz
-	cd gsl-latest
-	./configure CC=gcc --prefix=$HOME/gsl
-	make
-	make check
-	make install
-	make installcheck
-	make clean
-
-With this done GSL will have to be added to your path, this is done with the following command:
-
-.. code-block:: bash
-
-	export PATH=$HOME/gsl/bin:$PATH
-
-This command must be given any time GSL is used, therefore it is recommended to add this command to your ``~.bashrc`` file.
-
-In order to manually install MultiNest and PyMultinest, first install the prerequisites. These are mpi4py and compilers for c and fortran and can be installed with the following commands:
+In order to manually install MultiNest and PyMultiNest, first install the prerequisites. These are mpi4py and compilers for C and Fortran, and can be installed with the following commands (assuming you are using a Debian-based distribution):
 
 .. code-block:: bash
 
@@ -210,7 +191,13 @@ When these have finished installing, clone the MultiNest repository, navigate to
 	ls ../lib/
 
 
-This is the sequence of commands to install MultiNest, the final step now is to install the Python interface to MultiNest, PyMultiNest. For this, run the following commands:
+The final step now is to install the Python interface to MultiNest, PyMultiNest. For this, simply install it using pip with
+
+.. code-block:: bash
+
+	pip install pymultinest
+
+Alternatively you can clone its git repository and install manually:
 
 .. code-block:: bash
 
@@ -218,57 +205,10 @@ This is the sequence of commands to install MultiNest, the final step now is to 
 	cd <path/to/clone>/pymultinest
 	python setup.py install [--user]
 
-This will install the package in your NEoST environment if this is the active environment. If this is the case, the ``--user`` flag needs to be omitted. Next, PyMultiNest needs to be interfaced with multinest itself, this is done by using the following single-line command
+This will install the package in your NEoST environment if this is the active environment. If this is the case, the ``--user`` flag needs to be omitted. Next, PyMultiNest needs to be interfaced with MultiNest itself, achieved by setting an environment variable as follows:
 
 .. code-block:: bash
 
 	export LD_LIBRARY_PATH=/my/directory/MultiNest/lib/:$LD_LIBRARY_PATH
 
 This command too needs to be given anytime you wish to use PyMultiNest and MultiNest together, so it is again recommended to add it to your ``~.bashrc`` file.
-
-.. Documentation
-.. -------------
-
-.. If you wish to compile the documentation you require
-.. `Sphinx <http://www.sphinx-doc.org/en/master>`_ and extensions. To install
-.. these, run the following commands:
-
-.. code-block .. :: bash
-
-    conda install sphinx
-    conda install -c conda-forge nbsphinx
-    conda install decorator
-    conda install sphinxcontrib-websupport
-    conda install sphinx_rtd_theme
-    conda install pandoc
-
-.. Note, one can also perform these commands using ``pip`` instead of ``conda``. Now the documentation can be compiled using:
-
-.. code-block .. :: bash
-
-    cd NEoST-main/docs; [make clean;] make html
-
-.. To rebuild the documentation after a change to source code docstrings:
-
-.. code-block .. :: bash
-
-    [CC=<path/to/compiler/executable>] python setup.py install [--user]; cd
-    docs; make clean; make html; cd ..
-
-.. The ``.html`` files can then found in ``NEoST-main/docs/build/html``, along with the
-.. notebooks for the tutorials in this documentation. The ``.html`` files can
-.. naturally be opened in a browser, handily via a Jupyter session (this is
-.. particularly useful if the edits are to tutorial notebooks).
-
-.. Note that if you require links to the source code in the HTML files, you need
-.. to ensure Sphinx imports the ``NEoST`` package from the source directory
-.. instead of from the ``~/.local/lib`` directory of the user. To enforce this,
-.. insert the path to the source directory into ``sys.path`` in the ``conf.py``
-.. script. Then make sure the extension modules are inside the source directory
-.. -- i.e., the package is built in-place (see above).
-
-.. note ..::
-
-   To build the documentation, all modules need to be imported, and the
-   dependencies that are not resolved will print warning messages.
-
