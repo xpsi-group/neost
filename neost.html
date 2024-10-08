@@ -1,0 +1,397 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>neost package &mdash; NEoST 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=7ab3649f" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="neost.eos package" href="neost.eos.html" />
+    <link rel="prev" title="neost" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NEoST
+              <img src="_static/neostlogo_small.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applications.html">Publications</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Team and acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="citation.html">Citation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">Future</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Start_here.html">Start here</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_example.html">Piecewise Polytropic Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_prior_example.html">Piecewise Polytropic Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CS_example.html">Speed of Sound Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CS_prior_example.html">Speed of Sound Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tabulated_example.html">Tabulated Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tabulated_prior_example.html">Tabulated Prior Example</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">neost</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">neost package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html">neost.eos package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-neost.Likelihood">neost.Likelihood module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#neost.Likelihood.Likelihood"><code class="docutils literal notranslate"><span class="pre">Likelihood</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-neost.Prior">neost.Prior module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#neost.Prior.Prior"><code class="docutils literal notranslate"><span class="pre">Prior</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-neost.Star">neost.Star module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#neost.Star.Star"><code class="docutils literal notranslate"><span class="pre">Star</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-neost.tovsolvers.TOVh">neost.tovsolvers.TOVh module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#neost.tovsolvers.TOVh.h_initial_condition"><code class="docutils literal notranslate"><span class="pre">h_initial_condition()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#neost.tovsolvers.TOVh.solveTOVh"><code class="docutils literal notranslate"><span class="pre">solveTOVh()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-neost.tovsolvers.TOVr">neost.tovsolvers.TOVr module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#neost.tovsolvers.TOVr.initial_conditions"><code class="docutils literal notranslate"><span class="pre">initial_conditions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#neost.tovsolvers.TOVr.solveTOVr"><code class="docutils literal notranslate"><span class="pre">solveTOVr()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-neost.utils">neost.utils module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#neost.utils.m1_from_mc_m2"><code class="docutils literal notranslate"><span class="pre">m1_from_mc_m2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#neost.utils.m1_m2_from_mc_q"><code class="docutils literal notranslate"><span class="pre">m1_m2_from_mc_q()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#neost.utils.tidaltilde"><code class="docutils literal notranslate"><span class="pre">tidaltilde()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-neost">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NEoST</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">neost</a></li>
+      <li class="breadcrumb-item active">neost package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/neost.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="neost-package">
+<h1>neost package<a class="headerlink" href="#neost-package" title="Link to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="neost.eos.html">neost.eos package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="neost.eos.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="neost.eos.html#module-neost.eos.base">neost.eos.base module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="neost.eos.html#neost.eos.base.BaseEoS"><code class="docutils literal notranslate"><span class="pre">BaseEoS</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.base.BaseEoS.CofE"><code class="docutils literal notranslate"><span class="pre">BaseEoS.CofE()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.base.BaseEoS.EofP"><code class="docutils literal notranslate"><span class="pre">BaseEoS.EofP()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.base.BaseEoS.EofRho"><code class="docutils literal notranslate"><span class="pre">BaseEoS.EofRho()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.base.BaseEoS.PofE"><code class="docutils literal notranslate"><span class="pre">BaseEoS.PofE()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.base.BaseEoS.SLYfit"><code class="docutils literal notranslate"><span class="pre">BaseEoS.SLYfit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.base.BaseEoS.ceft_band_func"><code class="docutils literal notranslate"><span class="pre">BaseEoS.ceft_band_func()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.base.BaseEoS.edens"><code class="docutils literal notranslate"><span class="pre">BaseEoS.edens()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.base.BaseEoS.find_max_edsc"><code class="docutils literal notranslate"><span class="pre">BaseEoS.find_max_edsc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.base.BaseEoS.get_BPS"><code class="docutils literal notranslate"><span class="pre">BaseEoS.get_BPS()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.base.BaseEoS.get_eos_crust"><code class="docutils literal notranslate"><span class="pre">BaseEoS.get_eos_crust()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.base.BaseEoS.get_minmax_edsc_chirp"><code class="docutils literal notranslate"><span class="pre">BaseEoS.get_minmax_edsc_chirp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.base.BaseEoS.plot"><code class="docutils literal notranslate"><span class="pre">BaseEoS.plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.base.BaseEoS.plot_massradius"><code class="docutils literal notranslate"><span class="pre">BaseEoS.plot_massradius()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.base.BaseEoS.polytropic_func"><code class="docutils literal notranslate"><span class="pre">BaseEoS.polytropic_func()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.base.BaseEoS.rhodens"><code class="docutils literal notranslate"><span class="pre">BaseEoS.rhodens()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.base.BaseEoS.update"><code class="docutils literal notranslate"><span class="pre">BaseEoS.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="neost.eos.html#module-neost.eos.polytropes">neost.eos.polytropes module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="neost.eos.html#neost.eos.polytropes.PolytropicEoS"><code class="docutils literal notranslate"><span class="pre">PolytropicEoS</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.polytropes.PolytropicEoS.check_constraints"><code class="docutils literal notranslate"><span class="pre">PolytropicEoS.check_constraints()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.polytropes.PolytropicEoS.eos_core_pp"><code class="docutils literal notranslate"><span class="pre">PolytropicEoS.eos_core_pp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.polytropes.PolytropicEoS.get_eos"><code class="docutils literal notranslate"><span class="pre">PolytropicEoS.get_eos()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.polytropes.PolytropicEoS.polytropic_func"><code class="docutils literal notranslate"><span class="pre">PolytropicEoS.polytropic_func()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="neost.eos.html#module-neost.eos.speedofsound">neost.eos.speedofsound module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="neost.eos.html#neost.eos.speedofsound.SpeedofSoundEoS"><code class="docutils literal notranslate"><span class="pre">SpeedofSoundEoS</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.speedofsound.SpeedofSoundEoS.Cs_model_core"><code class="docutils literal notranslate"><span class="pre">SpeedofSoundEoS.Cs_model_core()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.speedofsound.SpeedofSoundEoS.Cs_model_total"><code class="docutils literal notranslate"><span class="pre">SpeedofSoundEoS.Cs_model_total()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.speedofsound.SpeedofSoundEoS.check_constraints"><code class="docutils literal notranslate"><span class="pre">SpeedofSoundEoS.check_constraints()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.speedofsound.SpeedofSoundEoS.get_eos"><code class="docutils literal notranslate"><span class="pre">SpeedofSoundEoS.get_eos()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.speedofsound.SpeedofSoundEoS.logistic"><code class="docutils literal notranslate"><span class="pre">SpeedofSoundEoS.logistic()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="neost.eos.html#neost.eos.speedofsound.SpeedofSoundEoS.match_func"><code class="docutils literal notranslate"><span class="pre">SpeedofSoundEoS.match_func()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-neost.Likelihood">
+<span id="neost-likelihood-module"></span><h2>neost.Likelihood module<a class="headerlink" href="#module-neost.Likelihood" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="neost.Likelihood.Likelihood">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neost.Likelihood.</span></span><span class="sig-name descname"><span class="pre">Likelihood</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prior</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">likelihood_functions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">likelihood_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chirp_masses</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/Likelihood.html#Likelihood"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.Likelihood.Likelihood" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.Likelihood.Likelihood.array_to_scalar">
+<span class="sig-name descname"><span class="pre">array_to_scalar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/Likelihood.html#Likelihood.array_to_scalar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.Likelihood.Likelihood.array_to_scalar" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.Likelihood.Likelihood.call">
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/Likelihood.html#Likelihood.call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.Likelihood.Likelihood.call" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.Likelihood.Likelihood.loglike_prior">
+<span class="sig-name descname"><span class="pre">loglike_prior</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/Likelihood.html#Likelihood.loglike_prior"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.Likelihood.Likelihood.loglike_prior" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-neost.Prior">
+<span id="neost-prior-module"></span><h2>neost.Prior module<a class="headerlink" href="#module-neost.Prior" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="neost.Prior.Prior">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neost.Prior.</span></span><span class="sig-name descname"><span class="pre">Prior</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">EOS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">static_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chirp_masses</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/Prior.html#Prior"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.Prior.Prior" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.Prior.Prior.inverse_sample">
+<span class="sig-name descname"><span class="pre">inverse_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hypercube</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/Prior.html#Prior.inverse_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.Prior.Prior.inverse_sample" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-neost.Star">
+<span id="neost-star-module"></span><h2>neost.Star module<a class="headerlink" href="#module-neost.Star" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="neost.Star.Star">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neost.Star.</span></span><span class="sig-name descname"><span class="pre">Star</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epscent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enthalpy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/Star.html#Star"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.Star.Star" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Instances of this class represent a model neutron star.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="neost.Star.Star.Mrot">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Mrot</span></span><a class="headerlink" href="#neost.Star.Star.Mrot" title="Link to this definition"></a></dt>
+<dd><p>Get the gravitational mass.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="neost.Star.Star.Req">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Req</span></span><a class="headerlink" href="#neost.Star.Star.Req" title="Link to this definition"></a></dt>
+<dd><p>Get the equatorial radius.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.Star.Star.plot_structure">
+<span class="sig-name descname"><span class="pre">plot_structure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/Star.html#Star.plot_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.Star.Star.plot_structure" title="Link to this definition"></a></dt>
+<dd><p>Plot the internal mass and pressure structure of the star.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.Star.Star.solve_structure">
+<span class="sig-name descname"><span class="pre">solve_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rtol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.46</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/Star.html#Star.solve_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.Star.Star.solve_structure" title="Link to this definition"></a></dt>
+<dd><p>Solve the relativistic structure equations to build a model star.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">param eos (object)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The interpolated EoS object, which inputs a density
+and outputs a pressure, both in geometrized units.</p>
+</dd>
+<dt class="field-even">param Pmin (float)<span class="colon">:</span></dt>
+<dd class="field-even"><p>The pressure at the surface of the star, or the
+minimum pressure for which the EoS is defined.
+Should be given in geometrized units.</p>
+</dd>
+<dt class="field-odd">param atol (float)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The absolute tolerance for the ODE solver.</p>
+</dd>
+<dt class="field-even">param rtol (float)<span class="colon">:</span></dt>
+<dd class="field-even"><p>The relative tolerance for the ODE solver.</p>
+</dd>
+<dt class="field-odd">param hmax (float)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The maximum step size allowed for the ODE solver,
+given in centimetres.</p>
+</dd>
+<dt class="field-even">param step (float)<span class="colon">:</span></dt>
+<dd class="field-even"><p>The resolution of the ODE solver,
+should be between ~0.2 and ~0.5.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-neost.tovsolvers.TOVh">
+<span id="neost-tovsolvers-tovh-module"></span><h2>neost.tovsolvers.TOVh module<a class="headerlink" href="#module-neost.tovsolvers.TOVh" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="neost.tovsolvers.TOVh.h_initial_condition">
+<span class="sig-prename descclassname"><span class="pre">neost.tovsolvers.TOVh.</span></span><span class="sig-name descname"><span class="pre">h_initial_condition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">central_h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">central_P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">central_e</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">central_Gamma</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neost.tovsolvers.TOVh.h_initial_condition" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="neost.tovsolvers.TOVh.solveTOVh">
+<span class="sig-prename descclassname"><span class="pre">neost.tovsolvers.TOVh.</span></span><span class="sig-name descname"><span class="pre">solveTOVh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rhocent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eos_eps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eos_pres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rtol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.46</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neost.tovsolvers.TOVh.solveTOVh" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-neost.tovsolvers.TOVr">
+<span id="neost-tovsolvers-tovr-module"></span><h2>neost.tovsolvers.TOVr module<a class="headerlink" href="#module-neost.tovsolvers.TOVr" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="neost.tovsolvers.TOVr.initial_conditions">
+<span class="sig-prename descclassname"><span class="pre">neost.tovsolvers.TOVr.</span></span><span class="sig-name descname"><span class="pre">initial_conditions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rhocent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pcent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adindcent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neost.tovsolvers.TOVr.initial_conditions" title="Link to this definition"></a></dt>
+<dd><p>Set the initial conditions for solving the structure equations.</p>
+<dl>
+<dt>Args: </dt><dd><p>eos (object): An object that takes energy density as input and outputs pressure, both in geometrized units.
+w0 (float): The initial value of the rotational drag. Not known a priori, but can be calculated after the TOV equations are solved.
+j0 (float): The initial value of j. Not known a priori, but can be calculated after the TOV equations are solved.
+static (bool): Calculate initial conditions for a static star (True) or a rotating star (False).</p>
+</dd>
+<dt>Returns:</dt><dd><p>tuple: tuple containing:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>dr</strong> (<em>float</em>): The initial stepsize in cm.</p></li>
+<li><p><strong>intial</strong>   (<em>array</em>): A np array storing the initial conditions.</p></li>
+</ul>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="neost.tovsolvers.TOVr.solveTOVr">
+<span class="sig-prename descclassname"><span class="pre">neost.tovsolvers.TOVr.</span></span><span class="sig-name descname"><span class="pre">solveTOVr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rhocent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eos_eps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eos_pres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rtol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#neost.tovsolvers.TOVr.solveTOVr" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-neost.utils">
+<span id="neost-utils-module"></span><span id="module-neost.global_imports"></span><h2>neost.utils module<a class="headerlink" href="#module-neost.utils" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="neost.utils.m1_from_mc_m2">
+<span class="sig-prename descclassname"><span class="pre">neost.utils.</span></span><span class="sig-name descname"><span class="pre">m1_from_mc_m2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/utils.html#m1_from_mc_m2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.utils.m1_from_mc_m2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="neost.utils.m1_m2_from_mc_q">
+<span class="sig-prename descclassname"><span class="pre">neost.utils.</span></span><span class="sig-name descname"><span class="pre">m1_m2_from_mc_q</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chirp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/utils.html#m1_m2_from_mc_q"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.utils.m1_m2_from_mc_q" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="neost.utils.tidaltilde">
+<span class="sig-prename descclassname"><span class="pre">neost.utils.</span></span><span class="sig-name descname"><span class="pre">tidaltilde</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/utils.html#tidaltilde"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.utils.tidaltilde" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-neost">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-neost" title="Link to this heading"></a></h2>
+<p>NEoST: Open-source code for equation of state inference via nested sampling.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="neost" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="neost.eos.html" class="btn btn-neutral float-right" title="neost.eos package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2024 the NEoST Core Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
