@@ -92,8 +92,8 @@ class TabulatedEoS(BaseEoS):
             self.add_adm_eos()
 
 
-
-
+    
+    
     def add_adm_eos(self):
 
         def joinarray(ar1,ar2):
@@ -148,9 +148,6 @@ class TabulatedEoS(BaseEoS):
                 upper_bound = 1
                 
             
-                
-
-            
 
             x= np.logspace(lower_bound,upper_bound,pts)
 
@@ -191,12 +188,16 @@ class TabulatedEoS(BaseEoS):
 
             self.massdensities_dm = nchi * self.mchi * pow(10,-3) #Factor of 10^-3 is here to convert from SI base units to cgs base units
 
-   def check_constraints(self):
-       check = True
-       if self.reach_fraction == True:
-           check = True
-       else:
-           check = False
-       return check
+   
+
+
+    def check_constraints(self):
+        check = True
+        if self.reach_fraction == True:
+            check = True
+        else:
+            check = False
+            
+    return check
 
 
