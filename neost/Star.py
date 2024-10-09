@@ -7,6 +7,7 @@ try:
     from neost.tovsolvers.TOVdm import solveTOVdm
 except ImportError:
     from neost.tovsolvers.TOVr_python import solveTOVr
+    from neost.tovsolvers.TOVdm_python import solveTOVdm
     
     warnings.warn('C TOV solvers either not installed or broken, using Python TOV solver instead. This is much slower.')
 from . import global_imports
@@ -21,6 +22,7 @@ class Star():
     """
     Instances of this class represent a model neutron star.
     """
+
 
     def __init__(self, epscent,epscent_dm = 0.0, enthalpy=False):
         """
@@ -81,13 +83,13 @@ class Star():
                 self.Mb, self.Rns, self.Mdm_core, self.Mdm_halo, self.radius_dm_core, self.radius_dm_halo, self.tidal = solveTOVdm(self.epscent, self.epscent_dm, eps, pres, eps_dm, pres_dm, dm_halo,two_fluid_tidal, atol, rtol, hmax, step)
 
 
-@property
-def Mrot(self):
-    """ Get the gravitational mass. """
-    return (self.Mb + self.Mdm_core + self.Mdm_halo) / Msun 
+    @property
+    def Mrot(self):
+        """ Get the gravitational mass. """
+        return (self.Mb + self.Mdm_core + self.Mdm_halo) / Msun 
 
-@property
-def Mbaryonic(self):
+    @property
+    def Mbaryonic(self):
     """ Get the gravitational mass of baryonic component. """
     return (self.Mb)/ Msun
 
@@ -95,40 +97,40 @@ def Mbaryonic(self):
     def Req(self):
         """ Get the equatorial radius. """
         return (self.Rns) / 1e5
-@property
-def Mdm(self):
-    """ Get the total gravitational dark matter mass. """
-    return (self.Mdm_core + self.Mdm_halo) / Msun
+    @property
+    def Mdm(self):
+        """ Get the total gravitational dark matter mass. """
+        return (self.Mdm_core + self.Mdm_halo) / Msun
 
-@property
-def Mdmcore(self):
-    """ Get the dark matter mass within the baryonic radius. """
-    return (self.Mdm_core) / Msun
+    @property
+    def Mdmcore(self):
+        """ Get the dark matter mass within the baryonic radius. """
+        return (self.Mdm_core) / Msun
 
-@property
-def Mdmhalo(self):
-    """ Get the dark matter mass outside the baryonic radius. """
-    return (self.Mdm_halo) / Msun
+    @property
+    def Mdmhalo(self):
+        """ Get the dark matter mass outside the baryonic radius. """
+        return (self.Mdm_halo) / Msun
 
-@property
-def Rdm(self):
-    """ Get the total dark matter radius."""
-    if self.radius_dm_halo == 0 or self.radius_dm_halo == 999e5:
+    @property
+    def Rdm(self):
+        """ Get the total dark matter radius."""
+        if self.radius_dm_halo == 0 or self.radius_dm_halo == 999e5:
         Rdm = self.radius_dm_core
         
-    else:
-        Rdm = self.radius_dm_halo
-    return (Rdm) / 1e5
+        else:
+            Rdm = self.radius_dm_halo
+        return (Rdm) / 1e5
 
-@property
-def Rdm_core(self):
-    """ Get the dark matter core radius. """
-    return self.radius_dm_core  / 1e5
+    @property
+    def Rdm_core(self):
+        """ Get the dark matter core radius. """
+        return self.radius_dm_core  / 1e5
 
-@property
-def Rdm_halo(self):
-    """ Get the dark matter halo radius. """
-    return self.radius_dm_halo  / 1e5
+    @property
+    def Rdm_halo(self):
+        """ Get the dark matter halo radius. """
+        return self.radius_dm_halo  / 1e5
 
 
 
