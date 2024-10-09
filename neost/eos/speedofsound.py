@@ -168,10 +168,10 @@ class SpeedofSoundEoS(BaseEoS):
             pos_nchi = np.logspace(-5, 55, 5000)
             self.energydensities_dm = (self.mchi * _c**2 * pos_nchi + 1. / 2. *
                                        pow(self.gchi_over_mphi,2) * _hbar**3 *
-                                       _c**(-1) * pos_nchi**2) *10 / c**2 #Factor of 10 is here to convert from SI base units to cgs base unit
+                                       _c**(-1) * pos_nchi**2) *10 / c**2 #Factor of 10 is here to convert from SI base units to cgs base units
                                                                            # /c**2 is here since this is base units of g/(cm s^2) not g/cm^3
             self.pressures_dm = (1. / 2. * pow(self.gchi_over_mphi,2) *
-                                 _hbar**3 * _c**(-1.) * pos_nchi**2) *10 #Factor of 10 is here to convert from SI base units to cgs base unit
+                                 _hbar**3 * _c**(-1.) * pos_nchi**2) *10 #Factor of 10 is here to convert from SI base units to cgs base units
 
             self.massdensities_dm = pos_nchi * self.mchi * pow(10,-3) #Factor of 10^-3 is here to convert from SI base units to cgs base units
 
@@ -198,6 +198,10 @@ class SpeedofSoundEoS(BaseEoS):
             if self.eos_params['mchi']>= pow(10,5):
                 lower_bound = -10
                 upper_bound = 1
+                
+            
+                
+
             
 
             x= np.logspace(lower_bound,upper_bound,pts)
@@ -233,9 +237,10 @@ class SpeedofSoundEoS(BaseEoS):
                                                            # /c**2 is here since this is base units of g/(cm s^2) not g/cm^3
 
    
-            self.pressures_dm[len(z)::] = (const*np.sqrt(1+y**2)*((2./ 3.*y**3)-y)+B+C)*10 #Factor of 10 is here to convert from SI base units to cgs base unitw #10 ADDED ON 11/18. This is added to convert kg/ms^2 to g/cms^2
+            self.pressures_dm[len(z)::] = (const*np.sqrt(1+y**2)*((2./ 3.*y**3)-y)+B+C)*10 #Factor of 10 is here to convert from SI base units to cgs base unit #10 ADDED ON 11/18. This is added to convert kg/ms^2 to g/cms^2
 
             nchi = 1./(3*np.pi**2)*(self.mchi*_c*x/_hbar)**3
+
             self.massdensities_dm = nchi * self.mchi * pow(10,-3) #Factor of 10^-3 is here to convert from SI base units to cgs base units
     
 
