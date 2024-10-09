@@ -8,7 +8,6 @@ try:
 except ImportError:
     from neost.tovsolvers.TOVr_python import solveTOVr
     from neost.tovsolvers.TOVdm_python import solveTOVdm
-
     warnings.warn('C TOV solvers either not installed or broken, using Python TOV solver instead. This is much slower.')
 from . import global_imports
 
@@ -22,6 +21,7 @@ class Star():
     """
     Instances of this class represent a model neutron star.
     """
+
 
     def __init__(self, epscent,epscent_dm = 0.0, enthalpy=False):
         """
