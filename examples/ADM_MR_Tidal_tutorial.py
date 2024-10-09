@@ -11,9 +11,8 @@ from neost.Star import Star
 from neost.Likelihood import Likelihood
 from scipy.stats import multivariate_normal
 from neost import PosteriorAnalysis
-import numpy
-import matplotlib
-from matplotlib import pyplot
+import numpy as np
+import matplotlib.pyplot as plt
 import timeit
 import neost.global_imports as global_imports
 from matplotlib.patches import Ellipse
@@ -30,8 +29,8 @@ EOS = polytropes.PolytropicEoS(crust='ceft-Hebeler', rho_t= 2e14,adm_type = 'Fer
 EOS.update({'gamma1':2.3, 'gamma2':4., 'gamma3':2.6, 'rho_t1':1.8, 'rho_t2':4, 'mchi': 4.5*pow(10,4), 'gchi_over_mphi': pow(10,-1), 'adm_fraction': 4.7, 'ceft': 2.6}, max_edsc=True)
 
 
-central_densities = numpy.logspace(14.5,numpy.log10(EOS.max_edsc), 75)
-MR = numpy.zeros((len(central_densities), 6))
+central_densities = np.logspace(14.5,np.log10(EOS.max_edsc), 75)
+MR = np.zeros((len(central_densities), 6))
 
 
 #print('ADM energy density in units of g/cm^3')
@@ -53,7 +52,7 @@ print("Execution time of the MR is: " + str(end-start))
 print('ADM mass-fraction: ', MR[:,5]/MR[:,0]*100)
 
 
-fig, ax = pyplot.subplots(1,1, figsize=(10, 6))
+fig, ax = plt.subplots(1,1, figsize=(10, 6))
 lns1 = ax.plot(MR[:,1], MR[:,0],label='ADM admixed neutron star', lw=2.5,color = '#00B1B7')
 lns2 = ax.plot(EOS.massradius[:,1], EOS.massradius[:,0], label='Baryonic neutron star', lw=2.5,alpha = 0.5,color = '#005ABD')
 ax.set_ylim(0.,3.)
@@ -70,12 +69,12 @@ ax.legend(lns,labs,loc='best', fontsize=16)
 
 #for axis in ['top', 'bottom', 'left', 'right']:
     #ax.spines[axis].set_linewidth(1.5)
-pyplot.tight_layout()
-pyplot.show()
+plt.tight_layout()
+plt.show()
 plt.savefig('chains/' + 'MR_example.png',dpi = 300,facecolor = 'white')
 
 
-fig, ax = pyplot.subplots(1,1, figsize=(10, 6))
+fig, ax = plt.subplots(1,1, figsize=(10, 6))
 lns1 = ax.plot(MR[:,0], MR[:,2],label='ADM admixed neutron star', lw=2.5,color = '#00B1B7')
 lns2 = ax.plot(MR[:,3], MR[:,4], label='Baryonic neutron star', lw=2.5,alpha = 0.5,color = '#005ABD')
 ax.set_yscale('log')
@@ -92,6 +91,6 @@ ax.legend(lns,labs,loc='best', fontsize=16)
 
 #for axis in ['top', 'bottom', 'left', 'right']:
     #ax.spines[axis].set_linewidth(1.5)
-pyplot.tight_layout()
-pyplot.show()
+plt.tight_layout()
+plt.show()
 plt.savefig('chains/'+ 'MTidal_exmample.png', dpi = 300, facecolor = 'white')
