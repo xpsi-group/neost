@@ -7,7 +7,8 @@ try:
     from neost.tovsolvers.TOVdm import solveTOVdm
 except ImportError:
     from neost.tovsolvers.TOVr_python import solveTOVr
-    
+    from neost.tovsolvers.TOVdm_python import solveTOVdm
+
     warnings.warn('C TOV solvers either not installed or broken, using Python TOV solver instead. This is much slower.')
 from . import global_imports
 
