@@ -45,6 +45,11 @@ class Prior():
                             (self.variable_params['rho_t2'][1] - pr['rho_t1'])
                             + pr['rho_t1'])
 
+            if 'mchi' in self.variable_params.keys():
+                pr['mchi'] = 10**pr['mchi']
+
+            if 'gchi_over_mphi' in self.variable_params.keys():
+                pr['gchi_over_mphi' ] = 10**pr['gchi_over_mphi']
 
         pr.update(self.static_params)
         self.EOS.update({k: pr[k] for k in tuple(self.EOS.param_names)},

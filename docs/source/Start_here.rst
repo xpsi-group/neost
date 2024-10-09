@@ -12,6 +12,12 @@ All tutorials listed below may be found as Jupyter notebooks under ``docs/source
 
 * :doc:`Piecewise Polytropic Prior Example<PP_prior_example>` a python script detailing how to perform prior sampling using the piecewise polytropic equation of state parameterization.
 
+* :doc:`Piecewise Polytropic with ADM Example<PP_with_ADM_example>` a python script detailing how to perform a basic inference run using the piecewise polytropic equation of state parameterization and the Nelson et al. 2018 bosonic asymmetric dark matter core model.
+
+* :doc:`Piecewise Polytropic with ADM Prior Example<PP_with_ADM_prior_example>` a python script detailing how to perform prior sampling using the piecewise polytropic equation of state parameterization and the Nelson et al. 2018 bosonic asymmetric dark matter core model.
+
+* :doc:`ADM admixed M-R and M-Tidal Example<ADM_MR_Tidal_tutorial>` a python script detailing how to compute the mass-radius and mass-tidal deformability curve when ADM is considered.
+
 * :doc:`Speed of Sound Example<CS_example>` a python script demonstrating how to perform a basic inference run using the speed of sound equation of state parameterization.
 
 * :doc:`Speed of Sound Prior Example Example<CS_prior_example>` a python script detailing how to perform prior sampling using the speed of sound equation of state parameterization.
