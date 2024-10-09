@@ -1,9 +1,8 @@
 import numpy as np
-import matplotlib
 from matplotlib.lines import Line2D
 import matplotlib.patches as mpatches
 from matplotlib.colors import ListedColormap
-from matplotlib import pyplot as plt
+import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.interpolate import UnivariateSpline
 from scipy.stats import gaussian_kde
@@ -38,7 +37,7 @@ def m1(mc, m2):
 def calc_bands(x, y):
     miny = np.zeros((len(y),3))
     maxy = np.zeros((len(y),3))
-    
+
     for i in range(len(y)):
         z = y[i][y[i]>0.0]
         if len(z)<200:
@@ -54,7 +53,7 @@ def calc_bands(x, y):
         index_95 = np.argsort(array)[::-1][index_95]
         miny[i] =  x[i], min(testz[index_68]), min(testz[index_95])
         maxy[i] =  x[i], max(testz[index_68]), max(testz[index_95])
-        
+
     miny = miny[~np.all(miny == 0, axis=1)]
     maxy = maxy[~np.all(maxy == 0, axis=1)]
     return miny, maxy
@@ -180,13 +179,13 @@ def compute_table_data(root_name, EOS, variable_params, static_params,dm = False
                 Rdm = np.zeros(len(eps))
                 Mdm = np.zeros(len(eps))
 
-                
+
                 for j, e in enumerate(eps):
                     epsdm_cent = EOS.find_epsdm_cent(EOS.adm_fraction,eps)
                     epsdm[i] = epsdm_cent
                     star = Star(e,epsdm_cent)
-                    star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo) #EOS.two_fluid_tidal not needed in this section since only MR    
-                                                                                                                                    #so default value is used (False). 
+                    star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo) #EOS.two_fluid_tidal not needed in this section since only MR
+                                                                                                                                    #so default value is used (False).
                     M[j] = star.Mrot
                     R[j] = star.Req
                     Rdm[j] = star.Rdm
@@ -196,7 +195,7 @@ def compute_table_data(root_name, EOS, variable_params, static_params,dm = False
                 index_max_M = np.argmax(M[indices])
                 Radius_max_M = R[index_max_M]
 
-               
+
                 MR = UnivariateSpline(M, R[indices], k=1, s=0, ext=1)
                 epsdm_Mdm = UnivariateSpline(Mdm[indicies], epsdm[indices], k=1, s=0, ext=1)
 
@@ -236,7 +235,7 @@ def compute_table_data(root_name, EOS, variable_params, static_params,dm = False
 
                     pres_2 = EOS.eos(epsb_2) + eos_dm(epsdm_2)
 
-                
+
                 row = [max(M), Radius_max_M, np.log10(EOS.max_edsc + epsdm_max), max_rhoc, np.log10(EOS.eos(EOS.max_edsc) + eos_dm(epsdm_max)),R_14, np.log10(eps_14), rho_14, np.log10(pres_14),R_2, np.log10(eps_2), rho_2, np.log10(pres_2)]
 
 
@@ -313,9 +312,9 @@ def compute_prior_auxiliary_data(root_name, EOS, variable_params, static_params,
         energydensities_b = np.logspace(14.2, 16, 200)
         energydensities_dm = np.logspace(12, 18, 200)
         energydensities = energydensities_b + energydensities_dm
-        
+
         MR_prpr_pp = np.zeros((len(ewprior), 2))
-        
+
         pressures_dm = np.zeros((len(energydensities), len(ewprior)))
         pressures_rho_dm = np.zeros((len(energydensities), len(ewprior)))
         pressures_b = np.zeros((len(energydensities), len(ewprior)))
@@ -357,23 +356,23 @@ def compute_prior_auxiliary_data(root_name, EOS, variable_params, static_params,
             rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0, ext = 1)
             edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0, ext = 1)
             max_rhoc = edsrho(EOS.max_edsc)
-            
+
             rhopres_dm = UnivariateSpline(EOS.massdensities_dm, EOS.pressures_dm, k=1, s=0, ext = 1)
             edsrho_dm = UnivariateSpline(EOS.energydensities_dm, EOS.massdensities_dm, k=1, s=0, ext = 1)
             eos_dm = UnivariateSpline(EOS.energydensities_dm, EOS.pressures_dm, k=1, s=0, ext = 1)
-            
+
             max_edsc_dm = EOS.find_epsdm_cent(EOS.adm_fraction,EOS.max_edsc)
             max_rhoc_dm = edsrho_dm(max_edsc_dm)
-            
+
             if EOS.reach_fraction == False:
                 max_rhoc_dm = 0.0
                 max_edsc_dm = 0.0
 
             else:
                 max_rhoc_dm = edsrho_dm(max_edsc_dm)
-                
 
-            
+
+
             max_rhoc_admixed = max_rhoc + max_rhoc_dm
             max_edsc_admixed = EOS.max_edsc + max_edsc_dm
 
@@ -390,13 +389,13 @@ def compute_prior_auxiliary_data(root_name, EOS, variable_params, static_params,
 
             else:
                 pressures_rho[:,i][energydensities_b<max_rhoc] = pressures_rho_b[:,i][energydensities_b<max_rhoc]
-            
-            
+
+
 
             pressures_b[:,i][energydensities_b<EOS.max_edsc] = EOS.eos(energydensities_b[energydensities_b<EOS.max_edsc])
             dm_pres_eps = eos_dm(energydensities_dm[energydensities_dm<max_edsc_dm])
-            
-            if len(dm_pres_eps) != 0: 
+
+            if len(dm_pres_eps) != 0:
                 pressures_dm[:,i][energydensities_dm<max_edsc_dm] = dm_pres_eps
                 dm_pres_eps_interp = UnivariateSpline(energydensities_dm[energydensities_dm<max_edsc_dm], dm_pres_eps, k=1, s=0, ext = 1)
 
@@ -415,10 +414,10 @@ def compute_prior_auxiliary_data(root_name, EOS, variable_params, static_params,
             if EOS.reach_fraction == False:
                 MR_prpr_pp[i] = star.Mrot, 0.0
 
-    
+
 
     MR_prpr_pp = MR_prpr_pp[MR_prpr_pp[:,1] != 0]
-        
+
     # save everything
     np.save(root_name + 'pressures', pressures)
     np.savetxt(root_name + 'MR_prpr.txt', MR_prpr_pp)
@@ -489,7 +488,7 @@ def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp
     if len(list(variable_params.keys())) == num_stars:
         flag = True
 
-    else: 
+    else:
         flag = False
 
 
@@ -499,20 +498,20 @@ def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp
         MR_prpr_pp = np.zeros((len(ewposterior), 2))
     else:
         masses = np.linspace(.2, 2.9, 200)
-        
+
         #More points are added to account for larger energy density spread from ADM
         #total ADM [1e12,1e18] + baryonic energy densities [1e14.2,1e16]
         energydensities_b = np.logspace(14.2, 16, 200)
         energydensities_dm = np.logspace(12, 18, 200)
         energydensities = energydensities_b + energydensities_dm
-        
+
         MR_prpr_pp = np.zeros((len(ewposterior), 2))
-        
+
         pressures_dm = np.zeros((len(energydensities), len(ewposterior)))
         pressures_rho_dm = np.zeros((len(energydensities), len(ewposterior)))
         pressures_b = np.zeros((len(energydensities), len(ewposterior)))
         pressures_rho_b = np.zeros((len(energydensities), len(ewposterior)))
-        
+
     scattered = []
 
     if flag == True:
@@ -541,10 +540,10 @@ def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp
 
         rhocs = np.logspace(14.5, np.log10(EOS.max_edsc), 30)
         rhocsdm = np.zeros_like(rhocs)
-        
+
         M = np.zeros(len(rhocs))
         R = np.zeros(len(rhocs))
-        
+
         rhoc = np.random.rand() *(np.log10(EOS.max_edsc) - 14.6) + 14.6
         rhocpar = np.array([10**v for k,v in par.items() if 'rhoc' in k])
         tmp = []
@@ -566,7 +565,7 @@ def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp
             M, indices = np.unique(M, return_index=True)
             MR = UnivariateSpline(M, R[indices], k=1, s=0, ext=1)
             rhocM = UnivariateSpline(M, rhocs[indices], k=1, s=0, ext = 1)
-            
+
             for j, e in enumerate(rhocpar):
                 star = Star(e)
                 star.solve_structure(EOS.energydensities, EOS.pressures)
@@ -589,11 +588,11 @@ def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp
             rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0, ext = 1)
             edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0, ext = 1)
             max_rhoc = edsrho(EOS.max_edsc)
-            
+
             rhopres_dm = UnivariateSpline(EOS.massdensities_dm, EOS.pressures_dm, k=1, s=0, ext = 1)
             edsrho_dm = UnivariateSpline(EOS.energydensities_dm, EOS.massdensities_dm, k=1, s=0, ext = 1)
             eos_dm = UnivariateSpline(EOS.energydensities_dm, EOS.pressures_dm, k=1, s=0, ext = 1)
-            
+
             max_edsc_dm = EOS.find_epsdm_cent(EOS.adm_fraction,EOS.max_edsc)
 
             if EOS.reach_fraction == False:
@@ -607,7 +606,7 @@ def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp
             max_edsc_admixed = EOS.max_edsc + max_edsc_dm
 
             pressures_rho_b[:,i][energydensities_b<max_rhoc] = rhopres(energydensities_b[energydensities_b<max_rhoc])
-            
+
             dm_pres_rho = rhopres_dm(energydensities_dm[energydensities_dm<max_rhoc_dm])
 
             if len(dm_pres_rho) != 0:
@@ -619,13 +618,13 @@ def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp
 
             else:
                 pressures_rho[:,i][energydensities_b<max_rhoc] = pressures_rho_b[:,i][energydensities_b<max_rhoc]
-            
-            
+
+
 
             pressures_b[:,i][energydensities_b<EOS.max_edsc] = EOS.eos(energydensities_b[energydensities_b<EOS.max_edsc])
             dm_pres_eps = eos_dm(energydensities_dm[energydensities_dm<max_edsc_dm])
-            
-            if len(dm_pres_eps) != 0: 
+
+            if len(dm_pres_eps) != 0:
                 pressures_dm[:,i][energydensities_dm<max_edsc_dm] = dm_pres_eps
                 dm_pres_eps_interp = UnivariateSpline(energydensities_dm[energydensities_dm<max_edsc_dm], dm_pres_eps, k=1, s=0, ext = 1)
 
@@ -646,8 +645,8 @@ def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp
                 if EOS.reach_fraction == False:
                     R[j] = 0.0
                     rhocsdm[j] = 0.0
-                    
-                    
+
+
 
             idx_no_zero = np.nonzero(R)
             M = M[idx_no_zero]
@@ -665,12 +664,12 @@ def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp
                 MR = 0
                 rhocs_admixed = rhocs[indices] + rhocsdm[indices]
                 rhocM = 0
-            
+
             epsdm = EOS.find_epsdm_cent(EOS.adm_fraction,10**rhoc)
             star = Star(10**rhoc,epsdm)
             star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo)
             MR_prpr_pp[i] = star.Mrot, star.Req
-            
+
             if EOS.reach_fraction == False:
                 MR_prpr_pp[i] = star.Mrot, 0.0
 
@@ -682,32 +681,32 @@ def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp
                     tmp.append([e + epsdm, EOS.eos(e) + eos_dm(epsdm), star.Mrot, star.Req, star.Rdm_halo])
 
                 if chirp_masses[j] is not None:
-                    if rhocM != 0:   
+                    if rhocM != 0:
                         M2 = m1(chirp_masses[j], tmp[j][4])
                         rhoc = rhocM(M2)
                         epsdm = EOS.find_epsdm_cent(EOS.adm_fraction,rhoc)
                         star = Star(rhoc,epsdm)  #two_fluid_tidal used here since we need star.tidal
                         star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo, EOS.two_fluid_tidal)
-                    
+
                         if EOS.reach_fraction == True:
                             tmp.append([e + epsdm, EOS.eos(e) + eos_dm(epsdm), star.Mrot, star.Req, star.Rdm_halo])
 
             if tmp != []:
                 scattered.append(tmp)
 
-            if MR != 0:   
+            if MR != 0:
                 radii[:,i] = MR(masses)
 
-    
+
     scattered = np.array(scattered)
     MR_prpr_pp = MR_prpr_pp[MR_prpr_pp[:,1] != 0]
-    
+
     # save everything
     np.save(root_name + 'pressures', pressures)
     np.save(root_name + 'radii', radii)
     np.save(root_name + 'scattered', scattered)
     np.savetxt(root_name + 'MR_prpr.txt', MR_prpr_pp)
-   
+
     if dm == True:
         np.save(root_name + 'pressures_baryon', pressures_b)
         np.save(root_name + 'pressures_dm', pressures_dm)
@@ -741,7 +740,7 @@ def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp
 def cornerplot(root_name, variable_params, dm = False): #Add ADM functionality
     ewposterior = np.loadtxt(root_name + 'post_equal_weights.dat')
     if dm == False:
-        figure = corner.corner(ewposterior[:,0:-1], labels = list(variable_params.keys()), show_titles=True, 
+        figure = corner.corner(ewposterior[:,0:-1], labels = list(variable_params.keys()), show_titles=True,
                         color=colors[4], quantiles =[0.16, 0.5, 0.84], smooth=.8)
     else:
         idx_mchi = list(variable_params.keys()).index('mchi')
@@ -750,7 +749,7 @@ def cornerplot(root_name, variable_params, dm = False): #Add ADM functionality
         ewposterior[:,idx_mchi] = np.log10(ewposterior[:,idx_mchi])
         ewposterior[:,idx_gchi_over_mphi] = np.log10(ewposterior[:,idx_gchi_over_mphi])
 
-        figure = corner.corner(ewposterior[:,0:-1], labels = list(variable_params.keys()), show_titles=True, 
+        figure = corner.corner(ewposterior[:,0:-1], labels = list(variable_params.keys()), show_titles=True,
                         color=colors[4], quantiles =[0.16, 0.5, 0.84], smooth=.8)
 
     figure.savefig(root_name + 'corner.png')
@@ -781,7 +780,7 @@ def mass_radius_prior_predictive_plot(root_name,variable_params, label_name='upd
     if len(list(variable_params.keys())) == num_stars:
         flag = True
 
-    else: 
+    else:
         flag = False
 
     if flag == True:
@@ -791,14 +790,14 @@ def mass_radius_prior_predictive_plot(root_name,variable_params, label_name='upd
 
         inbins = np.histogramdd(MR_prpr[:,[1,0]], bins=50, density=True)
         levels = [0.05, 0.32, 1]
-    
+
         sns.kdeplot(x=MR_prpr[:,1], y=MR_prpr[:,0], gridsize=50, fill=True, ax=ax, levels=levels,
                     alpha=1., cmap=ListedColormap(colors[[5,3]]))
 
         # add legend, for now 'prior' is always shown
-        custom_lines = [Line2D([0], [0], color='black', lw=2, linestyle='--', alpha=1.), 
+        custom_lines = [Line2D([0], [0], color='black', lw=2, linestyle='--', alpha=1.),
                     mpatches.Patch(color=colors[5], alpha=1.)]
-        ax.legend(custom_lines, ['Prior', label_name], 
+        ax.legend(custom_lines, ['Prior', label_name],
                     loc=1, prop={'size': 14})
 
         ax.yaxis.set_ticks([1., 1.5, 2., 2.5, 3.0])
@@ -840,7 +839,7 @@ def eos_posterior_plot(root_name,variable_params, prior_contours=None, dm = Fals
     if len(list(variable_params.keys())) == num_stars:
         flag = True
 
-    else: 
+    else:
         flag = False
 
     if flag == True:
@@ -853,18 +852,18 @@ def eos_posterior_plot(root_name,variable_params, prior_contours=None, dm = Fals
         else:
             minpres_pp = np.log10(np.load(root_name + 'minpres_baryon.npy'))
             maxpres_pp = np.log10(np.load(root_name + 'maxpres_baryon.npy'))
-            
+
         scatter = np.load(root_name + 'scattered.npy')
         central_density_post = np.log10(scatter[:,0][:,[0,1]])
 
-        corner.hist2d(central_density_post[:,0], central_density_post[:,1], show_titles=False, 
+        corner.hist2d(central_density_post[:,0], central_density_post[:,1], show_titles=False,
                             color=colors[3], plot_data_points=False, plot_density=False,
                     levels=[0.68, 0.95])
 
 
-        ax.fill_between(minpres_pp[:,0], minpres_pp[:,2], maxpres_pp[:,2], 
+        ax.fill_between(minpres_pp[:,0], minpres_pp[:,2], maxpres_pp[:,2],
                             color=sns.cubehelix_palette(8, start=.5, rot=-.75, dark=.2, light=.85)[0], alpha=1)
-        ax.fill_between(minpres_pp[:,0], minpres_pp[:,1], maxpres_pp[:,1], 
+        ax.fill_between(minpres_pp[:,0], minpres_pp[:,1], maxpres_pp[:,1],
                             color=sns.cubehelix_palette(8, start=.5, rot=-.75, dark=.2, light=.85)[3], alpha=1)
         if prior_contours is not None:
             minpres_prior = np.log10(np.load(prior_contours))
@@ -882,7 +881,3 @@ def eos_posterior_plot(root_name,variable_params, prior_contours=None, dm = Fals
 
         plt.tight_layout()
         fig.savefig(root_name + 'EoSposterior.png')
-
-
-
-
