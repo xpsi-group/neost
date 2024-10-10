@@ -1,11 +1,11 @@
-import numpy as np
+import numpy
 
 
 def m1_from_mc_m2(mc, m2):
 
     num1 = (2. / 3.)**(1. / 3.) * mc**5.
-    denom1 = ((9 * m2**7. * mc**5. + np.sqrt(3.) * 
-              np.sqrt(abs(27 * m2**14. * mc**10. - 
+    denom1 = ((9 * m2**7. * mc**5. + numpy.sqrt(3.) * 
+              numpy.sqrt(abs(27 * m2**14. * mc**10. - 
                          4. * m2**9. * mc**15.)))**(1. / 3.))
     denom2 = 2.**(1. / 3.) * 3.**(2. / 3.) * m2**3.
     return num1 / denom1 + denom1 / denom2

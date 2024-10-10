@@ -3,7 +3,7 @@ from scipy.interpolate import UnivariateSpline
 from scipy import optimize
 from scipy.integrate import cumulative_trapezoid, solve_ivp
 
-from . base import BaseEoS
+from . base import BaseEoS                              ############## CAUTION: added modifications to n3lo gaussian sampling index
 
 from .. import global_imports
 
@@ -61,6 +61,7 @@ class SpeedofSoundEoS(BaseEoS):
         self.param_names = ['a1', 'a2', 'a3/a2', 'a4', 'a5']
         if self.ceft is True:
             self.param_names.append('ceft')
+            self.param_names.append('ceft_in')                 ### added
 
 
     def get_eos(self):
@@ -123,7 +124,6 @@ class SpeedofSoundEoS(BaseEoS):
         return (dmin * self._cs_crust(x * rho_ns) / c**2. +
                 dplus * (self.Cs_model_core(x, norm)))
 
-    
 
     def check_constraints(self):
         check = True

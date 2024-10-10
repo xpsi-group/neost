@@ -3,7 +3,7 @@ from math import pow
 from scipy.interpolate import UnivariateSpline,interp1d
 from scipy.integrate import odeint
 
-from . base import BaseEoS
+from . base import BaseEoS                              ######## CAUTION: added modifications to sample gaussian n3lo indexes
 
 from .. import global_imports
 
@@ -54,6 +54,7 @@ class PolytropicEoS(BaseEoS):
 
         if self.ceft is True:
             self.param_names.append('ceft')
+            self.param_names.append('ceft_in')                        ##### added
 
 
     def get_eos(self):
