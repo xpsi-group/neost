@@ -4,6 +4,7 @@ from matplotlib.lines import Line2D
 import matplotlib.patches as mpatches
 from matplotlib.colors import ListedColormap
 import matplotlib.pyplot as plt
+import pathlib
 import seaborn as sns
 from scipy.interpolate import UnivariateSpline
 from scipy.stats import gaussian_kde
@@ -163,9 +164,33 @@ def compute_table_data(root_name, EOS, variable_params, static_params):
         print('P_cent 2.0: ', get_quantiles(Data_array[:,12]))
         print('Delta R = R_2.0 - R_1.4: ', get_quantiles(Data_array[:,9] - Data_array[:,5]))
 
-def compute_prior_auxiliary_data(root_name, EOS, variable_params, static_params):
-    ewprior = np.loadtxt(root_name + 'post_equal_weights.dat')
-    print("Total number of samples is %d" %(len(ewprior)))
+def load_equal_weighted_samples(path, sampler, identifier):
+    # For Multinest, 'path' is the directory containing all the output files.
+    # For Ultranest, it's the base directory of the output files (i.e. 'path' should contain a subdirectory called 'chains'
+    assert(sampler.lower() in ['ultranest', 'multinest'])
+    if sampler == 'ultranest' and identifier != '':
+        warnings.warn(f'Ultranest does not support run names, ignoring identifier {identifier}')
+    # Assume Ultranest is used
+    sample_file = f'{path}/chains/equal_weighted_post.txt'
+    skiprows = 1 # This is to ignore the first line, which contains the parameter names
+    if sampler.lower() == 'multinest':
+        skiprows = 0 # No need to skip any lines with Multinest
+        sample_file = f'{path}/{identifier}post_equal_weights.dat'
+
+    # Load and return the samples
+    return np.loadtxt(sample_file, skiprows=skiprows)
+
+def save_auxiliary_data(path, identifier, data, fnames):
+    # data and fnames should be lists.
+    assert(len(data) == len(fnames))
+    for i in range(len(data)):
+        extension = pathlib.Path(fnames[i]).suffix.lower()
+        savefunc = np.savetxt if extension == '.txt' else np.save
+        savefunc(f'{path}/{identifier}{fnames[i]}', data[i])
+
+def compute_prior_auxiliary_data(path, EOS, variable_params, static_params, sampler='ultranest', identifier=''):
+    ewprior = load_equal_weighted_samples(path, sampler, identifier)
+    print(f"Total number of samples is {len(ewprior)}")
 
     num_stars = len(np.array([v for k,v in variable_params.items() if 'rhoc' in k]))
 
@@ -208,21 +233,20 @@ def compute_prior_auxiliary_data(root_name, EOS, variable_params, static_params)
         star = Star(rhoc)
         star.solve_structure(EOS.energydensities, EOS.pressures)
         MR_prpr_pp[i] = star.Mrot, star.Req
-    # save everything
-    np.save(root_name + 'pressures', pressures)
-    np.savetxt(root_name + 'MR_prpr.txt', MR_prpr_pp)
 
+    # Save everything
+    savedata = [pressures, MR_prpr_pp]
+    fnames = ['pressures.npy', 'MR_prpr.txt']
     if flag == False:
         minpres, maxpres = calc_bands(energydensities, pressures)
         minpres_rho, maxpres_rho = calc_bands(energydensities, pressures_rho)
-        np.save(root_name + 'minpres_rho', minpres_rho)
-        np.save(root_name + 'maxpres_rho', maxpres_rho)
-        np.save(root_name + 'minpres', minpres)
-        np.save(root_name + 'maxpres', maxpres)
+        savedata += [minpres_rho, maxpres_rho, minpres, maxpres]
+        fnames += ['minpres_rho.npy', 'maxpres_rho.npy', 'minpres.npy', 'maxpres.npy']
+    save_auxiliary_data(path, identifier, savedata, fnames)
 
 
-def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp_masses): 
-    ewposterior = np.loadtxt(root_name + 'post_equal_weights.dat')
+def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_masses, sampler='ultranest', identifier=''):
+    ewposterior = load_equal_weighted_samples(path, sampler, identifier)
     print("Total number of samples is %d" %(len(ewposterior)))
 
     num_stars = len(np.array([v for k,v in variable_params.items() if 'rhoc' in k]))
@@ -254,10 +278,6 @@ def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp
         minpres_rho = np.zeros((3, len(energydensities)))
         maxpres_rho = np.zeros((3, len(energydensities)))
         MR_prpr_pp = np.zeros((len(ewposterior), 2))
-
-    
-    
-
 
     for i in range(0, len(ewposterior), 1):
 
@@ -307,25 +327,17 @@ def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp
 
         radii[:,i] = MR(masses)
 
-
+    # Save everything
     scattered = np.array(scattered)
-    # save everything
-    np.save(root_name + 'pressures', pressures)
-    np.save(root_name + 'radii', radii)
-    np.save(root_name + 'scattered', scattered)
-    np.savetxt(root_name + 'MR_prpr.txt', MR_prpr_pp)
-   
+    savedata = [pressures, radii, scattered, MR_prpr_pp]
+    fnames = ['pressures.npy', 'radii.npy', 'scattered.npy', 'MR_prpr.txt']
     if flag == False:
         minpres, maxpres = calc_bands(energydensities, pressures)
         minpres_rho, maxpres_rho = calc_bands(energydensities, pressures_rho)
         minradii, maxradii = calc_bands(masses, radii)
-        np.save(root_name + 'minpres_rho', minpres_rho)
-        np.save(root_name + 'maxpres_rho', maxpres_rho)
-        np.save(root_name + 'minpres', minpres)
-        np.save(root_name + 'maxpres', maxpres)
-        np.save(root_name + 'minradii', minradii)
-        np.save(root_name + 'maxradii', maxradii)
-
+        savedata += [minpres_rho, maxpres_rho, minpres, maxpres, minradii, maxradii]
+        fnames += ['minpres_rho.npy', 'maxpres_rho.npy', 'minpres.npy', 'maxpres.npy', 'minradii.npy', 'maxradii.npy']
+    save_auxiliary_data(path, identifier, savedata, fnames)
 
 def cornerplot(root_name, variable_params):
     ewposterior = np.loadtxt(root_name + 'post_equal_weights.dat')
