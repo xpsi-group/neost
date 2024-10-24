@@ -129,6 +129,14 @@ or, equivalently,
 
 	pip install .
 
+In case you want to edit NEoST, you can do a so-called editable install:
+
+.. code-block:: bash
+
+	pip install -e .
+
+This will immediately activate your edits without having to reinstall NEoST each time.
+
 NEoST can optionally be installed without cythonizing the TOV solvers, at the expense of much slower performance. If you wish to do this, rename or delete the ``setup.py`` file before running ``make install``.  We only recommend using the Python TOV solvers if the cythonized solvers fail to compile or run.  Note that the unit tests in the ``tests/`` directory fail if the Python solvers are used; this is expected.
 
 
