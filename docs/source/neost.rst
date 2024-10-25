@@ -36,6 +36,14 @@ neost.Star module
    :undoc-members:
    :show-inheritance:
 
+neost.PosteriorAnalysis module
+------------------------------
+
+.. automodule:: neost.PosteriorAnalysis
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 neost.tovsolvers.TOVh module
 ----------------------------
 
@@ -48,6 +56,22 @@ neost.tovsolvers.TOVr module
 ----------------------------
 
 .. automodule:: neost.tovsolvers.TOVr
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+neost.tovsolvers.TOVdm module
+-----------------------------
+
+.. automodule:: neost.tovsolvers.TOVdm
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+neost.tovsolvers.TidalDef module
+--------------------------------
+
+.. automodule:: neost.tovsolvers.TidalDef
    :members:
    :undoc-members:
    :show-inheritance:
