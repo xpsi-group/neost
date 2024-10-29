@@ -16,22 +16,24 @@ NEoST has been used in several Equation of State studies by the NICER collaborat
 .. _Zenodo24: https://doi.org/10.5281/zenodo.10871353
 __ Zenodo24_
 
-**Raaijmakers et al. 2021** `(ApJ Letters, 918, L29) <https://ui.adsabs.harvard.edu/abs/2021ApJ...918L..29R/abstract>`_  *Constraints on the Dense Matter Equation of State and Neutron Star Properties from NICER's Mass-Radius Estimate of PSR J0740+6620 and Multimessenger Observations*. See also the associated `Zenodo repository`__.
+**Raaijmakers et al. 2021** `(ApJ Letters, 918, L29) <https://iopscience.iop.org/article/10.3847/2041-8213/ac089a>`_  *Constraints on the Dense Matter Equation of State and Neutron Star Properties from NICER's Mass-Radius Estimate of PSR J0740+6620 and Multimessenger Observations*. See also the associated `Zenodo repository`__.
 
 .. _Zenodo21: https://doi.org/10.5281/zenodo.4696231
 __ Zenodo21_
 
-**Raaijmakers et al. 2020** `(ApJ Letters, 893, L21) <https://ui.adsabs.harvard.edu/abs/2020ApJ...893L..21R/abstract>`_  *Constraining the Dense Matter Equation of State with Joint Analysis of NICER and LIGO/Virgo Measurements*. See also the associated `Zenodo repository`__.
+**Raaijmakers et al. 2020** `(ApJ Letters, 893, L21) <https://iopscience.iop.org/article/10.3847/2041-8213/ab822f>`_  *Constraining the Dense Matter Equation of State with Joint Analysis of NICER and LIGO/Virgo Measurements*. See also the associated `Zenodo repository`__.
 
 .. _Zenodo20: https://doi.org/10.5281/zenodo.3711718
 __ Zenodo20_  
 
-**Raaijmakers et al. 2019** `(ApJ Letters, 887, L22) <https://ui.adsabs.harvard.edu/abs/2019ApJ...887L..22R/abstract>`_  *A Nicer View of PSR J0030+0451: Implications for the Dense Matter Equation of State*
+**Raaijmakers et al. 2019** `(ApJ Letters, 887, L22) <https://iopscience.iop.org/article/10.3847/2041-8213/ab451a>`_  *A Nicer View of PSR J0030+0451: Implications for the Dense Matter Equation of State*
 
 Other papers
 ************
 
 NEoST has also been used in the following papers:
+
+***Rutherford et al. 2024** `(Physical Review D, submitted) <https://ui.adsabs.harvard.edu/abs/2024arXiv241000140R/abstract>`_ *Probing fermionic asymmetric dark matter cores using global neutron star properties*
 
 **Rutherford et al. 2023** `(Physical Review D, 107, 103051) <https://ui.adsabs.harvard.edu/abs/2023PhRvD.107j3051R/abstract>`_ *Constraining bosonic asymmetric dark matter with neutron star mass-radius measurements*     
 
