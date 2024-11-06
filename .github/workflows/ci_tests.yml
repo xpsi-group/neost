@@ -74,6 +74,14 @@ jobs:
     - name: mamba installs
       run: |
         micromamba install flake8 pytest
+
+    - name: Python version check
+      run: |
+        echo $PATH
+        python --version
+        which python
+      shell: bash {0}
+    
     - name: install gsl
       run: |
         brew install gsl
