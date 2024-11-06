@@ -43,6 +43,7 @@ if 'darwin' in OS:
     extra_compile_args.append('-Wno-#warnings')
     extra_compile_args.append('-Wno-error=format-security')
     include_dirs.append(['/usr/local/include', '/usr/local/opt/llvm/include', './neost'])
+    include_dirs = tuple(include_dirs)
 
 else:
     # point to shared library at compile time so runtime resolution
