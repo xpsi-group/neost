@@ -51,6 +51,7 @@ else:
     extra_link_args.append('-Wl,-rpath=%s' % (gsl_prefix + '/lib'))
     extra_compile_args.append('-Wno-cpp')
     include_dirs.append('./neost/tovsolvers/')
+    include_dirs = tuple(include_dirs)
 
 # Specify the Cython modules to be compiled
 TOVr = Extension(
