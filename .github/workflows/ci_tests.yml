@@ -53,9 +53,6 @@ jobs:
 
   tests-mac:
     runs-on: macos-latest
-    defaults:
-      run:
-        shell: bash -l {0}
     strategy:
       fail-fast: false
       max-parallel: 5
@@ -76,7 +73,7 @@ jobs:
         micromamba install flake8 pytest
     - name: install gsl
       run: |
-        sudo apt-get install -y libgsl-dev
+        brew install gsl
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -86,8 +83,7 @@ jobs:
     - name: install neost package
       run: |
         pip install .
-      shell: bash -l {0}
 
     - name: Test with pytest
       run: |
-        pytest
+        pytest 
