@@ -53,6 +53,9 @@ jobs:
 
   tests-mac:
     runs-on: macos-latest
+    defaults:
+      run:
+        shell: bash {0}
     strategy:
       fail-fast: false
       max-parallel: 5
@@ -83,6 +86,7 @@ jobs:
     - name: install neost package
       run: |
         pip install .
+        shell: bash {0}
 
     - name: Test with pytest
       run: |
