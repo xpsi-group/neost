@@ -67,10 +67,14 @@ jobs:
     - name: Install Conda environment with Micromamba
       uses: mamba-org/setup-micromamba@v1
       with:
-        environment-file: environment.yml
+        environment-file: environment_mac.yml
         cache-env: true
         cache-env-key: env-envkey-${{ github.sha }}-${{ github.run_attempt }}
         environment-name: neost
+    - name: pymultinest install
+      run: |
+        pip install pymultinest
+        
     - name: mamba installs
       run: |
         micromamba install flake8 pytest
