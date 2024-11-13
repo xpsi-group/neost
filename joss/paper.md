@@ -10,10 +10,10 @@ authors:
       affiliation: 1
     - name: Nathan Rutherford
       orcid: 0000-0002-9626-7257
-      affiliation: 2
+      affiliation: 3
     - name: Patrick Timmerman
       orcid: 0009-0003-2793-1569
-      affiliation: 3
+      affiliation: 2
     - name: Tuomo Salmi
       orcid: 0000-0001-6356-125X
       affiliation: 2
