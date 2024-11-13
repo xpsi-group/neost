@@ -65,7 +65,7 @@ It shows how the track for physical measurements and
 the track for theoretical models are fed through the framework, and what the main steps of analysis
 are after inference is complete.\label{fig:neost}](fig1.png){width=100%}
 
-NEoST is being used for EoS inference using mass-radius posteriors generated from pulse profile modeling of NICER data [@Raaijmakers:2019;@Raaijmakers:2020;@Raaijmakers:2021;@Rutherford:2024], specifically those generated using the X-PSI package [@Riley:2019;@Riley:2021;@Salmi:2022;@Riley:2023;@Salmi:2023;@Vinciguerra:2024;@Choudhury:2024;@Salmi:2024a,@Salmi:2024b].  It has also been used to study EoS prior sensitivities using synthetic mass-radius posteriors [@Greif:2019] and to study the consequences of a potential dark matter component in neutron stars [@Rutherford:2023;@Rutherford:2024b].  
+NEoST is being used for EoS inference using mass-radius posteriors generated from pulse profile modeling of NICER data [@Raaijmakers:2019;@Raaijmakers:2020;@Raaijmakers:2021;@Rutherford:2024], specifically those generated using the X-PSI package [@Riley:2019;@Riley:2021;@Salmi:2022;@Riley:2023;@Salmi:2023;@Vinciguerra:2024;@Choudhury:2024;@Salmi:2024a;@Salmi:2024b].  It has also been used to study EoS prior sensitivities using synthetic mass-radius posteriors [@Greif:2019] and to study the consequences of a potential dark matter component in neutron stars [@Rutherford:2023;@Rutherford:2024b].  
 
 The core routines of NEoST are written in Cython
 [@cython2011], and are dependent on the GNU Scientific Library [GSL,
