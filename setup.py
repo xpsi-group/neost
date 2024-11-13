@@ -65,6 +65,16 @@ TOVr = Extension(
             extra_link_args=extra_link_args,
         )
 
+TOVdm = Extension(
+            name = 'neost.tovsolvers.TOVdm',
+            sources = ['neost/tovsolvers/TOVdm.pyx'],
+            libraries = libraries,
+            library_dirs = library_dirs,
+            include_dirs=include_dirs,
+            extra_compile_args=extra_compile_args,
+            extra_link_args=extra_link_args,
+        )
+
 TOVh = Extension(
             name = 'neost.tovsolvers.TOVh',
             sources = ['neost/tovsolvers/TOVh.pyx'],
@@ -76,5 +86,5 @@ TOVh = Extension(
         )
 
 setup(
-    ext_modules=[TOVr, TOVh]
+    ext_modules=[TOVr, TOVdm, TOVh]
 )

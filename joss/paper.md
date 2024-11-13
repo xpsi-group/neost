@@ -8,11 +8,11 @@ authors:
     - name: Geert Raaijmakers
       orcid: 0000-0002-9397-786X
       affiliation: 1
-    - name: Patrick Timmerman
-      orcid: 0009-0003-2793-1569
-      affiliation: 2
     - name: Nathan Rutherford
       orcid: 0000-0002-9626-7257
+      affiliation: 2
+    - name: Patrick Timmerman
+      orcid: 0009-0003-2793-1569
       affiliation: 3
     - name: Tuomo Salmi
       orcid: 0000-0001-6356-125X
@@ -46,7 +46,7 @@ bibliography: neostjoss.bib
 
 # Summary
 
-The Nested Equation of State Sampling (NEoST) package is an open-source code that allows users to infer the parameters of the dense matter Equation of State (EoS) in neutron stars via nested sampling. It provides a Bayesian inference framework that compares pre-existing EoS models (parameterized or tabulated, for both crust and core) to a variety of user-defined astrophysical input data (real or synthetic), namely mass-radius samples, mass-tidal deformability samples, and mass samples. NEoST can also be used to provide a fast solver for the Tolman-Oppenheimer-Volkoff equations for neutron star structure [@TOV1;@TOV2].  
+The Nested Equation of State Sampling (NEoST) package is an open-source code that allows users to infer the parameters of the dense matter Equation of State (EoS) in neutron stars via nested sampling. It provides a Bayesian inference framework that compares pre-existing EoS models (parameterized or tabulated, for both crust and core) to a variety of user-defined astrophysical input data (real or synthetic), namely mass-radius samples, mass-tidal deformability samples, and mass samples. NEoST can also be used to provide a fast solver for the Tolman-Oppenheimer-Volkoff (TOV) equations for neutron star structure [@TOV1;@TOV2]. Moreoever, NEoST is able to fully account for a possible dark matter component inside neutron stars, where the dark matter is described by the [@Nelson:2018] model.   
 
 # Statement of need
 
@@ -65,7 +65,7 @@ It shows how the track for physical measurements and
 the track for theoretical models are fed through the framework, and what the main steps of analysis
 are after inference is complete.\label{fig:neost}](fig1.png){width=100%}
 
-NEoST is being used for EoS inference using mass-radius posteriors generated from pulse profile modeling of NICER data [@Raaijmakers:2019;@Raaijmakers:2020;@Raaijmakers:2021;@Rutherford:2024], specifically those generated using the X-PSI package [@Riley:2019;@Riley:2021;@Salmi:2022;@Riley:2023;@Vinciguerra:2024;@Choudhury:2024].  It has also been used to study EoS prior sensitivities using synthetic mass-radius posteriors [@Greif:2019] and to study the consequences of a potential dark matter component in neutron stars [@Rutherford:2023].  
+NEoST is being used for EoS inference using mass-radius posteriors generated from pulse profile modeling of NICER data [@Raaijmakers:2019;@Raaijmakers:2020;@Raaijmakers:2021;@Rutherford:2024], specifically those generated using the X-PSI package [@Riley:2019;@Riley:2021;@Salmi:2022;@Riley:2023;@Salmi:2023;@Vinciguerra:2024;@Choudhury:2024;@Salmi:2024a,@Salmi:2024b].  It has also been used to study EoS prior sensitivities using synthetic mass-radius posteriors [@Greif:2019] and to study the consequences of a potential dark matter component in neutron stars [@Rutherford:2023;@Rutherford:2024b].  
 
 The core routines of NEoST are written in Cython
 [@cython2011], and are dependent on the GNU Scientific Library [GSL,

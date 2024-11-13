@@ -33,6 +33,9 @@
    Start_here
    PP_example
    PP_prior_example
+   PP_with_ADM_example
+   PP_with_ADM_prior_example
+   ADM_MR_Tidal_tutorial
    CS_example
    CS_prior_example
    Tabulated_example
