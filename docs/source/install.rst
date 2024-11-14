@@ -111,7 +111,7 @@ Once that is complete, try to install PyMultiNest using pip:
 
 .. code-block:: bash
 
-	pip install pymultinest
+	python -m pip install pymultinest
 
 If this works you may proceed to the Installing NEoST instructions as normal. However, if this fails, or works but installing MultiNest fails, we recomend using the following procedure from `NMMA <https://nuclear-multimessenger-astronomy.github.io/nmma/#for-arm64-macs>`_ to install PyMultiNest/MultiNest. You may also have a glance at the Alternative instructions for prerequisites for installing PyMultiNest/MultiNest as well.
 
@@ -127,7 +127,7 @@ or, equivalently,
 
 .. code-block:: bash
 
-	pip install .
+	python -m pip install .
 
 NEoST can optionally be installed without cythonizing the TOV solvers, at the expense of much slower performance. If you wish to do this, rename or delete the ``setup.py`` file before running ``make install``.  We only recommend using the Python TOV solvers if the cythonized solvers fail to compile or run.  Note that the unit tests in the ``tests/`` directory fail if the Python solvers are used; this is expected.
 
@@ -151,7 +151,7 @@ If you haven't used conda, you can install them using
 
 .. code-block:: bash
 
-	pip install sphinx nbsphinx decorator sphinxcontrib-websupport sphinx_rtd_theme
+	python -m pip install sphinx nbsphinx decorator sphinxcontrib-websupport sphinx_rtd_theme
 
 Unfortunately, the ``pandoc`` version available in pip does not seem to work, so you may have to install pandoc separately using, e.g., your system's package manager. See also `Pandoc <https://pandoc.org/installing.html>`_.
 
@@ -195,7 +195,7 @@ The final step now is to install the Python interface to MultiNest, PyMultiNest.
 
 .. code-block:: bash
 
-	pip install pymultinest
+	python -m pip install pymultinest
 
 Alternatively you can clone its git repository and install manually:
 
