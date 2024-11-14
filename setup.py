@@ -42,7 +42,7 @@ if 'darwin' in OS:
     library_dirs.append('/opt/local/lib')
     extra_compile_args.append('-Wno-#warnings')
     extra_compile_args.append('-Wno-error=format-security')
-    include_dirs.extend(['/usr/local/include', '/usr/local/opt/llvm/include', './neost'])
+    include_dirs.extend(['/usr/local/include', '/usr/local/opt/llvm/include', './neost/tovsolvers/'])
 
 else:
     # point to shared library at compile time so runtime resolution
