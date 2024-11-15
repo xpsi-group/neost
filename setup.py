@@ -30,20 +30,19 @@ else:
 
 # Common includes, linker arguments, compiler arguments
 include_dirs = [np.get_include(), gsl_prefix+'/include', '.']
-extra_link_args = ['-fopenmp']
-extra_compile_args = ['-fopenmp', '-Wno-unused-function', '-Wno-uninitialized']
+extra_link_args = []
+extra_compile_args = ['-Wno-unused-function', '-Wno-uninitialized']
 
 # OS-specific settings
 if 'darwin' in OS:
     # Using compiler of clang with llvm installed
-    os.environ["CC"] = "/usr/local/opt/llvm/bin/clang"
-    os.environ["CXX"] = "/usr/local/opt/llvm/bin/clang++"
+    # os.environ["CC"] = "/usr/local/opt/llvm/bin/clang"
+    # os.environ["CXX"] = "/usr/local/opt/llvm/bin/clang++"
     library_dirs.append('/usr/local/opt/llvm/lib')
     library_dirs.append('/opt/local/lib')
     extra_compile_args.append('-Wno-#warnings')
     extra_compile_args.append('-Wno-error=format-security')
-    include_dirs.append(['/usr/local/include', '/usr/local/opt/llvm/include', './neost'])
-    include_dirs = tuple(include_dirs)
+    include_dirs.extend(['/usr/local/include', '/usr/local/opt/llvm/include', './neost/tovsolvers/'])
 
 else:
     # point to shared library at compile time so runtime resolution
@@ -52,7 +51,6 @@ else:
     extra_link_args.append('-Wl,-rpath=%s' % (gsl_prefix + '/lib'))
     extra_compile_args.append('-Wno-cpp')
     include_dirs.append('./neost/tovsolvers/')
-    include_dirs = tuple(include_dirs)
 
 # Specify the Cython modules to be compiled
 TOVr = Extension(
