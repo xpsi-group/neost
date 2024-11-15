@@ -77,7 +77,7 @@ jobs:
         
     - name: mamba installs
       run: |
-        micromamba install flake8 pytest
+        brew install flake8 pytest
 
     - name: Python version check
       run: |
