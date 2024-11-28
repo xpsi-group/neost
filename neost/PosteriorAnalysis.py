@@ -193,6 +193,12 @@ def save_auxiliary_data(path, identifier, data, fnames):
         savefunc(fname, data[i])
         print(f'Writing {fname} to disk')
 
+def print_samples_per_core(samples):
+    print('Number of samples to be processed per core:', end=' ')
+    for a in samples:
+        print(len(a), end=' ')
+    print()
+
 def compute_prior_auxiliary_data(path, EOS, variable_params, static_params, sampler='ultranest', identifier=''):
     comm = MPI.COMM_WORLD
     mpi_rank = comm.Get_rank()
@@ -205,8 +211,9 @@ def compute_prior_auxiliary_data(path, EOS, variable_params, static_params, samp
 
     if mpi_rank == 0:
         ewprior = load_equal_weighted_samples(path, sampler, identifier)
+        num_samples = len(ewprior)
         num_stars = len(np.array([v for k,v in variable_params.items() if 'rhoc' in k]))
-        print(f"Total number of samples is {len(ewprior)}, and the number of stars is {num_stars}")
+        print(f"Total number of samples is {num_samples}, and the number of stars is {num_stars}")
 
         if len(list(variable_params.keys())) == num_stars:
             flag = True
@@ -214,8 +221,14 @@ def compute_prior_auxiliary_data(path, EOS, variable_params, static_params, samp
             flag = False
 
         # Recast ewprior in a form suitable for MPI scatter
-        for i in range(len(ewprior)):
-            samples[i%num_processes].append(ewprior[i])
+        samples_per_core = int(np.ceil(num_samples / num_processes))
+        for current_core in range(num_processes):
+            for i in range(samples_per_core):
+                idx = current_core*samples_per_core + i
+                if idx >= num_samples:
+                    break
+                samples[current_core].append(ewprior[idx])
+        print_samples_per_core(samples)
 
     # Scatter samples to the different processes
     samples = comm.scatter(samples, root=0)
