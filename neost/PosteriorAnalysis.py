@@ -201,8 +201,6 @@ def compute_prior_auxiliary_data(path, EOS, variable_params, static_params, samp
 
     masses = np.linspace(.2, 2.9, 50)
     energydensities = np.logspace(14.2, 16, 50)
-    pressures = None
-    pressures_rho = None
     flag = None
 
     if mpi_rank == 0:
@@ -215,10 +213,6 @@ def compute_prior_auxiliary_data(path, EOS, variable_params, static_params, samp
         else:
             flag = False
 
-        # Final results will be gathered in these later (after the loop), for now just create them
-        pressures = np.zeros((len(masses), len(ewprior)))
-        pressures_rho = np.zeros((len(masses), len(ewprior)))
-
         # Recast ewprior in a form suitable for MPI scatter
         for i in range(len(ewprior)):
             samples[i%num_processes].append(ewprior[i])
@@ -230,8 +224,6 @@ def compute_prior_auxiliary_data(path, EOS, variable_params, static_params, samp
     mass_radius = [] # Calling it mass_radius because MR_prpr_pp is a bad name
     pressures_list = [] # These two are a little complicated, so using the suffix _list to clarify that this is not the final output
     pressures_rho_list = []
-    pressures_indexes = []
-    pressures_rho_indexes = []
 
     for sample in samples:
         pr = sample[0:len(variable_params)]
@@ -244,16 +236,16 @@ def compute_prior_auxiliary_data(path, EOS, variable_params, static_params, samp
         max_rhoc = edsrho(EOS.max_edsc)
 
         # pressures_rho
+        tmp = np.zeros(len(masses))
         indexes = energydensities < max_rhoc
-        tmp = rhopres(energydensities[indexes])
+        tmp[indexes] = rhopres(energydensities[indexes])
         pressures_rho_list.append(tmp)
-        pressures_rho_indexes.append(indexes)
 
         # pressures
+        tmp = np.zeros(len(masses))
         indexes = energydensities < EOS.max_edsc
-        tmp = EOS.eos(energydensities[indexes])
+        tmp[indexes] = EOS.eos(energydensities[indexes])
         pressures_list.append(tmp)
-        pressures_indexes.append(indexes)
 
         # mass-radius
         rhoc = 10**par['rhoc_1'] #just pick one of the central density samples, their distributions will be identical since constant likelihood eval on all sources
@@ -265,33 +257,22 @@ def compute_prior_auxiliary_data(path, EOS, variable_params, static_params, samp
     mass_radius = comm.gather(mass_radius, root=0)
     pressures_rho_list = comm.gather(pressures_rho_list, root=0)
     pressures_list = comm.gather(pressures_list, root=0)
-    pressures_rho_indexes = comm.gather(pressures_rho_indexes, root=0)
-    pressures_indexes = comm.gather(pressures_indexes, root=0)
 
     if mpi_rank == 0:
-        # Save everything
+        # Rearrange data to the expected output format
         mass_radius = np.concatenate([np.array(arr) for arr in mass_radius]) # May need to improve this
-        k = 0
-        for i in range(len(pressures_rho_list)):
-            print(len(pressures_rho_list))
-            indexes = pressures_rho_indexes[i]
-            pressures_tmp = pressures_rho_list[i]
-            for j in range(len(pressures_tmp)):
-                idx = indexes[j]
-                pressures_rho[:, k][idx] = pressures_tmp[j]
-                k = k + 1
-        k = 0
-        for i in range(len(pressures_list)):
-            print(len(pressures_list))
-            indexes = pressures_indexes[i]
-            pressures_tmp = pressures_list[i]
-            for j in range(len(pressures_tmp)):
-                idx = indexes[j]
-                pressures[:, k][idx] = pressures_tmp[j]
-                k = k + 1
-        print(f'mass_radius.shape = {mass_radius.shape}')
-        print(f'pressures_rho.shape = {pressures_rho.shape}')
-        print(f'pressures.shape = {pressures.shape}')
+        pressures_rho = np.empty((len(masses),0))
+        pressures = np.empty((len(masses),0))
+        for pressures_tmp in pressures_rho_list:
+            for tmp in pressures_tmp:
+                tmp = tmp.reshape((-1,1))
+                pressures_rho = np.hstack((pressures_rho, tmp))
+        for pressures_tmp in pressures_list:
+            for tmp in pressures_tmp:
+                tmp = tmp.reshape((-1,1))
+                pressures = np.hstack((pressures, tmp))
+
+        # Save everything
         savedata = [pressures, mass_radius]
         fnames = ['pressures.npy', 'MR_prpr.txt']
         if not flag:
