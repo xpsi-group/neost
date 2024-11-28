@@ -17,6 +17,9 @@ from neost.Star import Star
 from neost.Likelihood import Likelihood
 import neost.global_imports as global_imports
 
+# MPI
+from mpi4py import MPI
+
 c = global_imports._c
 G = global_imports._G
 Msun = global_imports._M_s
@@ -191,36 +194,47 @@ def save_auxiliary_data(path, identifier, data, fnames):
         print(f'Writing {fname} to disk')
 
 def compute_prior_auxiliary_data(path, EOS, variable_params, static_params, sampler='ultranest', identifier=''):
-    ewprior = load_equal_weighted_samples(path, sampler, identifier)
-    print(f"Total number of samples is {len(ewprior)}")
-
-    num_stars = len(np.array([v for k,v in variable_params.items() if 'rhoc' in k]))
-
-    if len(list(variable_params.keys())) == num_stars:
-        flag = True
-
-    else:
-        flag = False
+    comm = MPI.COMM_WORLD
+    mpi_rank = comm.Get_rank()
+    num_processes = comm.Get_size()
+    samples = [[] for i in range(num_processes)] # This is essentially a rearranged 'ewprior'
 
     masses = np.linspace(.2, 2.9, 50)
     energydensities = np.logspace(14.2, 16, 50)
+    pressures = None
+    pressures_rho = None
+    flag = None
 
-    if flag == True:
+    if mpi_rank == 0:
+        ewprior = load_equal_weighted_samples(path, sampler, identifier)
+        num_stars = len(np.array([v for k,v in variable_params.items() if 'rhoc' in k]))
+        print(f"Total number of samples is {len(ewprior)}, and the number of stars is {num_stars}")
+
+        if len(list(variable_params.keys())) == num_stars:
+            flag = True
+        else:
+            flag = False
+
+        # Final results will be gathered in these later (after the loop), for now just create them
         pressures = np.zeros((len(masses), len(ewprior)))
         pressures_rho = np.zeros((len(masses), len(ewprior)))
-        MR_prpr_pp = np.zeros((len(ewprior), 2))
-    else:
-        pressures = np.zeros((len(masses), len(ewprior)))
-        pressures_rho = np.zeros((len(masses), len(ewprior)))
-        minpres = np.zeros((3, len(energydensities)))
-        maxpres = np.zeros((3, len(energydensities)))
-        minpres_rho = np.zeros((3, len(energydensities)))
-        maxpres_rho = np.zeros((3, len(energydensities)))
-        MR_prpr_pp = np.zeros((len(ewprior), 2))
 
-    for i in range(0, len(ewprior), 1):
+        # Recast ewprior in a form suitable for MPI scatter
+        for i in range(len(ewprior)):
+            samples[i%num_processes].append(ewprior[i])
 
-        pr = ewprior[i][0:len(variable_params)]
+    # Scatter samples to the different processes
+    samples = comm.scatter(samples, root=0)
+
+    # These three are now local to each process, and each will be joined together with its siblings later (with comm.gather)
+    mass_radius = [] # Calling it mass_radius because MR_prpr_pp is a bad name
+    pressures_list = [] # These two are a little complicated, so using the suffix _list to clarify that this is not the final output
+    pressures_rho_list = []
+    pressures_indexes = []
+    pressures_rho_indexes = []
+
+    for sample in samples:
+        pr = sample[0:len(variable_params)]
         par = {e:pr[j] for j, e in enumerate(list(variable_params.keys()))}
         par.update(static_params)
         EOS.update(par, max_edsc=True)
@@ -228,23 +242,64 @@ def compute_prior_auxiliary_data(path, EOS, variable_params, static_params, samp
         rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0)
         edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0)
         max_rhoc = edsrho(EOS.max_edsc)
-        pressures_rho[:,i][energydensities<max_rhoc] = rhopres(energydensities[energydensities<max_rhoc])
-        pressures[:,i][energydensities<EOS.max_edsc] = EOS.eos(energydensities[energydensities<EOS.max_edsc])
 
+        # pressures_rho
+        indexes = energydensities < max_rhoc
+        tmp = rhopres(energydensities[indexes])
+        pressures_rho_list.append(tmp)
+        pressures_rho_indexes.append(indexes)
+
+        # pressures
+        indexes = energydensities < EOS.max_edsc
+        tmp = EOS.eos(energydensities[indexes])
+        pressures_list.append(tmp)
+        pressures_indexes.append(indexes)
+
+        # mass-radius
         rhoc = 10**par['rhoc_1'] #just pick one of the central density samples, their distributions will be identical since constant likelihood eval on all sources
         star = Star(rhoc)
         star.solve_structure(EOS.energydensities, EOS.pressures)
-        MR_prpr_pp[i] = star.Mrot, star.Req
+        mass_radius.append([star.Mrot, star.Req])
 
-    # Save everything
-    savedata = [pressures, MR_prpr_pp]
-    fnames = ['pressures.npy', 'MR_prpr.txt']
-    if flag == False:
-        minpres, maxpres = calc_bands(energydensities, pressures)
-        minpres_rho, maxpres_rho = calc_bands(energydensities, pressures_rho)
-        savedata += [minpres_rho, maxpres_rho, minpres, maxpres]
-        fnames += ['minpres_rho.npy', 'maxpres_rho.npy', 'minpres.npy', 'maxpres.npy']
-    save_auxiliary_data(path, identifier, savedata, fnames)
+    # Send the results back to the master process
+    mass_radius = comm.gather(mass_radius, root=0)
+    pressures_rho_list = comm.gather(pressures_rho_list, root=0)
+    pressures_list = comm.gather(pressures_list, root=0)
+    pressures_rho_indexes = comm.gather(pressures_rho_indexes, root=0)
+    pressures_indexes = comm.gather(pressures_indexes, root=0)
+
+    if mpi_rank == 0:
+        # Save everything
+        mass_radius = np.concatenate([np.array(arr) for arr in mass_radius]) # May need to improve this
+        k = 0
+        for i in range(len(pressures_rho_list)):
+            print(len(pressures_rho_list))
+            indexes = pressures_rho_indexes[i]
+            pressures_tmp = pressures_rho_list[i]
+            for j in range(len(pressures_tmp)):
+                idx = indexes[j]
+                pressures_rho[:, k][idx] = pressures_tmp[j]
+                k = k + 1
+        k = 0
+        for i in range(len(pressures_list)):
+            print(len(pressures_list))
+            indexes = pressures_indexes[i]
+            pressures_tmp = pressures_list[i]
+            for j in range(len(pressures_tmp)):
+                idx = indexes[j]
+                pressures[:, k][idx] = pressures_tmp[j]
+                k = k + 1
+        print(f'mass_radius.shape = {mass_radius.shape}')
+        print(f'pressures_rho.shape = {pressures_rho.shape}')
+        print(f'pressures.shape = {pressures.shape}')
+        savedata = [pressures, mass_radius]
+        fnames = ['pressures.npy', 'MR_prpr.txt']
+        if not flag:
+            minpres, maxpres = calc_bands(energydensities, pressures)
+            minpres_rho, maxpres_rho = calc_bands(energydensities, pressures_rho)
+            savedata += [minpres_rho, maxpres_rho, minpres, maxpres]
+            fnames += ['minpres_rho.npy', 'maxpres_rho.npy', 'minpres.npy', 'maxpres.npy']
+        save_auxiliary_data(path, identifier, savedata, fnames)
 
 
 def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_masses, sampler='ultranest', identifier=''):
@@ -256,7 +311,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
     if len(list(variable_params.keys())) == num_stars:
         flag = True
 
-    else: 
+    else:
         flag = False
 
     masses = np.linspace(.2, 2.9, 50)
@@ -293,7 +348,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
         max_rhoc = edsrho(EOS.max_edsc)
         pressures_rho[:,i][energydensities<max_rhoc] = rhopres(energydensities[energydensities<max_rhoc])
         pressures[:,i][energydensities<EOS.max_edsc] = EOS.eos(energydensities[energydensities<EOS.max_edsc])
-            
+
         rhocs = np.logspace(14.5, np.log10(EOS.max_edsc), 30)
         M = np.zeros(len(rhocs))
         R = np.zeros(len(rhocs))
@@ -306,7 +361,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
         M, indices = np.unique(M, return_index=True)
         MR = UnivariateSpline(M, R[indices], k=1, s=0, ext=1)
         rhocM = UnivariateSpline(M, rhocs[indices], k=1, s=0)
-            
+
         rhocpar = np.array([10**v for k,v in par.items() if 'rhoc' in k])
         tmp = []
         for j, e in enumerate(rhocpar):
