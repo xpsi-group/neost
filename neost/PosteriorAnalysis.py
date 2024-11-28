@@ -207,7 +207,7 @@ def compute_prior_auxiliary_data(path, EOS, variable_params, static_params, samp
 
     masses = np.linspace(.2, 2.9, 50)
     energydensities = np.logspace(14.2, 16, 50)
-    flag = None
+    eos_is_fixed = None
 
     if mpi_rank == 0:
         ewprior = load_equal_weighted_samples(path, sampler, identifier)
@@ -216,9 +216,9 @@ def compute_prior_auxiliary_data(path, EOS, variable_params, static_params, samp
         print(f"Total number of samples is {num_samples}, and the number of stars is {num_stars}")
 
         if len(list(variable_params.keys())) == num_stars:
-            flag = True
+            eos_is_fixed = True
         else:
-            flag = False
+            eos_is_fixed = False
 
         # Recast ewprior in a form suitable for MPI scatter
         samples_per_core = int(np.ceil(num_samples / num_processes))
@@ -288,7 +288,7 @@ def compute_prior_auxiliary_data(path, EOS, variable_params, static_params, samp
         # Save everything
         savedata = [pressures, mass_radius]
         fnames = ['pressures.npy', 'MR_prpr.txt']
-        if not flag:
+        if not eos_is_fixed:
             minpres, maxpres = calc_bands(energydensities, pressures)
             minpres_rho, maxpres_rho = calc_bands(energydensities, pressures_rho)
             savedata += [minpres_rho, maxpres_rho, minpres, maxpres]
