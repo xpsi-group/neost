@@ -30,11 +30,13 @@ else:
 
 # Common includes, linker arguments, compiler arguments
 include_dirs = [np.get_include(), gsl_prefix+'/include', '.']
-extra_link_args = []
-extra_compile_args = ['-Wno-unused-function', '-Wno-uninitialized']
+extra_link_args = ['-fopenmp']
+extra_compile_args = ['-fopenmp','-Wno-unused-function', '-Wno-uninitialized']
 
 # OS-specific settings
 if 'darwin' in OS:
+    extra_link_args = []
+    extra_compile_args = ['-Wno-unused-function', '-Wno-uninitialized']
     # Using compiler of clang with llvm installed
     # os.environ["CC"] = "/usr/local/opt/llvm/bin/clang"
     # os.environ["CXX"] = "/usr/local/opt/llvm/bin/clang++"
