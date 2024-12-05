@@ -103,5 +103,5 @@ jobs:
 
     - name: Test with pytest
       run: |
-        conda activate neost
+        micromamba activate neost
         python -m pytest
