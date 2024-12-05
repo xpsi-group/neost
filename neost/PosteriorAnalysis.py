@@ -186,7 +186,9 @@ def save_auxiliary_data(path, identifier, data, fnames):
     for i in range(len(data)):
         extension = pathlib.Path(fnames[i]).suffix.lower()
         savefunc = np.savetxt if extension == '.txt' else np.save
-        savefunc(f'{path}/{identifier}{fnames[i]}', data[i])
+        fname = f'{path}/{identifier}{fnames[i]}'
+        savefunc(fname, data[i])
+        print(f'Writing {fname} to disk')
 
 def compute_prior_auxiliary_data(path, EOS, variable_params, static_params, sampler='ultranest', identifier=''):
     ewprior = load_equal_weighted_samples(path, sampler, identifier)
