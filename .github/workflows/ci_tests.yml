@@ -71,8 +71,9 @@ jobs:
         cache-env: true
         cache-env-key: env-envkey-${{ github.sha }}-${{ github.run_attempt }}
         environment-name: neost
-    - name: pymultinest install
+    - name: pymultinest install and neost activation
       run: |
+        micromamba activate neost
         pip install pymultinest
         
     - name: mamba installs
@@ -103,5 +104,4 @@ jobs:
 
     - name: Test with pytest
       run: |
-        micromamba activate neost
         python -m pytest
