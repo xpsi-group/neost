@@ -38,6 +38,6 @@ class TestLikelihoodCheck(object):
         if (np.isclose(-4.187612429216115, ll, rtol=1.0e-5) is False):
             print('C TOV solvers either not installed or broken, using Python TOV solver instead')
             assert np.isclose(-4.192614304543445, ll, rtol=1.0e-5)
-		else:
+        else:
             assert np.isclose(-4.187612429216115, ll, rtol=1.0e-5)
 
