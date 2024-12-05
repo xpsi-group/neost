@@ -40,10 +40,10 @@ if 'darwin' in OS:
     # Using compiler of clang with llvm installed
     # os.environ["CC"] = "/usr/local/opt/llvm/bin/clang"
     # os.environ["CXX"] = "/usr/local/opt/llvm/bin/clang++"
-    library_dirs.append('/usr/local/opt/llvm/lib')
-    library_dirs.append('/opt/local/lib')
-    extra_compile_args.append('-Wno-#warnings')
-    extra_compile_args.append('-Wno-error=format-security')
+    library_dirs.extend('/usr/local/opt/llvm/lib')
+    library_dirs.extend('/opt/local/lib')
+    extra_compile_args.extend('-Wno-#warnings')
+    extra_compile_args.extend('-Wno-error=format-security')
     include_dirs.extend(['/usr/local/include', '/usr/local/opt/llvm/include', './neost/tovsolvers/'])
 
 else:
