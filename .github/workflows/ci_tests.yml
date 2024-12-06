@@ -87,9 +87,10 @@ jobs:
         which python
       shell: bash -l {0}
     
-    - name: install gsl
+    - name: install gsl and cython
       run: |
         brew install gsl
+        brew install cython
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
