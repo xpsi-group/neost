@@ -71,9 +71,10 @@ jobs:
         cache-env: true
         cache-env-key: env-envkey-${{ github.sha }}-${{ github.run_attempt }}
         environment-name: neost
-    - name: pymultinest install and neost activation
+    - name: pymultinest & Cython install and neost activation
       run: |
         micromamba activate neost
+        pip install cython
         pip install pymultinest
         
     - name: mamba installs
@@ -87,10 +88,10 @@ jobs:
         which python
       shell: bash -l {0}
     
-    - name: install gsl and cython
+    - name: install gsl
       run: |
         brew install gsl
-        brew install cython
+        
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
