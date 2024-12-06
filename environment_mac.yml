@@ -5,7 +5,6 @@ channels:
 dependencies:
         - python # Just to ensure we're not using system-wide python. See PEP 668
         - numpy
-        - cython
         - matplotlib
         - scipy
         - pytest
