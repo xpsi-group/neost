@@ -1,0 +1,221 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overview &mdash; NEoST 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Publications" href="applications.html" />
+    <link rel="prev" title="Installation" href="install.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NEoST
+              <img src="_static/neostlogo_small.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#framework-for-bayesian-inference-of-the-eos">Framework for Bayesian inference of the EOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#astrophysical-data">Astrophysical data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#equation-of-state-models">Equation of state models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#crust-models">Crust models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#core-models">Core models</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#sampling">Sampling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="applications.html">Publications</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Team and acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="citation.html">Citation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">Future</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Start_here.html">Start here</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_example.html">Piecewise Polytropic Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_prior_example.html">Piecewise Polytropic Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_with_ADM_example.html">Piecewise Polytropic with ADM Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_with_ADM_prior_example.html">Piecewise Polytropic Prior with ADM Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ADM_MR_Tidal_tutorial.html">ADM M-R and M-Tidal Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CS_example.html">Speed of Sound Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CS_prior_example.html">Speed of Sound Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tabulated_example.html">Tabulated Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tabulated_prior_example.html">Tabulated Prior Example</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">neost</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NEoST</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Overview</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/overview.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="overview">
+<span id="id1"></span><h1>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h1>
+<p>Matter in the cores of neutron stars can reach several times the nuclear saturation density. The <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2016PhR...621..127L/abstract">Equation of State (EoS)</a> of matter under such circumstances is not well understood:  in addition to extreme levels of <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2015ARNPS..65..457H/abstract">neutron-richness</a> there could also exist stable states of <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2020PrPNP.11203770T/abstract">strange matter</a>, in the form of either hyperons or deconfined quarks. Neutron star properties like mass <span class="math notranslate nohighlight">\(M\)</span>, radius <span class="math notranslate nohighlight">\(R\)</span> and tidal deformability <span class="math notranslate nohighlight">\(\Lambda\)</span> depend on the EoS, so measurement of these quantities provides insight. NEoST provides a framework for EoS inference for different types of astrophysical data, and a library of EoS models.</p>
+<section id="framework-for-bayesian-inference-of-the-eos">
+<h2>Framework for Bayesian inference of the EOS<a class="headerlink" href="#framework-for-bayesian-inference-of-the-eos" title="Link to this heading"></a></h2>
+<p>Given EOS parameterizations, governed by parameters <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>, we employ Bayes’ theorem and write the posterior distributions of the EOS parameters and central energy densities <span class="math notranslate nohighlight">\(\boldsymbol{\varepsilon}\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[p(\boldsymbol{\theta}, \boldsymbol{\varepsilon} \,|\, \boldsymbol{d}, \mathbb{M})
+\propto p(\boldsymbol{\theta} \,|\, \mathbb{M})
+~p(\boldsymbol{\varepsilon} \,|\, \boldsymbol{\theta}, \mathbb{M})
+~p(\boldsymbol{d} \,|\, \boldsymbol{\theta}, \mathbb{M})\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbb{M}\)</span> denotes the model including all assumed physics and <span class="math notranslate nohighlight">\(\boldsymbol{d}\)</span> the astrophysical datasets used to constrain the EOS, consisting of, e.g., masses from radio data, masses and radii from NICER, and mass and tidal deformability from gravitational wave data.  Assuming each of these datasets to be independent of each other, we can separate the likelihoods and write</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}p(\boldsymbol{\theta}, \boldsymbol{\varepsilon} \,|\, &amp;\boldsymbol{d}, \mathbb{M})
+\propto
+p(\boldsymbol{\theta} \,|\, \mathbb{M})
+~
+p(\boldsymbol{\varepsilon} \,|\, \boldsymbol{\theta}, \mathbb{M}) \\
+&amp; \times \prod_{i} p(\Lambda_{1,i}, \Lambda_{2,i}, M_{1,i}, M_{2,i} \,|\,
+\boldsymbol{d}_{\rm GW, i}) \\
+&amp; \times \prod_{j} p(M_j, R_j \,|\, \boldsymbol{d}_{\rm NICER,j}) \\
+&amp; \times \prod_{k} p(M_k \,|\, \boldsymbol{d}_{\rm radio,k})\end{split}\]</div>
+<p>Here the products run over the number of different observed stars, or mergers, in the case of the gravitational wave data.  Note that we have equated the nuisance-marginalized likelihoods to the nuisance-marginalized posterior distributions for the inferred masses, radii etc.  For a discussion of when this is justifiable, we refer the reader to Section 2 of <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2021ApJ...918L..29R/abstract">Raaijmakers et al. (2021)</a>.</p>
+<p>To speed up convergence we transform the gravitational wave posterior distributions to include the two tidal deformabilities, chirp mass <span class="math notranslate nohighlight">\(\mathcal{M}_c = (M_1 M_2)^{3/5}/(M_1 + M_2)^{1/5}\)</span> and the mass ratio <span class="math notranslate nohighlight">\(q\)</span> and re-weight the prior. Then we fix the chirp mass to its median value (see Section 2.2 of <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2020ApJ...893L..21R/abstract">Raaijmakers et al. (2020)</a> for more details).</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}p(\boldsymbol{\theta}, \boldsymbol{\varepsilon} \,|\, &amp;\boldsymbol{d}, \mathbb{M})
+\propto p(\boldsymbol{\theta} \,|\, \mathbb{M})
+~ p(\boldsymbol{\varepsilon} \,|\, \boldsymbol{\theta}, \mathbb{M}) \\
+&amp; \times \prod_{i} p(\Lambda_{1,i}, \Lambda_{2,i}, q_i \,|\, \mathcal{M}_c, \boldsymbol{d}_{\rm GW, i}) \\
+&amp; \times \prod_{j} p(M_j, R_j \,|\, \boldsymbol{d}_{\rm NICER,j}) \\
+&amp; \times \prod_{k} p(M_k \,|\, \boldsymbol{d}_{\rm radio,k})\end{split}\]</div>
+<p>In order to account for the presence of dark matter within this inference procedure, we follow the framework outlined in <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2023PhRvD.107j3051R/abstract">Rutherford et al. (2023)</a>. The inference methods above sample over the central energy density. We instead sample over the ADM mass-fraction, the fraction of ADM mass inside the neutron star, i.e., we introduce <span class="math notranslate nohighlight">\(F_{\chi} = F_{\chi}(\boldsymbol{\theta}, \boldsymbol{\epsilon_{c,B}}, \boldsymbol{\epsilon_{c,ADM}})\)</span> and write the above as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}p(\boldsymbol{\theta}, \boldsymbol{\epsilon_{c,B}}, \nonumber \boldsymbol{F_{\chi}} |\mathbf{d}) \propto ~
+&amp; p(\boldsymbol{\theta}) p(\boldsymbol{\epsilon_{c, B}}|\boldsymbol{\theta}) p( \boldsymbol{F_{\chi}} |\boldsymbol{\theta}, \boldsymbol{\epsilon_c}) \\
+&amp; \times \prod_{i} p(\Lambda_{1,i}, \Lambda_{2,i}, q_i \,|\, \mathcal{M}_c, \boldsymbol{d}_{\rm GW, i}) \\
+&amp; \times \prod_{j} p(M_j, R_j \,|\, \boldsymbol{d}_{\rm NICER,j}) \\
+&amp; \times \prod_{k} p(M_k \,|\, \boldsymbol{d}_{\rm radio,k}),\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{\epsilon_{c,B}}\)</span> and <span class="math notranslate nohighlight">\(\boldsymbol{\epsilon_{c,ADM}}\)</span> are the central energy densities of baryonic matter and ADM, respectively. We sample over the mass-fraction because our mass-radius algorithm is structured such that the dark matter energy density is dependent on the mass-fraction.</p>
+</section>
+<section id="astrophysical-data">
+<h2>Astrophysical data<a class="headerlink" href="#astrophysical-data" title="Link to this heading"></a></h2>
+<p>The astrophysical datasets that NEoST uses come in the form of posterior distributions (e.g. for mass alone, mass-radius, or mass-tidal deformability) that are derived from separate inference analyses.  Mass posteriors come from pulsar timing analysis of pulsars in binary systems:  for an example see <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2021ApJ...915L..12F/abstract">Fonseca et al (2021)</a>.   Mass-radius posteriors from NICER data are generated via Pulse Profile Modelling, see e.g. <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2021ApJ...918L..27R/abstract">Riley et al. (2021)</a> for a discussion of the method, and the example file <code class="docutils literal notranslate"><span class="pre">examples/J0740.npy</span></code> in the NEoST Github repository.   Mass-tidal deformability posteriors are derived from gravitational wave data of neutron star binary mergers, see e.g. <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2019PhRvX...9a1001A/abstract">Abbott et al. (2019)</a> for a discussion of the method, and the example file <code class="docutils literal notranslate"><span class="pre">examples/GW170817.npy</span></code> in the NEoST Github repository.</p>
+</section>
+<section id="equation-of-state-models">
+<h2>Equation of state models<a class="headerlink" href="#equation-of-state-models" title="Link to this heading"></a></h2>
+<p>NEoST uses the following general prescription for the EoS models:</p>
+<section id="crust-models">
+<h3>Crust models<a class="headerlink" href="#crust-models" title="Link to this heading"></a></h3>
+<p>For densities below 0.5 <span class="math notranslate nohighlight">\(n_s\)</span>, where <span class="math notranslate nohighlight">\(n_s = 0.16 \mathrm{fm}^{-3}\)</span>,  NEoST uses the BPS EoS for the outer crust (<a class="reference external" href="https://ui.adsabs.harvard.edu/abs/1971ApJ...170..299B/abstract">Baym, Pethick and Sutherland 1971</a>).</p>
+<p>From this density until a core transition density (typically between 1.1 to 1.5 <span class="math notranslate nohighlight">\(n_s\)</span>) NEoST assumes a polytrope with a varying normalization that captures the range of allowed EoS from chiral effective field theory (<a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2010PhRvC..82a4314H/abstract">cEFT</a>). This intermediate part is matched to the parametrized models for core, at higher densities.  Various cEFT prescriptions are available:  <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2013ApJ...773...11H/abstract">Hebeler et al. (2013)</a>; <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2013PhRvL.110c2504T/abstract">Tews et al. (2013)</a>; <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2016PhRvL.116f2501L/abstract">Lynn et al. (2016)</a>; and <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2019PhRvL.122d2501D/abstract">Drischler et al. (2019)</a>. In the most recent version of NEoST, we have also added <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2023PhRvL.130g2701K/abstract">Keller et al. (2023)</a> <span class="math notranslate nohighlight">\(N^{2}LO\)</span> and <span class="math notranslate nohighlight">\(N^{3}LO\)</span> cEFT EOS, with calculated error bars up to 1.5 <span class="math notranslate nohighlight">\(n_s\)</span>.</p>
+</section>
+<section id="core-models">
+<h3>Core models<a class="headerlink" href="#core-models" title="Link to this heading"></a></h3>
+<p>Two parameterized core EoS models are provided:  a three-piece piecewise polytropic (PP) model with varying transition densities between the polytropes (as used in <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2013ApJ...773...11H/abstract">Hebeler et al. 2013</a>), and a speed of sound (CS) model based on physical considerations at both nuclear and high densities (<a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2019MNRAS.485.5363G/abstract">Greif, Raaijmakers et al. 2019</a>).</p>
+<p>For the <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2009PhRvD..79l4032R/abstract">PP model</a> pressure is written as <span class="math notranslate nohighlight">\(P_i\left(\rho\right)=\rho^\Gamma_i\)</span>. The free parameters are the core transition density, the two transition densities between the polytropic segments, and the three polytropic indices.   See <a class="reference internal" href="PP_example.html"><span class="doc">Piecewise Polytropic Example</span></a>.</p>
+<p>For the CS model the speed of sound is taken to have the following functional form:</p>
+<div class="math notranslate nohighlight">
+\[c_s^2/c^2(x) = a_1e^{-\frac{1}{2}(x-a_2)^2}+a_6+\frac{\frac{1}{3}-a_6}{1+e^{-a_5(x-a_4)}}\]</div>
+<p>with <span class="math notranslate nohighlight">\(x\equiv\varepsilon(m_nn_s)\)</span>, where <span class="math notranslate nohighlight">\(m_n\)</span> is the neutron mass and <span class="math notranslate nohighlight">\(n_s\)</span> the nuclear saturation density. The <span class="math notranslate nohighlight">\(a_6\)</span> parameter is used to match between the crust and the core. Parameters <span class="math notranslate nohighlight">\(a_1\)</span> through <span class="math notranslate nohighlight">\(a_5\)</span> are free parameters which are limited by a number of constraints.  Pressure can be obtained via integrating over the density in the following manner</p>
+<div class="math notranslate nohighlight">
+\[P(\varepsilon)=\int_0^\varepsilon d\varepsilon'c_s^2(\varepsilon')/c^2.\]</div>
+<p>See <a class="reference internal" href="CS_example.html"><span class="doc">Speed of Sound Example</span></a>.</p>
+<p>The user can alternatively choose to use a tabulated EoS model, in which case there are no free core EoS parameters.  See <a class="reference internal" href="Tabulated_example.html"><span class="doc">Tabulated Example</span></a>, which uses the <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/1997PhRvC..56.2261A/abstract">AP4 EoS model</a>.</p>
+<p>Additionally, the user can enable the presence of bosonic/fermionic asymmetric dark matter (ADM) from <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2019JCAP...07..012N/abstract">Nelson et al. (2018)</a>. The Nelson et al. (2018) ADM model consideres an MeV/GeV mass-scale complex scalar/spin-1/2 dirac spinor particle with repulsive self-interactions mediative by an eV/MeV mass-scale vector gauge boson. These models were considered in the inferences of <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2023PhRvD.107j3051R/abstract">Rutherford et al. (2023)</a>, which also outlines how the Bayesian inference with ADM is modified to compared to one with only baryonic matter. See <a class="reference internal" href="PP_with_ADM_example.html"><span class="doc">Piecewise Polytropic with Bosonic ADM Example</span></a>.</p>
+</section>
+</section>
+<section id="sampling">
+<h2>Sampling<a class="headerlink" href="#sampling" title="Link to this heading"></a></h2>
+<img alt="_images/NEOST_schematic.png" src="_images/NEOST_schematic.png" />
+<p>NEoST samples from the prior distribution <span class="math notranslate nohighlight">\(p(\boldsymbol{\theta} \,|\, \mathbb{M}) p(\boldsymbol{\varepsilon} \,|\, \boldsymbol{\theta}, \mathbb{M})\)</span>, computes the corresponding <span class="math notranslate nohighlight">\(M\)</span>, <span class="math notranslate nohighlight">\(R\)</span> and <span class="math notranslate nohighlight">\(\Lambda\)</span>, and then evaluates the likelihood by applying a kernel density estimation (kde, see <a class="reference internal" href="PP_example.html"><span class="doc">Piecewise Polytropic Example</span></a> for more discussion of this aspect) to the posterior distributions of the astrophysical data sets using the nested sampling software <a class="reference external" href="https://github.com/farhanferoz/MultiNest">MultiNest</a>.</p>
+<p>The prior distributions <span class="math notranslate nohighlight">\(p(\boldsymbol{\theta} \,|\, \mathbb{M})\)</span> used for the EoS models must be set:  the default priors are as described in Section 2.3 of <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2020ApJ...893L..21R/abstract">Raaijmakers et al. (2020)</a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="applications.html" class="btn btn-neutral float-right" title="Publications" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2024 the NEoST Core Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,338 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>History &mdash; NEoST 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Future" href="todo.html" />
+    <link rel="prev" title="Contributing" href="contributing.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NEoST
+              <img src="_static/neostlogo_small.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applications.html">Publications</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Team and acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="citation.html">Citation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">History</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#v2-0-0-2024-10-01">[v2.0.0 - 2024-10-01]</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#added">Added</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#attribution">Attribution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#v1-0-0-2024-09-11">[v1.0.0 - 2024-09-11]</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fixed">Fixed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Added</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#removed">Removed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#changed">Changed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Attribution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#v0-10-0-2024-07-10">[v0.10.0 - 2024-07-10]</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Fixed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Added</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">Removed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">Changed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deprecated">Deprecated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id10">Attribution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#v0-9-1-2023-09-20">[v0.9.1] - 2023-09-20</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id11">Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id12">Added</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id13">Changed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id14">Attribution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#v0-9-0-2023-09-07">[v0.9.0] - 2023-09-07</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id15">Summary</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">Future</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Start_here.html">Start here</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_example.html">Piecewise Polytropic Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_prior_example.html">Piecewise Polytropic Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_with_ADM_example.html">Piecewise Polytropic with ADM Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_with_ADM_prior_example.html">Piecewise Polytropic Prior with ADM Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ADM_MR_Tidal_tutorial.html">ADM M-R and M-Tidal Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CS_example.html">Speed of Sound Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CS_prior_example.html">Speed of Sound Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tabulated_example.html">Tabulated Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tabulated_prior_example.html">Tabulated Prior Example</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">neost</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NEoST</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">History</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/history.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="history">
+<span id="id1"></span><h1>History<a class="headerlink" href="#history" title="Link to this heading"></a></h1>
+<p>All notable changes to this project will be documented in this file.</p>
+<p>The format is based on
+<a class="reference external" href="http://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>
+and this project adheres to
+<a class="reference external" href="http://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
+<section id="v2-0-0-2024-10-01">
+<h2>[v2.0.0 - 2024-10-01]<a class="headerlink" href="#v2-0-0-2024-10-01" title="Link to this heading"></a></h2>
+<section id="summary">
+<h3>Summary<a class="headerlink" href="#summary" title="Link to this heading"></a></h3>
+<p>Included the functionality of NEoST to allow for the possibility of fermionic or bosonic asymmetric dark matter (ADM) using the Nelson et al. 2018 ADM model.</p>
+</section>
+<section id="added">
+<h3>Added<a class="headerlink" href="#added" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Two-fluid TOV solver in both python and cython that allows for an additional ADM component in the GR stellar structure equations. (TOVdm.pyx and TOVdm_python.py)</p></li>
+<li><p>Included the two-fluid tidal-deformability equations.</p></li>
+<li><p>Prior and posterior examples which include the possibility of ADM</p></li>
+<li><p>A simple tutorial showing how to compute the ADM admixed neutron star mass-radius and mass-tidal relations in NEoST.</p></li>
+<li><p>ADM functionality in base.py with “fchi_calc” and “find_epsdm_cent” functions.</p></li>
+<li><p>Calling functions in Star.py to access ADM mass and radius</p></li>
+<li><p>ADM EOS in polytropes.py, speedofsound.py, and tablualted.py</p></li>
+<li><p>ADM functionality in Likelihood.py with hard-cut offs included to eliminate non-physical parts of the ADM EOS parameter space.</p></li>
+<li><p>ADM functionality in PosteriorAnalysis.py</p></li>
+<li><p>ADM sampling in Prior.py such that ‘mchi’ (ADM particle mass) and ‘gchi_over_mphi’ (effective ADM self-repulsion strength) are sampled log-uniformly.</p></li>
+</ul>
+</section>
+<section id="attribution">
+<h3>Attribution<a class="headerlink" href="#attribution" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>NEoST core team</p></li>
+</ul>
+</section>
+</section>
+<section id="v1-0-0-2024-09-11">
+<h2>[v1.0.0 - 2024-09-11]<a class="headerlink" href="#v1-0-0-2024-09-11" title="Link to this heading"></a></h2>
+<section id="id2">
+<h3>Summary<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<p>Modernized installation, use standard python abbreviations “np” and “plt”, updated JOSS paper, minor bug fixes</p>
+</section>
+<section id="fixed">
+<h3>Fixed<a class="headerlink" href="#fixed" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>A numpy ragged-array issue in PosteriorAnalysis.compute_table_data()</p></li>
+</ul>
+</section>
+<section id="id3">
+<h3>Added<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Rutherford 2024 paper to publication list</p></li>
+<li><p>New main installation script: pyproject.toml</p></li>
+<li><p>Simple makefile that can install NEoST and also clean up generated files to simplify installation troubleshooting</p></li>
+<li><p>Reinstated tested instructions for compiling the documentation</p></li>
+</ul>
+</section>
+<section id="removed">
+<h3>Removed<a class="headerlink" href="#removed" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Unused imports and commented-out code</p></li>
+</ul>
+</section>
+<section id="changed">
+<h3>Changed<a class="headerlink" href="#changed" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The content and purpose of setup.py. This file is no longer the main installation script; its only purpose is to compile the Cython TOV solvers. To not compile these in case of issues, simply rename or delete setup.py.</p></li>
+<li><p>Installation instructions when not using conda</p></li>
+</ul>
+</section>
+<section id="id4">
+<h3>Attribution<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>NEoST core team</p></li>
+</ul>
+</section>
+</section>
+<section id="v0-10-0-2024-07-10">
+<h2>[v0.10.0 - 2024-07-10]<a class="headerlink" href="#v0-10-0-2024-07-10" title="Link to this heading"></a></h2>
+<section id="id5">
+<h3>Summary<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<p>Updates to the code and documentation for the 2024 ApJL paper, compatibility improvements</p>
+</section>
+<section id="id6">
+<h3>Fixed<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<p>Compatibility issues:</p>
+<ul class="simple">
+<li><p>A couple of numpy “ragged arrays” problems, which numpy no longer supports. Two in neost/Likelihood.py, and one in the initial_conditions() function in neost/tovsolvers/TOVr_python.py. The ragged arrays were previously constructed similar to np.array([x1, [x2], x3, [x4]]) whereas in this version they are constructed like np.array([x1, x2, x3, x4]).</p></li>
+<li><p>Cython 3 compilation issue.</p></li>
+<li><p>Use “density” instead of “normed” in numpy.histogramdd.</p></li>
+<li><p>seaborn.kdeplot: Use “fill” instead of “shade”, “levels” instead of “n_levels”, “cmap” instead of “colors”, and modify the supplied values accordingly</p></li>
+<li><p>Function name change: scipy.integrate.cumtrapz is now called scipy.integrate.cumulative_trapezoid. This was introduced in scipy 1.6 and the old name will become deprecated in scipy 1.14.</p></li>
+<li><p>Some minor plotting warnings</p></li>
+</ul>
+</section>
+<section id="id7">
+<h3>Added<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>New Keller-N2LO and Keller-N3LO crusts</p></li>
+<li><p>neost.PosteriorAnalysis.compute_table_data() function which computes a number of quantities published in tables in the 2024 ApJL paper.</p></li>
+<li><p>neost.PosteriorAnalysis.compute_prior_auxiliary_data() function, which is a simplified and faster version of neost.PosteriorAnalysis.compute_auxiliary_data().</p></li>
+<li><p>A “likelihood function” for prior samplings, which checks that our imposed constraints are fulfilled. No actual data is used in this “likelihood” so our priors are still priors.</p></li>
+<li><p>Use scipy.interpolate.interp1d if scipy.interpolate.UnivariateSpline fails in neost.eos.polytropes</p></li>
+</ul>
+</section>
+<section id="id8">
+<h3>Removed<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Dependencies: getdist, alive_progress</p></li>
+<li><p>Functionality: the option to plot two distributions at the same time using neost.PosteriorAnalysis.mass_radius_prior_predictive_plot().</p></li>
+</ul>
+</section>
+<section id="id9">
+<h3>Changed<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Cython TOV solvers no longer print “using c code”. Python TOV solvers, on the other hand, now raise a warning when they are in use.</p></li>
+<li><p>Renamed build.py to setup.py to enable installing with pip</p></li>
+<li><p>Updated core team membership</p></li>
+</ul>
+</section>
+<section id="deprecated">
+<h3>Deprecated<a class="headerlink" href="#deprecated" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Scipy &lt; 1.6 no longer supported due to the name change of scipy.integrate.cumtrapz.</p></li>
+</ul>
+</section>
+<section id="id10">
+<h3>Attribution<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>NEoST core team</p></li>
+</ul>
+</section>
+</section>
+<section id="v0-9-1-2023-09-20">
+<h2>[v0.9.1] - 2023-09-20<a class="headerlink" href="#v0-9-1-2023-09-20" title="Link to this heading"></a></h2>
+<section id="id11">
+<h3>Summary<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<p>Minor changes to all documentation and tutorials + submitted version of JOSS paper.</p>
+</section>
+<section id="id12">
+<h3>Added<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>JOSS paper (submitted version)</p></li>
+</ul>
+</section>
+<section id="id13">
+<h3>Changed<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Updates to all tutorials and documentation.</p></li>
+</ul>
+</section>
+<section id="id14">
+<h3>Attribution<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>NEoST core team</p></li>
+</ul>
+</section>
+</section>
+<section id="v0-9-0-2023-09-07">
+<h2>[v0.9.0] - 2023-09-07<a class="headerlink" href="#v0-9-0-2023-09-07" title="Link to this heading"></a></h2>
+<section id="id15">
+<h3>Summary<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
+<p>First public release of repository.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="contributing.html" class="btn btn-neutral float-left" title="Contributing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="todo.html" class="btn btn-neutral float-right" title="Future" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2024 the NEoST Core Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
