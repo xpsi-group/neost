@@ -129,7 +129,7 @@ or, equivalently,
 
 	pip install .
 
-NEoST can optionally be installed without cythonizing the TOV solvers, at the expense of much slower performance. If you wish to do this, rename or delete the ``setup.py`` file before running ``make install``.  We only recommend using the Python TOV solvers if the cythonized solvers fail to compile or run.  Note that the unit tests in the ``tests/`` directory fail if the Python solvers are used; this is expected.
+NEoST can optionally be installed without cythonizing the TOV solvers, at the expense of much slower performance. More specificaly, Cython offers a speed up of at least 15x (if dark matter is turned on) and 20x (if dark matter is turned off). If you wish to do this, rename or delete the ``setup.py`` file before running ``make install``.  We only recommend using the Python TOV solvers if the cythonized solvers fail to compile or run.  Note that the unit tests in the ``tests/`` directory fail if the Python solvers are used; this is expected.
 
 
 
