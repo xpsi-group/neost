@@ -1,0 +1,1068 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>neost.eos.base &mdash; NEoST 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            NEoST
+              <img src="../../../_static/neostlogo_small.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../applications.html">Publications</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../acknowledgements.html">Team and acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../citation.html">Citation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../todo.html">Future</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../Start_here.html">Start here</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../PP_example.html">Piecewise Polytropic Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../PP_prior_example.html">Piecewise Polytropic Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../PP_with_ADM_example.html">Piecewise Polytropic with ADM Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../PP_with_ADM_prior_example.html">Piecewise Polytropic Prior with ADM Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ADM_MR_Tidal_tutorial.html">ADM M-R and M-Tidal Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CS_example.html">Speed of Sound Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CS_prior_example.html">Speed of Sound Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Tabulated_example.html">Tabulated Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Tabulated_prior_example.html">Tabulated Prior Example</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">neost</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">NEoST</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">neost.eos.base</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for neost.eos.base</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">UnivariateSpline</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">optimize</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">odeint</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="n">Star</span> <span class="kn">import</span> <span class="nn">Star</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">global_imports</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="n">utils</span> <span class="kn">import</span> <span class="nn">m1_from_mc_m2</span><span class="o">,</span> <span class="nn">m1_m2_from_mc_q</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_c</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_G</span>
+<span class="n">Msun</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_M_s</span>
+<span class="n">pi</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_pi</span>
+<span class="n">rho_ns</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_rhons</span>
+<span class="n">dyncm2_to_MeVfm3</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_dyncm2_to_MeVfm3</span>
+<span class="n">gcm3_to_MeVfm3</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_gcm3_to_MeVfm3</span>
+<span class="n">oneoverfm_MeV</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_oneoverfm_MeV</span>
+
+
+<div class="viewcode-block" id="BaseEoS">
+<a class="viewcode-back" href="../../../neost.eos.html#neost.eos.base.BaseEoS">[docs]</a>
+<span class="k">class</span> <span class="nc">BaseEoS</span><span class="p">():</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class representing an equation of state object.</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    crust: str</span>
+<span class="sd">        The name of the EoS crust model to use. Can be either &#39;ceft-Hebeler&#39;,</span>
+<span class="sd">        &#39;ceft-Drischler&#39;, &#39;ceft-Lynn&#39;, &#39;ceft-Tews&#39;, &#39;ceft-old&#39;, &#39;BPS&#39;, or None</span>
+<span class="sd">        if a tabulated EoS with a crust model already included is used.</span>
+<span class="sd">    rho_t: float</span>
+<span class="sd">        The transition density between the crust EOS and the high density</span>
+<span class="sd">        parameterization in cgs.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    update(eos_params, max_edsc=True)</span>
+<span class="sd">        Update the EoS object with a given set of parameters</span>
+<span class="sd">    get_eos_crust()</span>
+<span class="sd">        Construct the crust of the equation of state, with or without cEFT.</span>
+<span class="sd">    plot()</span>
+<span class="sd">        Plot the equation of state.</span>
+<span class="sd">    plot_massradius()</span>
+<span class="sd">        Plot the mass-radius curve of the equation of state.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crust</span><span class="o">=</span><span class="s1">&#39;ceft-Hebeler&#39;</span><span class="p">,</span> <span class="n">rho_t</span><span class="o">=</span><span class="mf">2e14</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">crust</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ceft-Hebeler&#39;</span><span class="p">,</span> <span class="s1">&#39;ceft-Drischler&#39;</span><span class="p">,</span> <span class="s1">&#39;ceft-Lynn&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;ceft-Tews&#39;</span><span class="p">,</span> <span class="s1">&#39;ceft-Keller-N2LO&#39;</span><span class="p">,</span> <span class="s1">&#39;ceft-Keller-N3LO&#39;</span><span class="p">,</span> <span class="s1">&#39;ceft-old&#39;</span><span class="p">,</span> <span class="s1">&#39;BPS&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;crust model not recognized, choose either </span><span class="se">\</span>
+<span class="s1">                &quot;ceft-Hebeler&quot;, &quot;ceft-Drischler&quot;, &quot;ceft-Lynn&quot;, &quot;ceft-Tews&quot;, </span><span class="se">\</span>
+<span class="s1">                &quot;ceft-Keller-N2LO&quot;, &quot;ceft-Keller-N3LO&quot;, &quot;BPS&quot; or None if no crust is needed&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">crust</span> <span class="o">=</span> <span class="n">crust</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rho_t</span> <span class="o">=</span> <span class="n">rho_t</span>
+        <span class="k">if</span> <span class="n">crust</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">BPS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_BPS</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ceft</span> <span class="o">=</span> <span class="n">crust</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ceft&#39;</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceft</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="n">crust</span> <span class="o">==</span> <span class="s1">&#39;ceft-Hebeler&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">min_norm</span> <span class="o">=</span> <span class="mf">1.676</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">max_norm</span> <span class="o">=</span> <span class="mf">2.814</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">min_index</span> <span class="o">=</span> <span class="mf">2.486</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">max_index</span> <span class="o">=</span> <span class="mf">2.571</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_rho_start_ceft</span> <span class="o">=</span> <span class="mf">0.5792</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_rho_end_BPS</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+                <span class="k">if</span> <span class="n">crust</span> <span class="o">==</span> <span class="s1">&#39;ceft-Drischler&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">min_norm</span> <span class="o">=</span> <span class="mf">2.136</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">max_norm</span> <span class="o">=</span> <span class="mf">3.339</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">min_index</span> <span class="o">=</span> <span class="mf">2.623</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">max_index</span> <span class="o">=</span> <span class="mf">2.951</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_rho_start_ceft</span> <span class="o">=</span> <span class="mf">0.5625</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_rho_end_BPS</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+                <span class="k">if</span> <span class="n">crust</span> <span class="o">==</span> <span class="s1">&#39;ceft-Lynn&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">min_norm</span> <span class="o">=</span> <span class="mf">0.975</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">max_norm</span> <span class="o">=</span> <span class="mf">2.784</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">min_index</span> <span class="o">=</span> <span class="mf">1.844</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">max_index</span> <span class="o">=</span> <span class="mf">2.628</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_rho_start_ceft</span> <span class="o">=</span> <span class="mf">0.625</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_rho_end_BPS</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+                <span class="k">if</span> <span class="n">crust</span> <span class="o">==</span> <span class="s1">&#39;ceft-Tews&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">min_norm</span> <span class="o">=</span> <span class="mf">2.155</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">max_norm</span> <span class="o">=</span> <span class="mf">3.176</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">min_index</span> <span class="o">=</span> <span class="mf">2.991</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">max_index</span> <span class="o">=</span> <span class="mf">2.586</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_rho_start_ceft</span> <span class="o">=</span> <span class="mf">0.5792</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_rho_end_BPS</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+                <span class="k">if</span> <span class="n">crust</span> <span class="o">==</span> <span class="s1">&#39;ceft-Keller-N2LO&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">min_norm</span> <span class="o">=</span> <span class="mf">1.81356</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">max_norm</span> <span class="o">=</span> <span class="mf">3.49759</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">min_index</span> <span class="o">=</span> <span class="mf">2.39119</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">max_index</span> <span class="o">=</span> <span class="mf">3.00198</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_rho_start_ceft</span> <span class="o">=</span> <span class="mf">0.5792</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_rho_end_BPS</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+                <span class="k">if</span> <span class="n">crust</span> <span class="o">==</span> <span class="s1">&#39;ceft-Keller-N3LO&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">min_norm</span> <span class="o">=</span> <span class="mf">2.207</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">max_norm</span> <span class="o">=</span> <span class="mf">3.056</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">min_index</span> <span class="o">=</span> <span class="mf">2.361</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">max_index</span> <span class="o">=</span> <span class="mf">2.814</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_rho_start_ceft</span> <span class="o">=</span> <span class="mf">0.5792</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_rho_end_BPS</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+
+                <span class="k">if</span> <span class="n">crust</span> <span class="o">==</span> <span class="s1">&#39;ceft-old&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">min_norm</span> <span class="o">=</span> <span class="mf">1.7</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">max_norm</span> <span class="o">=</span> <span class="mf">2.76</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">min_index</span> <span class="o">=</span> <span class="mf">2.5</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">max_index</span> <span class="o">=</span> <span class="mf">2.5</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_rho_start_ceft</span> <span class="o">=</span> <span class="mf">0.5792</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_rho_end_BPS</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+            <span class="k">if</span> <span class="n">rho_t</span> <span class="o">&gt;</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">rho_ns</span> <span class="ow">or</span> <span class="n">rho_t</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rho_start_ceft</span> <span class="o">*</span> <span class="n">rho_ns</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The transition density should be between </span><span class="se">\</span>
+<span class="s1">                    </span><span class="si">%.2f</span><span class="s1"> and 2.0 saturation density.&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rho_start_ceft</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BaseEoS.update">
+<a class="viewcode-back" href="../../../neost.eos.html#neost.eos.base.BaseEoS.update">[docs]</a>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eos_params</span><span class="p">,</span> <span class="n">max_edsc</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to update a given EoS object with specified parameters.</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        eos_params : dict</span>
+<span class="sd">            A dictionary containing the parameter values of the EoS model.</span>
+<span class="sd">        max_edsc: bool</span>
+<span class="sd">            If True, compute the maximum central energy density allowed</span>
+<span class="sd">            by this set of parameters (default is True).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">crust</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceft</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ceft_param</span> <span class="o">=</span> <span class="n">eos_params</span><span class="p">[</span><span class="s1">&#39;ceft&#39;</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">eos_params</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span><span class="n">eos_params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">eos_params</span> <span class="k">if</span> 
+                                   <span class="n">i</span> <span class="o">!=</span> <span class="s1">&#39;ceft&#39;</span><span class="p">}</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ceft_param</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_norm</span> <span class="ow">or</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">ceft_param</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_norm</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;&quot;ceft&quot; variable should be either &quot;None&quot; </span><span class="se">\</span>
+<span class="s1">                                    or a float in the range [1.7, 2.76]&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_eos_crust</span><span class="p">()</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">eos_params</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span><span class="n">eos_params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">eos_params</span><span class="p">}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_eos_crust</span><span class="p">()</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">eos_params</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span><span class="n">eos_params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">eos_params</span><span class="p">}</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_eos</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">max_edsc</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">find_max_edsc</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_edsc</span> <span class="o">=</span> <span class="mf">0.0</span></div>
+
+
+    <span class="c1"># Compute the crust EoS</span>
+<div class="viewcode-block" id="BaseEoS.get_eos_crust">
+<a class="viewcode-back" href="../../../neost.eos.html#neost.eos.base.BaseEoS.get_eos_crust">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_eos_crust</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceft</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="c1"># TODO: add function that rho_t can be below 0.58*rho_ns</span>
+            <span class="c1"># attempt at making a different jump off from BPS</span>
+            
+            <span class="n">rhocrust</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">BPS</span><span class="p">[:,</span><span class="mi">0</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">BPS</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rho_end_BPS</span><span class="p">]</span>
+            <span class="n">rhotrans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rho_end_BPS</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rho_start_ceft</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+            <span class="n">rhocEFT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rho_start_ceft</span><span class="p">,</span> 
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">rho_t</span> <span class="o">/</span> <span class="n">rho_ns</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+            <span class="n">prescrust</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">BPS</span><span class="p">[:,</span><span class="mi">1</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">BPS</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rho_end_BPS</span><span class="p">]</span>
+            <span class="n">prescEFT</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceft_band_func</span><span class="p">(</span><span class="n">rhocEFT</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceft_param</span><span class="p">,</span>
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">min_norm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_norm</span><span class="p">,</span>
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">min_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_index</span><span class="p">)</span>
+            <span class="n">prestrans</span> <span class="o">=</span> <span class="n">prescrust</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">rhotrans</span> <span class="o">/</span> <span class="n">rhocrust</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">**</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">prescEFT</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">prescrust</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">rhocEFT</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">rhocrust</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+
+            <span class="n">rholow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">BPS</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span>
+                                                    <span class="n">rho_ns</span><span class="p">),</span> <span class="mi">50</span><span class="p">)</span>
+            <span class="n">epslow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">BPS</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span>
+                                                    <span class="n">gcm3_to_MeVfm3</span><span class="p">),</span> <span class="mi">50</span><span class="p">)</span>
+            <span class="n">preslow</span> <span class="o">=</span> <span class="p">((</span><span class="n">epslow</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">BPS</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">rho_ns</span><span class="p">))</span><span class="o">**</span><span class="p">(</span><span class="mf">5.</span> <span class="o">/</span> <span class="mf">3.</span><span class="p">)</span> <span class="o">*</span>
+                       <span class="bp">self</span><span class="o">.</span><span class="n">BPS</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">dyncm2_to_MeVfm3</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rho_crust</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">rhocrust</span><span class="p">,</span> <span class="n">rhotrans</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> 
+                                            <span class="n">rhocEFT</span><span class="p">])</span> <span class="o">*</span> <span class="n">rho_ns</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pres_crust</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">prescrust</span><span class="p">,</span> <span class="n">prestrans</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> 
+                                             <span class="n">prescEFT</span><span class="p">])</span> <span class="o">/</span> <span class="n">dyncm2_to_MeVfm3</span>
+
+            <span class="n">eps0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">BPS</span><span class="p">[:,</span><span class="mi">2</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">BPS</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rho_end_BPS</span><span class="p">]</span> <span class="o">/</span> <span class="n">gcm3_to_MeVfm3</span>
+            <span class="n">prho</span> <span class="o">=</span> <span class="n">UnivariateSpline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rho_crust</span><span class="p">,</span> 
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">_pres_crust</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+            <span class="n">result</span> <span class="o">=</span> <span class="n">odeint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edens</span><span class="p">,</span> <span class="n">eps0</span><span class="p">,</span> 
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_rho_crust</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_rho_crust</span> <span class="o">/</span> <span class="n">rho_ns</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rho_end_BPS</span><span class="p">],</span>
+                            <span class="n">args</span><span class="o">=</span><span class="nb">tuple</span><span class="p">([</span><span class="n">prho</span><span class="p">]))</span>
+            <span class="n">eds_crust</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">flatten</span><span class="p">()[</span><span class="mi">1</span><span class="p">::]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_eds_crust</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">epslow</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> 
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">BPS</span><span class="p">[:,</span><span class="mi">2</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">BPS</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rho_end_BPS</span><span class="p">]</span>
+                                            <span class="o">/</span> <span class="n">gcm3_to_MeVfm3</span><span class="p">,</span> <span class="n">eds_crust</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pres_crust</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">preslow</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pres_crust</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rho_crust</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">rholow</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rho_crust</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceft</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+
+            <span class="n">rhocrust</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">BPS</span><span class="p">[:,</span><span class="mi">0</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">BPS</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho_t</span> <span class="o">/</span> <span class="n">rho_ns</span><span class="p">]</span>
+            <span class="n">prescrust</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">BPS</span><span class="p">[:,</span><span class="mi">1</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">BPS</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho_t</span> <span class="o">/</span> <span class="n">rho_ns</span><span class="p">]</span>
+            <span class="n">edscrust</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">BPS</span><span class="p">[:,</span><span class="mi">2</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">BPS</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho_t</span> <span class="o">/</span> <span class="n">rho_ns</span><span class="p">]</span>
+
+            <span class="n">rholow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">BPS</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> 
+                                                    <span class="n">rho_ns</span><span class="p">),</span> <span class="mi">50</span><span class="p">)</span>
+            <span class="n">epslow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">BPS</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span>
+                                                    <span class="n">gcm3_to_MeVfm3</span><span class="p">),</span> <span class="mi">50</span><span class="p">)</span>
+            <span class="n">preslow</span> <span class="o">=</span> <span class="p">((</span><span class="n">epslow</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">BPS</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">rho_ns</span><span class="p">))</span><span class="o">**</span><span class="p">(</span><span class="mf">5.</span> <span class="o">/</span> <span class="mf">3.</span><span class="p">)</span> <span class="o">*</span>
+                       <span class="bp">self</span><span class="o">.</span><span class="n">BPS</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rho_crust</span> <span class="o">=</span> <span class="n">rhocrust</span> <span class="o">*</span> <span class="n">rho_ns</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pres_crust</span> <span class="o">=</span> <span class="n">prescrust</span> <span class="o">/</span> <span class="n">dyncm2_to_MeVfm3</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_eds_crust</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">epslow</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> 
+                                            <span class="n">edscrust</span> <span class="o">/</span> <span class="n">gcm3_to_MeVfm3</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pres_crust</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">preslow</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pres_crust</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rho_crust</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">rholow</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rho_crust</span><span class="p">])</span>
+
+        <span class="n">eos_crust</span> <span class="o">=</span> <span class="n">UnivariateSpline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_eds_crust</span><span class="p">,</span> 
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">_pres_crust</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cs_crust</span> <span class="o">=</span> <span class="n">eos_crust</span><span class="o">.</span><span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rhoeds_crust</span> <span class="o">=</span> <span class="n">UnivariateSpline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rho_crust</span><span class="p">,</span> 
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">_eds_crust</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eds_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eds_crust</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">P_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pres_crust</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+    <span class="c1">#######################</span>
+    <span class="c1"># Auxiliary functions #</span>
+    <span class="c1">#######################</span>
+
+    <span class="c1"># Analytic representation of the SLy EoS, used for crust</span>
+<div class="viewcode-block" id="BaseEoS.SLYfit">
+<a class="viewcode-back" href="../../../neost.eos.html#neost.eos.base.BaseEoS.SLYfit">[docs]</a>
+    <span class="k">def</span> <span class="nf">SLYfit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">):</span>
+
+        <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">6.22</span><span class="p">,</span> <span class="mf">6.121</span><span class="p">,</span> <span class="mf">0.005925</span><span class="p">,</span> <span class="mf">0.16326</span><span class="p">,</span> <span class="mf">6.48</span><span class="p">,</span> <span class="mf">11.4971</span><span class="p">,</span> <span class="mf">19.105</span><span class="p">,</span>
+                         <span class="mf">0.8938</span><span class="p">,</span> <span class="mf">6.54</span><span class="p">,</span> <span class="mf">11.4950</span><span class="p">,</span> <span class="o">-</span><span class="mf">22.775</span><span class="p">,</span> <span class="mf">1.5707</span><span class="p">,</span> <span class="mf">4.3</span><span class="p">,</span> <span class="mf">14.08</span><span class="p">,</span>
+                         <span class="mf">27.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.653</span><span class="p">,</span> <span class="mf">1.50</span><span class="p">,</span> <span class="mf">14.67</span><span class="p">])</span>
+        <span class="n">part1</span> <span class="o">=</span> <span class="p">((</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">rho</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">rho</span><span class="o">**</span><span class="mf">3.</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="n">rho</span><span class="p">)</span> <span class="o">*</span>
+                 <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">rho</span> <span class="o">-</span> <span class="n">a</span><span class="p">[</span><span class="mi">5</span><span class="p">]))</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">))</span>
+        <span class="n">part2</span> <span class="o">=</span> <span class="p">((</span><span class="n">a</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">*</span> <span class="n">rho</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.</span> <span class="o">/</span> 
+                 <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">-</span> <span class="n">rho</span><span class="p">))</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">))</span>
+        <span class="n">part3</span> <span class="o">=</span> <span class="p">((</span><span class="n">a</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span> <span class="o">*</span> <span class="n">rho</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.</span> <span class="o">/</span>
+                 <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span> <span class="o">-</span> <span class="n">rho</span><span class="p">))</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">))</span>
+        <span class="n">part4</span> <span class="o">=</span> <span class="p">((</span><span class="n">a</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">*</span> <span class="n">rho</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.</span> <span class="o">/</span>
+                 <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">17</span><span class="p">]</span> <span class="o">-</span> <span class="n">rho</span><span class="p">))</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">))</span>
+        <span class="n">pres</span> <span class="o">=</span> <span class="n">part1</span> <span class="o">+</span> <span class="n">part2</span> <span class="o">+</span> <span class="n">part3</span> <span class="o">+</span> <span class="n">part4</span>
+        <span class="k">return</span> <span class="n">pres</span></div>
+
+
+<div class="viewcode-block" id="BaseEoS.edens">
+<a class="viewcode-back" href="../../../neost.eos.html#neost.eos.base.BaseEoS.edens">[docs]</a>
+    <span class="k">def</span> <span class="nf">edens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eps</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">eos</span><span class="p">):</span>
+        <span class="n">dedrho</span> <span class="o">=</span> <span class="p">(</span><span class="n">eos</span><span class="p">(</span><span class="n">rho</span><span class="p">)</span> <span class="o">/</span> <span class="n">c</span><span class="o">**</span><span class="mf">2.</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span> <span class="o">/</span> <span class="n">rho</span>  <span class="c1">#eos(rho) is a pressure, which when divided by c^2 gives units of g/cm^3</span>
+        <span class="k">return</span> <span class="n">dedrho</span></div>
+
+
+<div class="viewcode-block" id="BaseEoS.rhodens">
+<a class="viewcode-back" href="../../../neost.eos.html#neost.eos.base.BaseEoS.rhodens">[docs]</a>
+    <span class="k">def</span> <span class="nf">rhodens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">eps</span><span class="p">):</span>
+        <span class="n">eos</span> <span class="o">=</span> <span class="n">UnivariateSpline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_eds_core</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pres_core</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">drhode</span> <span class="o">=</span> <span class="n">rho</span> <span class="o">/</span> <span class="p">(</span><span class="n">eos</span><span class="p">(</span><span class="n">eps</span><span class="p">)</span> <span class="o">/</span> <span class="n">c</span><span class="o">**</span><span class="mf">2.</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span> <span class="c1">#same reasoning as above</span>
+        <span class="k">return</span> <span class="n">drhode</span></div>
+
+
+<div class="viewcode-block" id="BaseEoS.PofE">
+<a class="viewcode-back" href="../../../neost.eos.html#neost.eos.base.BaseEoS.PofE">[docs]</a>
+    <span class="k">def</span> <span class="nf">PofE</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">E</span><span class="p">,</span> <span class="n">epsgrid</span><span class="p">,</span> <span class="n">presgrid</span><span class="p">):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">epsgrid</span><span class="p">,</span> <span class="n">E</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">pres</span> <span class="o">=</span> <span class="n">presgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">pow</span><span class="p">(</span><span class="n">E</span> <span class="o">/</span> <span class="n">epsgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">5.</span> <span class="o">/</span> <span class="mf">3.</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">epsgrid</span><span class="p">):</span> 
+            <span class="n">pres</span> <span class="o">=</span> <span class="n">presgrid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">pow</span><span class="p">(</span><span class="n">E</span> <span class="o">/</span> <span class="n">epsgrid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mf">5.</span> <span class="o">/</span> <span class="mf">3.</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">presgrid</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">/</span> <span class="n">presgrid</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">epsgrid</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">/</span> <span class="n">epsgrid</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="n">pres</span> <span class="o">=</span> <span class="n">presgrid</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">E</span> <span class="o">/</span> <span class="n">epsgrid</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span><span class="o">**</span><span class="n">ci</span>
+        <span class="k">return</span> <span class="n">pres</span></div>
+
+
+<div class="viewcode-block" id="BaseEoS.CofE">
+<a class="viewcode-back" href="../../../neost.eos.html#neost.eos.base.BaseEoS.CofE">[docs]</a>
+    <span class="k">def</span> <span class="nf">CofE</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">epsgrid</span><span class="p">,</span> <span class="n">presgrid</span><span class="p">):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">epsgrid</span><span class="p">,</span> <span class="n">E</span><span class="p">)</span>
+        <span class="n">ci</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">presgrid</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">/</span> <span class="n">presgrid</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span>
+              <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">epsgrid</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">/</span> <span class="n">epsgrid</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="p">((</span><span class="n">presgrid</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">epsgrid</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">ci</span> <span class="o">*</span>
+                <span class="p">(</span><span class="n">E</span> <span class="o">/</span> <span class="n">epsgrid</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span><span class="o">**</span><span class="p">(</span><span class="n">ci</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">))</span> <span class="o">/</span> <span class="n">c</span><span class="o">**</span><span class="mf">2.</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseEoS.EofP">
+<a class="viewcode-back" href="../../../neost.eos.html#neost.eos.base.BaseEoS.EofP">[docs]</a>
+    <span class="k">def</span> <span class="nf">EofP</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">epsgrid</span><span class="p">,</span> <span class="n">presgrid</span><span class="p">):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">presgrid</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">eds</span> <span class="o">=</span> <span class="n">epsgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">pow</span><span class="p">(</span><span class="n">P</span> <span class="o">/</span> <span class="n">presgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">3.</span> <span class="o">/</span> <span class="mf">5.</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">epsgrid</span><span class="p">):</span> 
+            <span class="n">eds</span> <span class="o">=</span> <span class="n">epsgrid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">pow</span><span class="p">(</span><span class="n">P</span> <span class="o">/</span> <span class="n">presgrid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mf">3.</span> <span class="o">/</span> <span class="mf">5.</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ci</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">presgrid</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">/</span> <span class="n">presgrid</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span>
+                  <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">epsgrid</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">/</span> <span class="n">epsgrid</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]))</span>
+            <span class="n">eds</span> <span class="o">=</span> <span class="n">epsgrid</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">pow</span><span class="p">(</span><span class="n">P</span> <span class="o">/</span> <span class="n">presgrid</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">ci</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">eds</span></div>
+
+
+<div class="viewcode-block" id="BaseEoS.EofRho">
+<a class="viewcode-back" href="../../../neost.eos.html#neost.eos.base.BaseEoS.EofRho">[docs]</a>
+    <span class="k">def</span> <span class="nf">EofRho</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">rhos</span><span class="p">,</span> <span class="n">eps</span><span class="p">):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">rhos</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+        <span class="n">ci</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">eps</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">/</span> <span class="n">eps</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span>
+              <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">rhos</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">/</span> <span class="n">rhos</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">eps</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">rho</span> <span class="o">/</span> <span class="n">rhos</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span><span class="o">**</span><span class="n">ci</span></div>
+
+
+
+    <span class="c1"># Find maximum central energy density</span>
+<div class="viewcode-block" id="BaseEoS.find_max_edsc">
+<a class="viewcode-back" href="../../../neost.eos.html#neost.eos.base.BaseEoS.find_max_edsc">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_max_edsc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">min_edsc0</span> <span class="o">=</span> <span class="mf">14.3</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho_t</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">eds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rho_t</span><span class="p">),</span> 
+                                 <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">4e16</span><span class="p">),</span> <span class="mi">1000</span><span class="p">)</span> <span class="c1">#eds is in units of g/cm^3,  </span>
+                                                                
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">eds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="mf">14.3</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">4e16</span><span class="p">),</span> <span class="mi">1000</span><span class="p">)</span> <span class="c1">#same as above</span>
+        <span class="n">dpde</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eos</span><span class="o">.</span><span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">cs</span> <span class="o">=</span> <span class="n">dpde</span><span class="p">(</span><span class="n">eds</span><span class="p">)</span><span class="o">/</span><span class="n">c</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">acausal</span> <span class="o">=</span> <span class="mf">1.</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">eds</span><span class="p">[</span><span class="n">cs</span> <span class="o">&gt;</span> <span class="n">acausal</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">maximum</span> <span class="o">=</span> <span class="n">eds</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">eds</span> <span class="o">==</span> <span class="nb">min</span><span class="p">(</span><span class="n">eds</span><span class="p">[</span><span class="n">cs</span> <span class="o">&gt;</span> <span class="n">acausal</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">maximum</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">min_edsc0</span><span class="p">:</span> <span class="c1"># g/cm^3</span>
+                <span class="n">maximum</span> <span class="o">=</span> <span class="n">min_edsc0</span> <span class="o">+</span> <span class="mf">0.01</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">maximum</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">eds</span><span class="p">)</span>
+ 
+        <span class="n">eds_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">min_edsc0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">maximum</span><span class="p">),</span> <span class="mi">50</span><span class="p">)</span> <span class="c1"># g/cm^3</span>
+        <span class="n">Ms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">eds_c</span><span class="p">),</span><span class="mi">3</span><span class="p">))</span>
+        
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">eds_c</span><span class="p">):</span>
+            <span class="n">star</span> <span class="o">=</span> <span class="n">Star</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="n">star</span><span class="o">.</span><span class="n">solve_structure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">energydensities</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pressures</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">star</span><span class="o">.</span><span class="n">Mrot</span> <span class="o">&lt;</span> <span class="n">Ms</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="k">break</span>
+            <span class="n">Ms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">star</span><span class="o">.</span><span class="n">Mrot</span><span class="p">,</span> <span class="n">star</span><span class="o">.</span><span class="n">Req</span><span class="p">,</span> <span class="n">star</span><span class="o">.</span><span class="n">tidal</span>
+
+        <span class="n">Ms</span> <span class="o">=</span> <span class="n">Ms</span><span class="p">[</span><span class="n">Ms</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">]</span>
+        <span class="n">eds_c</span> <span class="o">=</span> <span class="n">eds_c</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">Ms</span><span class="p">)]</span>
+        <span class="n">test</span><span class="p">,</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">Ms</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">return_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">Ms</span> <span class="o">=</span> <span class="n">Ms</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+        <span class="n">eds_c</span> <span class="o">=</span> <span class="n">eds_c</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+ 
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_M</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">Ms</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">index_max_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">Ms</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Radius_max_M</span> <span class="o">=</span> <span class="n">Ms</span><span class="p">[:,</span><span class="mi">1</span><span class="p">][</span><span class="n">index_max_M</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_edsc</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">eds_c</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_edsc</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">min_edsc0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">Ms</span><span class="p">[:,</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.9</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">min_edsc</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">eds_c</span><span class="p">[</span><span class="n">Ms</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.9</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">centraleds</span> <span class="o">=</span> <span class="n">eds_c</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">massradius</span> <span class="o">=</span> <span class="n">Ms</span></div>
+
+
+    
+<div class="viewcode-block" id="BaseEoS.f_chi_calc">
+<a class="viewcode-back" href="../../../neost.eos.html#neost.eos.base.BaseEoS.f_chi_calc">[docs]</a>
+    <span class="k">def</span> <span class="nf">f_chi_calc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">epscent</span><span class="p">,</span><span class="n">epscent_dm</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to calculate the ADM mass-fraction given the baryonic and ADM central densities, respectively.</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        epscent : float</span>
+<span class="sd">            Baryonic central energy density in cgs units for mass-density, i.e., divided by the speed of light squared.</span>
+<span class="sd">        epscent_dm: float</span>
+<span class="sd">            ADM central energy density in cgs units for mass-density, i.e., divided by the speed of light squared.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">star</span> <span class="o">=</span> <span class="n">Star</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span> <span class="n">epscent_dm</span><span class="p">)</span> 
+        <span class="n">star</span><span class="o">.</span><span class="n">solve_structure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">energydensities</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pressures</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">energydensities_dm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pressures_dm</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">dm_halo</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fchi</span> <span class="o">=</span> <span class="p">(</span><span class="n">star</span><span class="o">.</span><span class="n">Mdm</span><span class="o">/</span><span class="n">star</span><span class="o">.</span><span class="n">Mrot</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span>
+        <span class="k">except</span> <span class="ne">ZeroDivisionError</span><span class="p">:</span>
+            <span class="n">fchi</span> <span class="o">=</span> <span class="mf">999.0</span>
+        <span class="k">return</span> <span class="n">fchi</span></div>
+
+
+
+    
+<div class="viewcode-block" id="BaseEoS.find_epsdm_cent">
+<a class="viewcode-back" href="../../../neost.eos.html#neost.eos.base.BaseEoS.find_epsdm_cent">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_epsdm_cent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ADM_fraction</span><span class="p">,</span><span class="n">epscent</span><span class="p">):</span> <span class="c1">##(Also these all get implemented in g/cm^3), just like epscent</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to calculate the ADM central energy density given the baryonic central energy</span>
+<span class="sd">        density and ADM mass-fraction. Uses a wide array of different intervals of central energy densities </span>
+<span class="sd">        to determine the ADM central energy density as a root finding problem.</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ADM_fraction: float</span>
+<span class="sd">            Given ADM mass-fraction as a percentage [%]</span>
+<span class="sd">        epscent : float</span>
+<span class="sd">            Baryonic central energy density in cgs units for mass-density, i.e., divided by the speed of light squared.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="n">ADM_fraction</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#variable to track which interval the solver fails/passes on</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mi">0</span> <span class="p">,</span><span class="n">epscent</span> <span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">,</span><span class="n">full_output</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>  <span class="c1">#epscent</span>
+            
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">1e14</span> <span class="p">,</span><span class="mf">1e20</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">,</span><span class="n">full_output</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+                
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="mi">3</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mf">9e19</span><span class="p">,</span><span class="mf">5e22</span> <span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">,</span><span class="n">full_output</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+                    
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="mi">4</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">1e22</span> <span class="p">,</span><span class="mf">1e24</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span><span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">,</span><span class="n">full_output</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+                        
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="n">x</span> <span class="o">=</span> <span class="mi">5</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">9e23</span><span class="p">,</span><span class="mf">1e25</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span><span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">,</span><span class="n">full_output</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> 
+                            <span class="c1">#eliminate</span>
+                        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                            <span class="n">sol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1e10</span><span class="p">])</span> <span class="c1">#a specific value that is obvious to point out, needs to be an array since solvers have full_output = True so we can see details about them</span>
+        
+        <span class="n">ADM_fracplus</span> <span class="o">=</span> <span class="n">ADM_fraction</span> <span class="o">+</span> <span class="mf">.05</span><span class="o">*</span><span class="n">ADM_fraction</span>
+        <span class="n">ADM_fracminus</span> <span class="o">=</span> <span class="n">ADM_fraction</span> <span class="o">-</span> <span class="mf">.05</span><span class="o">*</span><span class="n">ADM_fraction</span>
+        <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+
+
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">f_chi_calc</span> <span class="o">&gt;</span> <span class="n">ADM_fracplus</span> <span class="ow">or</span> <span class="n">f_chi_calc</span> <span class="o">&lt;</span> <span class="n">ADM_fracminus</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">f_chi_calc</span> <span class="o">&gt;</span> <span class="n">ADM_fraction</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">epsdm_cent</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">):</span> <span class="c1">#epsdm_cent can still wind up being zero, so need to account for it</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="o">*</span><span class="mf">.75</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span><span class="n">xtol</span><span class="o">=</span><span class="mf">1e-24</span><span class="p">)</span>
+                        <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">low</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)))</span> <span class="o">-</span> <span class="mf">0.5</span>
+                            <span class="n">low</span> <span class="o">=</span> <span class="mi">5</span><span class="o">*</span><span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="n">low</span><span class="p">)</span>
+                            <span class="n">high</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)))</span> <span class="o">+</span> <span class="mf">0.5</span>
+                            <span class="n">high</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="n">high</span><span class="p">)</span>
+                            <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">low</span><span class="p">,</span><span class="n">high</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span><span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                            <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                            <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span>
+
+                    <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_chi_calc</span> <span class="o">&gt;</span> <span class="n">ADM_fracplus</span> <span class="ow">or</span> <span class="n">f_chi_calc</span> <span class="o">&lt;</span> <span class="n">ADM_fracminus</span><span class="p">):</span>                 
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="o">*</span><span class="mf">.75</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="o">*</span><span class="mf">1.01</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span><span class="n">xtol</span><span class="o">=</span><span class="mf">1e-24</span><span class="p">)</span>
+                            <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                            <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span>
+                            
+                        <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_chi_calc</span> <span class="o">&gt;</span> <span class="n">ADM_fracplus</span> <span class="ow">or</span> <span class="n">f_chi_calc</span> <span class="o">&lt;</span> <span class="n">ADM_fracminus</span><span class="p">):</span>
+                        <span class="k">if</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e18</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e5</span><span class="p">):</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">1e5</span><span class="p">,</span><span class="mf">1e18</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span><span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span>
+                            <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+                        <span class="k">elif</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e21</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span><span class="o">&gt;</span><span class="mf">1e18</span><span class="p">):</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">1e18</span><span class="p">,</span><span class="mf">1e21</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span><span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span>
+                            <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+                        <span class="k">elif</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e22</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e21</span><span class="p">):</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">1e21</span><span class="p">,</span><span class="mf">1e22</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span><span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span>
+
+                            <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span> 
+                        <span class="k">elif</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e24</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e22</span><span class="p">):</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">1e22</span><span class="p">,</span><span class="mf">1e24</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span><span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span>
+
+                            <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+                        <span class="k">elif</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">5e24</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e24</span><span class="p">):</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">1e24</span><span class="p">,</span><span class="mf">5e24</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span><span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span>
+                            <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+                        <span class="k">elif</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e25</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">5e24</span><span class="p">):</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">5e24</span><span class="p">,</span><span class="mf">1e25</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span><span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span>
+                                
+                            <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+
+                        <span class="k">if</span><span class="p">(</span><span class="n">f_chi_calc</span> <span class="o">&gt;</span> <span class="n">ADM_fracplus</span> <span class="ow">or</span> <span class="n">f_chi_calc</span> <span class="o">&lt;</span> <span class="n">ADM_fracminus</span><span class="p">):</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">4e24</span><span class="p">,</span><span class="mf">1e25</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span>
+                                    
+                            <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+                            <span class="k">if</span><span class="p">(</span><span class="n">f_chi_calc</span> <span class="o">&gt;</span> <span class="n">ADM_fracplus</span> <span class="ow">or</span> <span class="n">f_chi_calc</span> <span class="o">&lt;</span> <span class="n">ADM_fracminus</span><span class="p">):</span>
+                                <span class="k">try</span><span class="p">:</span>
+                                    <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">6e24</span><span class="p">,</span><span class="mf">1e25</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                                    <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                                    <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span> 
+                                        
+                                <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+                                <span class="k">if</span><span class="p">(</span><span class="n">f_chi_calc</span> <span class="o">&gt;</span> <span class="n">ADM_fracplus</span> <span class="ow">or</span> <span class="n">f_chi_calc</span> <span class="o">&lt;</span> <span class="n">ADM_fracminus</span><span class="p">):</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">False</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">True</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">else</span><span class="p">:</span> 
+                        <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">True</span>
+                    
+            <span class="k">elif</span> <span class="n">f_chi_calc</span> <span class="o">&lt;</span> <span class="n">ADM_fraction</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span> 
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">1e10</span><span class="p">,</span><span class="mf">5e22</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                        <span class="n">epsdm_cent</span>  <span class="o">=</span> <span class="n">sol</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span> 
+                        <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="mf">1e15</span>
+                        
+                    <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+
+                    <span class="k">if</span><span class="p">(</span><span class="n">f_chi_calc</span> <span class="o">&gt;</span> <span class="n">ADM_fracplus</span> <span class="ow">or</span> <span class="n">f_chi_calc</span> <span class="o">&lt;</span> <span class="n">ADM_fracminus</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="k">elif</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span> <span class="c1">#x = 3 ---&gt; solver for 5e19 to 5e22</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">toms748</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">1e21</span><span class="p">,</span><span class="mf">5e22</span><span class="p">,</span> <span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">xtol</span>  <span class="o">=</span> <span class="mf">1e-24</span><span class="p">,</span><span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                        <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="mf">1e22</span> <span class="c1"># a test value in the range! Since next attempt is based on epsdm_cent</span>
+                        
+                    <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_chi_calc</span> <span class="o">&gt;</span> <span class="n">ADM_fracplus</span> <span class="ow">or</span> <span class="n">f_chi_calc</span> <span class="o">&lt;</span> <span class="n">ADM_fracminus</span><span class="p">):</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">low</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)))</span> <span class="o">-</span> <span class="mi">1</span>
+                            <span class="n">low</span> <span class="o">=</span> <span class="mi">5</span><span class="o">*</span><span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="n">low</span><span class="p">)</span>
+                            <span class="n">high</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)))</span> <span class="o">+</span> <span class="mi">1</span>
+                            <span class="n">high</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="n">high</span><span class="p">)</span>
+                            <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">low</span><span class="p">,</span><span class="n">high</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span><span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                            <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                            <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="mf">1e22</span>
+
+                        <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">True</span>
+                        
+                        
+
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_chi_calc</span> <span class="o">&gt;</span> <span class="n">ADM_fracplus</span> <span class="ow">or</span> <span class="n">f_chi_calc</span> <span class="o">&lt;</span> <span class="n">ADM_fracminus</span><span class="p">):</span>
+                        <span class="k">if</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e22</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e21</span><span class="p">):</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">1e21</span><span class="p">,</span><span class="mf">1e22</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span><span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span>
+                            <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+                        <span class="k">elif</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e23</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">5e21</span><span class="p">):</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">5e21</span><span class="p">,</span><span class="mf">1e23</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span><span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span>
+                            
+                            <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+
+                        <span class="k">if</span><span class="p">(</span><span class="n">f_chi_calc</span> <span class="o">&gt;</span> <span class="n">ADM_fracplus</span> <span class="ow">or</span> <span class="n">f_chi_calc</span> <span class="o">&lt;</span> <span class="n">ADM_fracminus</span><span class="p">):</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">True</span>
+                
+                <span class="k">elif</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>  <span class="c1"># x = 4 ---&gt; solver in 1e22 to 1e24</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">1e22</span><span class="p">,</span><span class="mf">1e23</span><span class="p">,</span> <span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                        <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">1e23</span><span class="p">,</span><span class="mf">1e25</span><span class="p">,</span> <span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                            <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                            <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span>
+                    
+                    <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span> <span class="n">epsdm_cent</span><span class="p">)</span>
+
+                    <span class="k">if</span><span class="p">(</span><span class="n">f_chi_calc</span> <span class="o">&gt;</span> <span class="n">ADM_fracplus</span> <span class="ow">or</span> <span class="n">f_chi_calc</span> <span class="o">&lt;</span> <span class="n">ADM_fracminus</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">5e22</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e22</span><span class="p">):</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">sol</span>  <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">1e22</span><span class="p">,</span><span class="mf">5e22</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span>
+
+                        <span class="k">elif</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e23</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">5e22</span><span class="p">):</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">5e22</span><span class="p">,</span><span class="mf">1e23</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span>
+                            <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+                        <span class="k">elif</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">5e23</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e23</span><span class="p">):</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">sol</span>  <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">1e23</span><span class="p">,</span><span class="mf">5e23</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span>
+                            <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+                        <span class="k">elif</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e24</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">5e23</span><span class="p">):</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">5e23</span><span class="p">,</span><span class="mf">1e24</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span>
+
+                            <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+
+                        <span class="k">if</span><span class="p">(</span><span class="n">f_chi_calc</span> <span class="o">&gt;</span> <span class="n">ADM_fracplus</span> <span class="ow">or</span> <span class="n">f_chi_calc</span> <span class="o">&lt;</span> <span class="n">ADM_fracminus</span><span class="p">):</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">True</span>
+                            
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">True</span> 
+                        
+                <span class="k">elif</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>  <span class="c1">#x = 5 --&gt; solver in 9e23 and 1e25</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">1e24</span><span class="p">,</span><span class="mf">5e24</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span> <span class="c1">#1e24 5e24</span>
+                        <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">5e24</span><span class="p">,</span><span class="mf">1e25</span><span class="p">,</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span><span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span> <span class="c1">#5e24 1e25 </span>
+                            <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                            <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span>
+                           
+                        <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+
+                    <span class="k">if</span><span class="p">(</span><span class="n">f_chi_calc</span> <span class="o">&gt;</span> <span class="n">ADM_fracplus</span> <span class="ow">or</span> <span class="n">f_chi_calc</span> <span class="o">&lt;</span> <span class="n">ADM_fracminus</span><span class="p">):</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">toms748</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">1e24</span><span class="p">,</span><span class="mf">5e24</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                            <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">sol</span>  <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">toms748</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">5e24</span><span class="p">,</span><span class="mf">1e25</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span>
+                                
+                        <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_chi_calc</span> <span class="o">&gt;</span> <span class="n">ADM_fracplus</span> <span class="ow">or</span> <span class="n">f_chi_calc</span> <span class="o">&lt;</span> <span class="n">ADM_fracminus</span><span class="p">):</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">low</span>  <span class="o">=</span> <span class="n">epsdm_cent</span> <span class="o">-</span> <span class="mf">.5e24</span>
+                            <span class="n">high</span> <span class="o">=</span> <span class="n">epsdm_cent</span> <span class="o">+</span> <span class="mf">.5e24</span>
+                            <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">low</span><span class="p">,</span><span class="n">high</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                            <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                            <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span>
+                            
+                        <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">f_chi_calc</span> <span class="o">&gt;</span> <span class="n">ADM_fracplus</span> <span class="ow">or</span> <span class="n">f_chi_calc</span> <span class="o">&lt;</span> <span class="n">ADM_fracminus</span><span class="p">):</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">low</span>  <span class="o">=</span> <span class="n">epsdm_cent</span> <span class="o">-</span> <span class="mf">.5e24</span>
+                                <span class="n">high</span> <span class="o">=</span> <span class="n">epsdm_cent</span> <span class="o">+</span> <span class="mf">.5e24</span>
+                                <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">toms748</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">low</span><span class="p">,</span><span class="n">high</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span>
+                                
+                            <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+                            
+                            <span class="k">if</span> <span class="p">(</span><span class="n">f_chi_calc</span> <span class="o">&gt;</span> <span class="n">ADM_fracplus</span> <span class="ow">or</span> <span class="n">f_chi_calc</span> <span class="o">&lt;</span> <span class="n">ADM_fracminus</span><span class="p">):</span>
+                                <span class="k">if</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mf">24.5</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e24</span><span class="p">):</span>
+                                    <span class="k">try</span><span class="p">:</span>
+                                        <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">1e24</span><span class="p">,</span><span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mf">24.5</span><span class="p">),</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                                        <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                                        <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span>
+
+                                    <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span> <span class="n">epsdm_cent</span><span class="p">)</span>
+
+                                <span class="k">elif</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e25</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">epsdm_cent</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mf">24.5</span><span class="p">)):</span>
+                                    <span class="k">try</span><span class="p">:</span>
+                                        <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mf">24.5</span><span class="p">),</span> <span class="mf">1e25</span><span class="p">,</span> <span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                                        <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                                        <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">epsdm_cent</span>
+
+                                    <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span> <span class="n">epsdm_cent</span><span class="p">)</span>
+
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="k">try</span><span class="p">:</span>
+                                        <span class="n">sol</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">toms748</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mf">9e23</span><span class="p">,</span><span class="mf">1e25</span><span class="p">,</span><span class="n">maxiter</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-24</span><span class="p">)</span>
+                                        <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="n">sol</span>
+                                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                                        <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mf">24.4</span><span class="p">)</span> <span class="c1">#just an explicit answer in case the above fails, so pick a middle guess</span>
+
+                                    <span class="n">f_chi_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_chi_calc</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span> <span class="n">epsdm_cent</span><span class="p">)</span>
+                                    
+                                <span class="k">if</span><span class="p">(</span><span class="n">f_chi_calc</span> <span class="o">&gt;</span> <span class="n">ADM_fracplus</span> <span class="ow">or</span> <span class="n">f_chi_calc</span> <span class="o">&lt;</span> <span class="n">ADM_fracminus</span><span class="p">):</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">False</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">True</span>
+
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">True</span>
+                       
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">True</span>
+                       
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">True</span>
+    
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">f_chi_calc</span><span class="p">)</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">epsdm_cent</span></div>
+
+
+<div class="viewcode-block" id="BaseEoS.Mass_Radius">
+<a class="viewcode-back" href="../../../neost.eos.html#neost.eos.base.BaseEoS.Mass_Radius">[docs]</a>
+    <span class="k">def</span> <span class="nf">Mass_Radius</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">epscent</span><span class="p">,</span><span class="n">epscent_dm</span><span class="p">):</span>
+        <span class="n">star</span> <span class="o">=</span> <span class="n">Star</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span> <span class="n">epscent_dm</span><span class="p">)</span> 
+        <span class="n">star</span><span class="o">.</span><span class="n">solve_structure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">energydensities</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pressures</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">energydensities_dm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pressures_dm</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">star</span><span class="o">.</span><span class="n">Mgrav</span><span class="p">,</span><span class="n">star</span><span class="o">.</span><span class="n">Req</span><span class="p">,</span> <span class="n">star</span><span class="o">.</span><span class="n">Mdm</span><span class="p">,</span><span class="n">star</span><span class="o">.</span><span class="n">Rdm</span></div>
+
+
+
+<div class="viewcode-block" id="BaseEoS.get_minmax_edsc_chirp">
+<a class="viewcode-back" href="../../../neost.eos.html#neost.eos.base.BaseEoS.get_minmax_edsc_chirp">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_minmax_edsc_chirp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chirp</span><span class="p">):</span>
+
+        <span class="n">spline</span> <span class="o">=</span> <span class="n">UnivariateSpline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">massradius</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">centraleds</span><span class="p">,</span>
+                                  <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">min_mass</span> <span class="o">=</span> <span class="n">m1_from_mc_m2</span><span class="p">(</span><span class="n">chirp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_M</span><span class="p">)</span>
+        <span class="n">max_mass</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">m1_m2_from_mc_q</span><span class="p">(</span><span class="n">chirp</span><span class="p">,</span> <span class="mf">1.</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">massradius</span><span class="p">[:,</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">min_mass</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">massradius</span><span class="p">[:,</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">min_edsc</span> <span class="o">=</span> <span class="n">spline</span><span class="p">(</span><span class="n">min_mass</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">min_edsc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_edsc</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">massradius</span><span class="p">[:,</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">max_mass</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">massradius</span><span class="p">[:,</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">max_edsc</span> <span class="o">=</span> <span class="n">spline</span><span class="p">(</span><span class="n">max_mass</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">max_edsc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_edsc</span>
+
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">min_edsc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_edsc</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">max_edsc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_edsc</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseEoS.polytropic_func">
+<a class="viewcode-back" href="../../../neost.eos.html#neost.eos.base.BaseEoS.polytropic_func">[docs]</a>
+    <span class="k">def</span> <span class="nf">polytropic_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">K</span> <span class="o">*</span> <span class="n">rho</span><span class="o">**</span><span class="n">index</span></div>
+
+
+<div class="viewcode-block" id="BaseEoS.ceft_band_func">
+<a class="viewcode-back" href="../../../neost.eos.html#neost.eos.base.BaseEoS.ceft_band_func">[docs]</a>
+    <span class="k">def</span> <span class="nf">ceft_band_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">min_norm</span><span class="p">,</span>
+                       <span class="n">max_norm</span><span class="p">,</span> <span class="n">min_index</span><span class="p">,</span> <span class="n">max_index</span><span class="p">):</span>
+
+        <span class="n">index</span> <span class="o">=</span> <span class="p">((</span><span class="n">norm</span> <span class="o">-</span> <span class="n">min_norm</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_norm</span> <span class="o">-</span> <span class="n">min_norm</span><span class="p">)</span> <span class="o">*</span>
+                 <span class="p">(</span><span class="n">max_index</span> <span class="o">-</span> <span class="n">min_index</span><span class="p">)</span> <span class="o">+</span> <span class="n">min_index</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">polytropic_func</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span></div>
+
+
+    
+<div class="viewcode-block" id="BaseEoS.plot">
+<a class="viewcode-back" href="../../../neost.eos.html#neost.eos.base.BaseEoS.plot">[docs]</a>
+    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dm</span> <span class="o">=</span> <span class="s1">&#39;None&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Plot the EoS. If dm is not &#39;None&#39; will include ADM contribution.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">crust</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rho_crust</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="mf">13.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rho_t</span><span class="p">),</span>
+                                       <span class="mi">100</span><span class="p">)</span>  <span class="c1">#rho_crust is in units of g/cm^3 </span>
+                                                        
+            <span class="n">rho_core</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rho_t</span><span class="p">),</span> 
+                                      <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">8e15</span><span class="p">),</span> <span class="mi">100</span><span class="p">)</span> <span class="c1">#same as above, but for rho_core</span>
+
+            <span class="n">miny</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eos</span><span class="p">(</span><span class="n">rho_crust</span><span class="p">))</span> <span class="c1">#   units of g/(cm s^2)</span>
+                                                        
+            <span class="n">maxy</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eos</span><span class="p">(</span><span class="n">rho_core</span><span class="p">))</span> <span class="c1">#same deal as above</span>
+
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rho_crust</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eos</span><span class="p">(</span><span class="n">rho_crust</span><span class="p">),</span> 
+                    <span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Crust EoS&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span> 
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rho_core</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eos</span><span class="p">(</span><span class="n">rho_core</span><span class="p">),</span>
+                    <span class="n">c</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Core EoS&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span> 
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">miny</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">energydensities</span><span class="p">))</span> <span class="c1">#units of g/(cm s^2)</span>
+            <span class="n">maxy</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">energydensities</span><span class="p">))</span> <span class="c1">#same as above</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">energydensities</span><span class="p">,</span> 
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pressures</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;EoS&#39;</span><span class="p">)</span> <span class="c1">#same as above, but for energydensities and pressures</span>
+
+        <span class="k">if</span> <span class="n">dm</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Bosonic&#39;</span><span class="p">,</span> <span class="s1">&#39;Fermionic&#39;</span><span class="p">]:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">energydensities_dm</span><span class="p">,</span> 
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pressures_dm</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;steelblue&#39;</span><span class="p">,</span> 
+                    <span class="n">label</span><span class="o">=</span><span class="s1">&#39;DM EoS&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mf">1e13</span><span class="p">,</span> <span class="mf">1e19</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mf">1e30</span><span class="p">,</span> <span class="mf">1e38</span><span class="p">)</span>
+            
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">miny</span><span class="p">,</span> <span class="n">maxy</span><span class="p">)</span>
+
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\varepsilon$ [g/cm$^3$]&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Pressure [dyn/cm$^2$]&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">prop</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;testEoS_cgs.png&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="BaseEoS.plot_massradius">
+<a class="viewcode-back" href="../../../neost.eos.html#neost.eos.base.BaseEoS.plot_massradius">[docs]</a>
+    <span class="k">def</span> <span class="nf">plot_massradius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Plot the mass-radius curve.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">massradius</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">massradius</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Radius [km]&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Mass [M$_{\odot}$]&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">3.</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;testEoS_MR_cgs.png&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+    
+<div class="viewcode-block" id="BaseEoS.get_BPS">
+<a class="viewcode-back" href="../../../neost.eos.html#neost.eos.base.BaseEoS.get_BPS">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_BPS</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">BPS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">2.97500000e-14</span><span class="p">,</span> <span class="mf">6.30300000e-24</span><span class="p">,</span> <span class="mf">4.40700000e-12</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.06900000e-14</span><span class="p">,</span> <span class="mf">6.30300000e-23</span><span class="p">,</span> <span class="mf">4.54700000e-12</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.36900000e-14</span><span class="p">,</span> <span class="mf">7.55100000e-22</span><span class="p">,</span> <span class="mf">6.47200000e-12</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">6.18700000e-14</span><span class="p">,</span> <span class="mf">8.73700000e-21</span><span class="p">,</span> <span class="mf">9.15000000e-12</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.70000000e-13</span><span class="p">,</span> <span class="mf">1.06100000e-19</span><span class="p">,</span> <span class="mf">2.51600000e-11</span><span class="p">],</span> <span class="p">[</span><span class="mf">7.93700000e-13</span><span class="p">,</span> <span class="mf">3.63200000e-18</span><span class="p">,</span> <span class="mf">1.18300000e-10</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">4.33100000e-12</span><span class="p">,</span> <span class="mf">1.18600000e-16</span><span class="p">,</span> <span class="mf">6.41600000e-10</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.93400000e-11</span><span class="p">,</span> <span class="mf">6.08100000e-15</span><span class="p">,</span> <span class="mf">5.82500000e-09</span><span class="p">],</span> <span class="p">[</span><span class="mf">9.88100000e-11</span><span class="p">,</span> <span class="mf">3.10000000e-14</span><span class="p">,</span> <span class="mf">1.46300000e-08</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">2.48300000e-10</span><span class="p">,</span> <span class="mf">1.51700000e-13</span><span class="p">,</span> <span class="mf">3.67500000e-08</span><span class="p">],</span> <span class="p">[</span><span class="mf">6.23500000e-10</span><span class="p">,</span> <span class="mf">7.18300000e-13</span><span class="p">,</span> <span class="mf">9.22800000e-08</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.56600000e-09</span><span class="p">,</span> <span class="mf">3.28600000e-12</span><span class="p">,</span> <span class="mf">2.31900000e-07</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">3.93400000e-09</span><span class="p">,</span> <span class="mf">1.44700000e-11</span><span class="p">,</span> <span class="mf">5.82500000e-07</span><span class="p">],</span> <span class="p">[</span><span class="mf">9.88100000e-09</span><span class="p">,</span> <span class="mf">6.08800000e-11</span><span class="p">,</span> <span class="mf">1.46300000e-06</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.48300000e-08</span><span class="p">,</span> <span class="mf">2.44100000e-10</span><span class="p">,</span> <span class="mf">3.67600000e-06</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">3.12500000e-08</span><span class="p">,</span> <span class="mf">3.28200000e-10</span><span class="p">,</span> <span class="mf">4.62700000e-06</span><span class="p">],</span> <span class="p">[</span><span class="mf">6.23500000e-08</span><span class="p">,</span> <span class="mf">8.95500000e-10</span><span class="p">,</span> <span class="mf">9.23300000e-06</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.24400000e-07</span><span class="p">,</span> <span class="mf">2.39200000e-09</span><span class="p">,</span> <span class="mf">1.84200000e-05</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">2.48200000e-07</span><span class="p">,</span> <span class="mf">6.27800000e-09</span><span class="p">,</span> <span class="mf">3.67600000e-05</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.95300000e-07</span><span class="p">,</span> <span class="mf">1.62500000e-08</span><span class="p">,</span> <span class="mf">7.33700000e-05</span><span class="p">],</span> <span class="p">[</span><span class="mf">9.88100000e-07</span><span class="p">,</span> <span class="mf">4.16600000e-08</span><span class="p">,</span> <span class="mf">1.46400000e-04</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">1.24400000e-06</span><span class="p">,</span> <span class="mf">5.45300000e-08</span><span class="p">,</span> <span class="mf">1.84300000e-04</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.97200000e-06</span><span class="p">,</span> <span class="mf">1.01700000e-07</span><span class="p">,</span> <span class="mf">2.92200000e-04</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.12500000e-06</span><span class="p">,</span> <span class="mf">1.89000000e-07</span><span class="p">,</span> <span class="mf">4.63100000e-04</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">3.93400000e-06</span><span class="p">,</span> <span class="mf">2.57700000e-07</span><span class="p">,</span> <span class="mf">5.83000000e-04</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.95200000e-06</span><span class="p">,</span> <span class="mf">3.14300000e-07</span><span class="p">,</span> <span class="mf">7.34200000e-04</span><span class="p">],</span> <span class="p">[</span><span class="mf">6.23500000e-06</span><span class="p">,</span> <span class="mf">4.28100000e-07</span><span class="p">,</span> <span class="mf">9.24500000e-04</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">9.88100000e-06</span><span class="p">,</span> <span class="mf">7.93800000e-07</span><span class="p">,</span> <span class="mf">1.46500000e-03</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.56600000e-05</span><span class="p">,</span> <span class="mf">1.47000000e-06</span><span class="p">,</span> <span class="mf">2.32300000e-03</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.48200000e-05</span><span class="p">,</span> <span class="mf">2.72200000e-06</span><span class="p">,</span> <span class="mf">3.68300000e-03</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">3.12500000e-05</span><span class="p">,</span> <span class="mf">3.53300000e-06</span><span class="p">,</span> <span class="mf">4.63700000e-03</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.93400000e-05</span><span class="p">,</span> <span class="mf">4.80700000e-06</span><span class="p">,</span> <span class="mf">5.83600000e-03</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.95200000e-05</span><span class="p">,</span> <span class="mf">6.54000000e-06</span><span class="p">,</span> <span class="mf">7.35300000e-03</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">6.23500000e-05</span><span class="p">,</span> <span class="mf">8.89300000e-06</span><span class="p">,</span> <span class="mf">9.25600000e-03</span><span class="p">],</span> <span class="p">[</span><span class="mf">7.85000000e-05</span><span class="p">,</span> <span class="mf">1.20900000e-05</span><span class="p">,</span> <span class="mf">1.16600000e-02</span><span class="p">],</span> <span class="p">[</span><span class="mf">9.88100000e-05</span><span class="p">,</span> <span class="mf">1.56200000e-05</span><span class="p">,</span> <span class="mf">1.46800000e-02</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">1.24400000e-04</span><span class="p">,</span> <span class="mf">2.12400000e-05</span><span class="p">,</span> <span class="mf">1.84800000e-02</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.56600000e-04</span><span class="p">,</span> <span class="mf">2.88800000e-05</span><span class="p">,</span> <span class="mf">2.32800000e-02</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.97200000e-04</span><span class="p">,</span> <span class="mf">3.71300000e-05</span><span class="p">,</span> <span class="mf">2.93100000e-02</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">2.48200000e-04</span><span class="p">,</span> <span class="mf">5.04800000e-05</span><span class="p">,</span> <span class="mf">3.69200000e-02</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.12500000e-04</span><span class="p">,</span> <span class="mf">6.86500000e-05</span><span class="p">,</span> <span class="mf">4.64900000e-02</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.93400000e-04</span><span class="p">,</span> <span class="mf">9.33000000e-05</span><span class="p">,</span> <span class="mf">5.85200000e-02</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">4.95300000e-04</span><span class="p">,</span> <span class="mf">1.26900000e-04</span><span class="p">,</span> <span class="mf">7.37600000e-02</span><span class="p">],</span> <span class="p">[</span><span class="mf">6.23500000e-04</span><span class="p">,</span> <span class="mf">1.62100000e-04</span><span class="p">,</span> <span class="mf">9.28400000e-02</span><span class="p">],</span> <span class="p">[</span><span class="mf">6.90600000e-04</span><span class="p">,</span> <span class="mf">1.80500000e-04</span><span class="p">,</span> <span class="mf">1.02900000e-01</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">7.85000000e-04</span><span class="p">,</span> <span class="mf">2.05300000e-04</span><span class="p">,</span> <span class="mf">1.16900000e-01</span><span class="p">],</span> <span class="p">[</span><span class="mf">9.88100000e-04</span><span class="p">,</span> <span class="mf">2.79100000e-04</span><span class="p">,</span> <span class="mf">1.47300000e-01</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.24400000e-03</span><span class="p">,</span> <span class="mf">3.63000000e-04</span><span class="p">,</span> <span class="mf">1.85500000e-01</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">1.60800000e-03</span><span class="p">,</span> <span class="mf">4.87100000e-04</span><span class="p">,</span> <span class="mf">2.39800000e-01</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.95400000e-03</span><span class="p">,</span> <span class="mf">5.21200000e-04</span><span class="p">,</span> <span class="mf">2.91700000e-01</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.46900000e-03</span><span class="p">,</span> <span class="mf">5.67800000e-04</span><span class="p">,</span> <span class="mf">3.68800000e-01</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">2.97400000e-03</span><span class="p">,</span> <span class="mf">6.13500000e-04</span><span class="p">,</span> <span class="mf">4.44300000e-01</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.63300000e-03</span><span class="p">,</span> <span class="mf">6.75900000e-04</span><span class="p">,</span> <span class="mf">5.42700000e-01</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.46400000e-03</span><span class="p">,</span> <span class="mf">7.60100000e-04</span><span class="p">,</span> <span class="mf">6.67300000e-01</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">5.49100000e-03</span><span class="p">,</span> <span class="mf">8.73100000e-04</span><span class="p">,</span> <span class="mf">8.20700000e-01</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.50000000e-02</span><span class="p">,</span> <span class="mf">5.79900000e-03</span><span class="p">,</span> <span class="mf">3.76200000e+00</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.00000000e-02</span><span class="p">,</span> <span class="mf">1.16600000e-02</span><span class="p">,</span> <span class="mf">7.53000000e+00</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">7.50000000e-02</span><span class="p">,</span> <span class="mf">2.08500000e-02</span><span class="p">,</span> <span class="mf">1.13000000e+01</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.00000000e-01</span><span class="p">,</span> <span class="mf">3.21600000e-02</span><span class="p">,</span> <span class="mf">1.50800000e+01</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.25000000e-01</span><span class="p">,</span> <span class="mf">4.51500000e-02</span><span class="p">,</span> <span class="mf">1.88600000e+01</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">1.50000000e-01</span><span class="p">,</span> <span class="mf">5.96100000e-02</span><span class="p">,</span> <span class="mf">2.26400000e+01</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.75000000e-01</span><span class="p">,</span> <span class="mf">7.54400000e-02</span><span class="p">,</span> <span class="mf">2.64200000e+01</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.00000000e-01</span><span class="p">,</span> <span class="mf">9.26000000e-02</span><span class="p">,</span> <span class="mf">3.02100000e+01</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">2.25000000e-01</span><span class="p">,</span> <span class="mf">1.11000000e-01</span><span class="p">,</span> <span class="mf">3.40000000e+01</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.50000000e-01</span><span class="p">,</span> <span class="mf">1.30800000e-01</span><span class="p">,</span> <span class="mf">3.77900000e+01</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.75000000e-01</span><span class="p">,</span> <span class="mf">1.51800000e-01</span><span class="p">,</span> <span class="mf">4.15800000e+01</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">3.00000000e-01</span><span class="p">,</span> <span class="mf">1.74200000e-01</span><span class="p">,</span> <span class="mf">4.53800000e+01</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.25000000e-01</span><span class="p">,</span> <span class="mf">1.98000000e-01</span><span class="p">,</span> <span class="mf">4.91800000e+01</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.50000000e-01</span><span class="p">,</span> <span class="mf">2.23100000e-01</span><span class="p">,</span> <span class="mf">5.29800000e+01</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">3.75000000e-01</span><span class="p">,</span> <span class="mf">2.49700000e-01</span><span class="p">,</span> <span class="mf">5.67800000e+01</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.00000000e-01</span><span class="p">,</span> <span class="mf">2.77700000e-01</span><span class="p">,</span> <span class="mf">6.05800000e+01</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.25000000e-01</span><span class="p">,</span> <span class="mf">3.07300000e-01</span><span class="p">,</span> <span class="mf">6.43800000e+01</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">4.50000000e-01</span><span class="p">,</span> <span class="mf">3.38500000e-01</span><span class="p">,</span> <span class="mf">6.81900000e+01</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.75000000e-01</span><span class="p">,</span> <span class="mf">3.71300000e-01</span><span class="p">,</span> <span class="mf">7.20000000e+01</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.00000000e-01</span><span class="p">,</span> <span class="mf">4.05400000e-01</span><span class="p">,</span> <span class="mf">7.58100000e+01</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">5.79200000e-01</span><span class="p">,</span> <span class="mf">4.34030555e-01</span><span class="p">,</span> <span class="mf">8.78844243e+01</span><span class="p">],</span> <span class="p">[</span><span class="mf">6.37066667e-01</span><span class="p">,</span> <span class="mf">5.50694991e-01</span><span class="p">,</span> <span class="mf">9.67134788e+01</span><span class="p">]])</span>
+        <span class="k">return</span> <span class="n">BPS</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2024 the NEoST Core Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

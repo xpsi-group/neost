@@ -1,0 +1,558 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Speed of Sound Example &mdash; NEoST 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Speed of Sound Prior Example" href="CS_prior_example.html" />
+    <link rel="prev" title="ADM M-R and M-Tidal Example" href="ADM_MR_Tidal_tutorial.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NEoST
+              <img src="_static/neostlogo_small.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applications.html">Publications</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Team and acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="citation.html">Citation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">Future</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Start_here.html">Start here</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_example.html">Piecewise Polytropic Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_prior_example.html">Piecewise Polytropic Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_with_ADM_example.html">Piecewise Polytropic with ADM Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_with_ADM_prior_example.html">Piecewise Polytropic Prior with ADM Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ADM_MR_Tidal_tutorial.html">ADM M-R and M-Tidal Example</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Speed of Sound Example</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Equation-of-state-object">Equation of state object</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CS_prior_example.html">Speed of Sound Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tabulated_example.html">Tabulated Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tabulated_prior_example.html">Tabulated Prior Example</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">neost</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NEoST</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Speed of Sound Example</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/CS_example.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Speed-of-Sound-Example">
+<h1>Speed of Sound Example<a class="headerlink" href="#Speed-of-Sound-Example" title="Link to this heading"></a></h1>
+<p>To run this tutorial, you should install NEoST following the install guide. Some extra data files are also required, these are the <code class="docutils literal notranslate"><span class="pre">examples/J0740.npy</span></code> and <code class="docutils literal notranslate"><span class="pre">examples/GW170817.npy</span></code> files and are included in the GitHub repository along with this notebook.</p>
+<p>Before continuing with this tutorial, please read the inference process overview to familiarise yourself with the way NEoST parametrises the equation of state.</p>
+<p>The following block of code will properly import NEoST and its prerequisites, furthermore it also defines a name for the inference run, this name is what will be prefixed to all of NEoST’s output files.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">neost</span>
+<span class="kn">import</span> <span class="nn">kalepy</span>
+<span class="kn">from</span> <span class="nn">neost.eos</span> <span class="kn">import</span> <span class="n">speedofsound</span><span class="p">,</span> <span class="n">tabulated</span>
+<span class="kn">from</span> <span class="nn">neost.Prior</span> <span class="kn">import</span> <span class="n">Prior</span>
+<span class="kn">from</span> <span class="nn">neost.Star</span> <span class="kn">import</span> <span class="n">Star</span>
+<span class="kn">from</span> <span class="nn">neost.Likelihood</span> <span class="kn">import</span> <span class="n">Likelihood</span>
+<span class="kn">from</span> <span class="nn">neost</span> <span class="kn">import</span> <span class="n">PosteriorAnalysis</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">multivariate_normal</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">gaussian_kde</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span>
+<span class="kn">from</span> <span class="nn">pymultinest.solve</span> <span class="kn">import</span> <span class="n">solve</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">neost.global_imports</span> <span class="k">as</span> <span class="nn">global_imports</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="c1"># Some physical constants</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_c</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_G</span>
+<span class="n">Msun</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_M_s</span>
+<span class="n">pi</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_pi</span>
+<span class="n">rho_ns</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_rhons</span>
+
+<span class="c1"># Define name for run, extra - at the end is for nicer formatting of output</span>
+<span class="n">run_name</span> <span class="o">=</span> <span class="s2">&quot;CS-example-run-&quot;</span>
+</pre></div>
+</div>
+</div>
+<section id="Equation-of-state-object">
+<h2>Equation of state object<a class="headerlink" href="#Equation-of-state-object" title="Link to this heading"></a></h2>
+<p>With NEoST properly imported the equation of state needs to be defined. For the CS parametrisation this is done by creating a <code class="docutils literal notranslate"><span class="pre">speedofsound.SpeedofSoundEoS()</span></code> object. This object takes as input the <code class="docutils literal notranslate"><span class="pre">crust</span></code> parameter, the <code class="docutils literal notranslate"><span class="pre">rho_t</span></code> parameter and the <code class="docutils literal notranslate"><span class="pre">adm</span></code> parameter.</p>
+<p>Valid input for the crust parameter consists of one of the following values: <code class="docutils literal notranslate"><span class="pre">'ceft-Hebeler'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceft-Tews'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceft-Lynn'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceft-Drischler'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceft-old'</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>. This instructs NEoST on which cEFT model to use, in order of listing these would be: the band based on the work by Hebeler et al., Tews et al., Lynn et al., Drischler et al., an old implementation of the Hebeler band from Raaijmakers et al., or no cEFT at all.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">rho_t</span></code> parameter tells NEoST at which density to transition between the cEFT crust parametrisation and the core parametrisation. This value must not exceed a value of twice the nuclear saturation density, although for the currently implemented cEFT models it should not exceed 1.1 times the nuclear saturation density.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We&#39;re exploring a speed of sound (CS) EoS parametrization with a chiral effective field theory (cEFT) parametrization based on Hebeler&#39;s work</span>
+<span class="c1"># Transition between CS parametrisation and cEFT parametrization occurs at 1.1*saturation density</span>
+<span class="n">speedofsound_cs</span> <span class="o">=</span> <span class="n">speedofsound</span><span class="o">.</span><span class="n">SpeedofSoundEoS</span><span class="p">(</span><span class="n">crust</span> <span class="o">=</span> <span class="s1">&#39;ceft-Hebeler&#39;</span><span class="p">,</span> <span class="n">rho_t</span> <span class="o">=</span> <span class="mf">1.1</span><span class="o">*</span><span class="n">rho_ns</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>This block of code defines the measurements used to create the likelihood function for the Bayesian analysis. It shows you how to define measurements for both SciPy and KalePy, as well as what parameters need to be past for a mass-radius measurement and for a gravitational wave event when using non-synthetic data.</p>
+<p>To define a mass-radius measurement you need to create a KDE object. For both KalePy and SciPy, you need to provide the samples from which to create the KDE. These samples need to be provided as an array of shape <code class="docutils literal notranslate"><span class="pre">(2,n)</span></code> where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the number of samples of your dataset. The first row should consist of the masses and the second row should consist of the radii. As shown in the example, to turn a dataset into a SciPy KDE consists of simply calling the <code class="docutils literal notranslate"><span class="pre">gaussian_kde()</span></code> function and providing
+the dataset as argument.</p>
+<p>To define a gravitational wave event you again have to create a KDE, again the format of the dataset is the same for both a KalePy and a SciPy KDE, but this time the array needs to have a shape of <code class="docutils literal notranslate"><span class="pre">(4,n)</span></code> where <code class="docutils literal notranslate"><span class="pre">n</span></code> again is the number of samples in your dataset. Here the rows correspond to the following quantities respectively: - The chirp mass <span class="math notranslate nohighlight">\(M_c\)</span> - The mass ratio <span class="math notranslate nohighlight">\(Q\)</span> - The tidal deformability of the primary <span class="math notranslate nohighlight">\(\Lambda_1\)</span> - The tidal deformability of the secondary
+<span class="math notranslate nohighlight">\(\Lambda_2\)</span></p>
+<p>For the purposes of this example script we now turn this dataset into a KalePy KDE. We do this by creating a <code class="docutils literal notranslate"><span class="pre">kalepy.KDE()</span></code> object which takes as first argument your dataset, as second argument you provide the reflection bounds of your KDE for each row in your dataset, where <code class="docutils literal notranslate"><span class="pre">None</span></code> indicates no reflection. The <code class="docutils literal notranslate"><span class="pre">weights</span></code> argument provides the weights of your dataset, if your dataset is equally-weighted you do not need to provide this argument. The <code class="docutils literal notranslate"><span class="pre">bandwidth</span></code> parameter allows you to tweak
+the width of the kernels in your KDE and the <code class="docutils literal notranslate"><span class="pre">kernel</span></code> argument allows you to specify which kernel you want to use.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create the likelihoods for the individual measurements</span>
+<span class="c1"># First we load the mass-radius measurement</span>
+<span class="n">mass_radius_j0740</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;../../examples/j0740.npy&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mass_radius_j0740</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">J0740_LL</span> <span class="o">=</span> <span class="n">gaussian_kde</span><span class="p">(</span><span class="n">mass_radius_j0740</span><span class="p">)</span>
+<span class="c1"># And next up is the gravitational wave event</span>
+<span class="n">GW170817</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;../../examples/GW170817.npy&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">GW170817</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">GW170817_LL</span> <span class="o">=</span> <span class="n">kalepy</span><span class="o">.</span><span class="n">KDE</span><span class="p">(</span><span class="n">GW170817</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">reflect</span><span class="o">=</span><span class="p">[[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="kc">None</span><span class="p">]],</span> <span class="n">weights</span><span class="o">=</span><span class="n">GW170817</span><span class="p">[:,</span><span class="mi">4</span><span class="p">],</span> <span class="n">bandwidth</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+WARNING:root:Covariance matrix:
+[[ 3.31899211e-08 -2.86285105e-09  1.54277496e-04  3.21942472e-04]
+ [-2.86285105e-09  7.09883592e-05  7.53025316e-02 -2.61180844e-02]
+ [ 1.54277496e-04  7.53025316e-02  1.17142758e+03 -3.44084041e+02]
+ [ 3.21942472e-04 -2.61180844e-02 -3.44084041e+02  2.55366529e+03]]
+WARNING:root:(log) Ratio of covariance elements ([[ 1.06420747 10.01565831]
+ [11.95036522  0.87049944]]) exceeds tolerance (5.0)!
+WARNING:root:Recommend rescaling input data, or using a diagonal covariance matrix
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[2.17574594 2.07090014 2.09164163 ... 2.13092618 2.18066547 2.16990759]
+(8078, 5)
+</pre></div></div>
+</div>
+<p>Next, these KDEs need to be passed to NEoST, this is done through the <code class="docutils literal notranslate"><span class="pre">likelihood_functions</span></code> and <code class="docutils literal notranslate"><span class="pre">likelihood_params</span></code> lists. The first one is a list of all the (callable) KDEs, and the second one is a list of as many instances of <code class="docutils literal notranslate"><span class="pre">['Mass',</span> <span class="pre">'Radius']</span></code> as you have mass-radius measurements. The ordering of this list matters insofar as that you need to put any mass-radius measurements first in the <code class="docutils literal notranslate"><span class="pre">likelihood_functions</span></code> list and any gravitational wave events second.</p>
+<p>You will also need to define a <code class="docutils literal notranslate"><span class="pre">chirp_mass</span></code> list containing the median values of the chirp masses of your events, in case your event is a mass-radius measurement, enter <code class="docutils literal notranslate"><span class="pre">None</span></code> instead.</p>
+<p>Finally you will also need to define how many events you pass to NEoST, a quick and easy way to do this is shown in the example code below.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Pass the likelihoods to the solver</span>
+<span class="n">likelihood_functions</span> <span class="o">=</span> <span class="p">[</span><span class="n">J0740_LL</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">points</span><span class="p">:</span> <span class="n">GW170817_LL</span><span class="o">.</span><span class="n">density</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">points</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">probability</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span>
+<span class="n">likelihood_params</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;Mass&#39;</span><span class="p">,</span> <span class="s1">&#39;Radius&#39;</span><span class="p">]]</span>
+
+<span class="c1"># Define whether event is GW or not and define number of stars/events</span>
+<span class="n">chirp_mass</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mf">1.186</span><span class="p">]</span>
+<span class="n">number_stars</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">chirp_mass</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>If instead you are using synthetic data, for example a 2-dimensional Gaussian distribution, you can define a function that calculates the likelihood directly and pass this on to NEoST as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 2-dimensional approximation of the J0740 measurement</span>
+<span class="n">mu_M</span> <span class="o">=</span> <span class="mf">2.08</span>
+<span class="n">mu_R</span> <span class="o">=</span> <span class="mf">11.155</span>
+<span class="n">sigma_M</span> <span class="o">=</span> <span class="mf">0.07</span>
+<span class="n">sigma_R</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1"># uncertainty in radius</span>
+<span class="n">J0740</span> <span class="o">=</span> <span class="n">sps</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="p">[</span><span class="n">muM</span><span class="p">,</span> <span class="n">muR</span><span class="p">],</span> <span class="n">cov</span><span class="o">=</span><span class="p">[[</span><span class="n">sigM</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">sigR</span><span class="p">]])</span>
+
+<span class="n">likelihood_functions</span> <span class="o">=</span> <span class="p">[</span><span class="n">J0740</span><span class="o">.</span><span class="n">pdf</span><span class="p">]</span>
+<span class="n">likelihood_params</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;Mass&#39;</span><span class="p">,</span> <span class="s1">&#39;Radius&#39;</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>With our data defined, the next step is to define both the prior and the likelihood function.</p>
+<p>The prior is defined through a pair of dictionaries, <code class="docutils literal notranslate"><span class="pre">variable_params</span></code> and <code class="docutils literal notranslate"><span class="pre">static_params</span></code>. Here <code class="docutils literal notranslate"><span class="pre">variable_params</span></code> takes in the equation of state parameters that will be allowed to vary, and <code class="docutils literal notranslate"><span class="pre">static_params</span></code> will take in those that won’t. Entries into <code class="docutils literal notranslate"><span class="pre">variable_params</span></code> should be formatted as follows: <code class="docutils literal notranslate"><span class="pre">'param_name':[lower_bound,upper_bound]</span></code></p>
+<p>Additionally, for each of the measurements you must also append a dictionary item <code class="docutils literal notranslate"><span class="pre">'rhoc_i':[14.6,</span> <span class="pre">16]</span></code> to the end of <code class="docutils literal notranslate"><span class="pre">variable_params</span></code>, this parameter covers the central density of star i and needs to be appended for each star individually. Entries into <code class="docutils literal notranslate"><span class="pre">static_params</span></code> should be formatted in the following manner: <code class="docutils literal notranslate"><span class="pre">'param_name':value</span></code>.</p>
+<p>Finally, the prior object must be created using the following function call:<code class="docutils literal notranslate"><span class="pre">neost.Prior.Prior(EOS,</span> <span class="pre">variable_params,</span> <span class="pre">static_params,</span> <span class="pre">chirp_masses)</span></code> where the <code class="docutils literal notranslate"><span class="pre">EOS</span></code> argument is the equation of state object that was created in the previous step. When this prior is called it will then uniformly sample sets of parameters from the defined parameter ranges.</p>
+<p>The likelihood is defined by providing both the previously defined prior object and the likelihood functions defined in the previous codeblock. This is done with the following code: <code class="docutils literal notranslate"><span class="pre">likelihood</span> <span class="pre">=</span> <span class="pre">Likelihood(prior,</span> <span class="pre">likelihood_functions,</span> <span class="pre">likelihood_params,</span> <span class="pre">chirp_mass)</span></code></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define variable parameters, same prior as previous papers of Raaijmakers et al.</span>
+<span class="n">variable_params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ceft&#39;</span><span class="p">:[</span><span class="n">speedofsound_cs</span><span class="o">.</span><span class="n">min_norm</span><span class="p">,</span> <span class="n">speedofsound_cs</span><span class="o">.</span><span class="n">max_norm</span><span class="p">],</span><span class="s1">&#39;a1&#39;</span><span class="p">:[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">1.5</span><span class="p">],</span><span class="s1">&#39;a2&#39;</span><span class="p">:[</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">12.</span><span class="p">],</span><span class="s1">&#39;a3/a2&#39;</span><span class="p">:[</span><span class="mf">0.05</span><span class="p">,</span><span class="mf">2.</span><span class="p">],</span><span class="s1">&#39;a4&#39;</span><span class="p">:[</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">37.</span><span class="p">],</span><span class="s1">&#39;a5&#39;</span><span class="p">:[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">1.</span><span class="p">]}</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number_stars</span><span class="p">):</span>
+    <span class="n">variable_params</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;rhoc_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">):[</span><span class="mf">14.6</span><span class="p">,</span> <span class="mi">16</span><span class="p">]})</span>
+
+<span class="c1"># Define static parameters, empty dict because all params are variable</span>
+<span class="n">static_params</span><span class="o">=</span><span class="p">{}</span>
+
+<span class="c1"># Define joint prior and joint likelihood</span>
+<span class="n">prior</span> <span class="o">=</span> <span class="n">Prior</span><span class="p">(</span><span class="n">speedofsound_cs</span><span class="p">,</span> <span class="n">variable_params</span><span class="p">,</span> <span class="n">static_params</span><span class="p">,</span> <span class="n">chirp_mass</span><span class="p">)</span>
+<span class="n">likelihood</span> <span class="o">=</span> <span class="n">Likelihood</span><span class="p">(</span><span class="n">prior</span><span class="p">,</span> <span class="n">likelihood_functions</span><span class="p">,</span> <span class="n">likelihood_params</span><span class="p">,</span> <span class="n">chirp_mass</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>After defining your prior and likelihood function, it is best practice to test your prior and likelihood function. This is done with the short loop in the code block below. This loop will for each iteration first take a sample from the prior, and then compute the corresponding likelihood of said prior sample and print the likelihood as output.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Bounds of prior are&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">variable_params</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;number of parameters is </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span><span class="k">len</span>(variable_params))
+
+<span class="c1"># Perform a test, this will draw 50 random points from the prior and calculate their likelihood</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Testing prior and likelihood&quot;</span><span class="p">)</span>
+<span class="n">cube</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">variable_params</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cube</span><span class="p">)):</span>
+    <span class="n">par</span> <span class="o">=</span> <span class="n">prior</span><span class="o">.</span><span class="n">inverse_sample</span><span class="p">(</span><span class="n">cube</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">likelihood</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">par</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Testing done&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Bounds of prior are
+{&#39;ceft&#39;: [1.676, 2.814], &#39;a1&#39;: [0.1, 1.5], &#39;a2&#39;: [1.5, 12.0], &#39;a3/a2&#39;: [0.05, 2.0], &#39;a4&#39;: [1.5, 37.0], &#39;a5&#39;: [0.1, 1.0], &#39;rhoc_1&#39;: [14.6, 16], &#39;rhoc_2&#39;: [14.6, 16]}
+number of parameters is 8
+Testing prior and likelihood
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-11.637464035584994
+-1e+101
+-1e+101
+-10.309937003064551
+-1e+101
+-1e+101
+-1e+101
+-555.601883139233
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-466.56628036512404
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-100.28529865876497
+-476.53832187212896
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+-1e+101
+Testing done
+</pre></div></div>
+</div>
+<p>When finished with testing your likelihood and prior you can proceed to the actual inference process. This is done in the code block below. Warning: depending on the performance of your platform, this might be a very slow process. To make it slightly faster, we have decreased the number of live points and set a maximum number of iterations for this example. For a proper analysis, we would remove the max_iter argument and set, for example, n_live_points=1000.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Then we start the sampling with MultiNest</span>
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">LogLikelihood</span><span class="o">=</span><span class="n">likelihood</span><span class="o">.</span><span class="n">call</span><span class="p">,</span> <span class="n">Prior</span><span class="o">=</span><span class="n">prior</span><span class="o">.</span><span class="n">inverse_sample</span><span class="p">,</span> <span class="n">n_live_points</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">evidence_tolerance</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+               <span class="n">n_dims</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">variable_params</span><span class="p">),</span> <span class="n">sampling_efficiency</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">outputfiles_basename</span><span class="o">=</span><span class="s1">&#39;../../examples/chains/&#39;</span> <span class="o">+</span> <span class="n">run_name</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ MultiNest Warning: no resume file found, starting from scratch
+ *****************************************************
+ MultiNest v3.10
+ Copyright Farhan Feroz &amp; Mike Hobson
+ Release Jul 2015
+
+ no. of live points =  100
+ dimensionality =    8
+ *****************************************************
+ Starting MultiNest
+ generating live points
+ live points generated, starting sampling
+Acceptance Rate:                        0.914634
+Replacements:                                150
+Total Samples:                               164
+Nested Sampling ln(Z):               -210.223049
+Importance Nested Sampling ln(Z):     -10.058174 +/-  0.368387
+Acceptance Rate:                        0.781250
+Replacements:                                200
+Total Samples:                               256
+Nested Sampling ln(Z):                -37.412144
+Importance Nested Sampling ln(Z):     -12.408725 +/-  0.285935
+ ln(ev)=  -37.412143550728111      +/-                       NaN
+ Total Likelihood Evaluations:          256
+ Sampling finished. Exiting MultiNest
+  analysing data from ../../examples/chains/CS-example-run-.txt
+103.70460939407349
+</pre></div></div>
+</div>
+<p>Finally, NEoST also includes functionality to perform the first steps of posterior analysis. The first step in this process is to call the <code class="docutils literal notranslate"><span class="pre">PosteriorAnalysis.compute_auxiliary_data()</span></code> function with the code block below. This will generate as output a set of files that can subsequently be used with several additional plotting routines included in NEoST, or you can analyse these files on your own. For the following posterior analysis examples we use previously computed high-resolution MultiNest
+example outputs to avoid problems with too few samples. Note that computing the auxiliary data might take some time.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute auxiliary data for posterior analysis</span>
+<span class="n">PosteriorAnalysis</span><span class="o">.</span><span class="n">compute_auxiliary_data</span><span class="p">(</span><span class="s1">&#39;../../examples/chains_example/&#39;</span> <span class="o">+</span> <span class="n">run_name</span><span class="p">,</span> <span class="n">speedofsound_cs</span><span class="p">,</span>
+                                         <span class="n">variable_params</span><span class="p">,</span> <span class="n">static_params</span><span class="p">,</span> <span class="n">chirp_mass</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Total number of samples is 5349
+sample too small for 3059949687207196.00
+sample too small for 3330036391323825.00
+sample too small for 3623962320002086.50
+sample too small for 3943831644306433.50
+sample too small for 4291934260128778.50
+sample too small for 4670762181205290.00
+sample too small for 5083027379064073.00
+sample too small for 5531681197617238.00
+sample too small for 6019935481383572.00
+sample too small for 6551285568595496.00
+sample too small for 7129535313794352.00
+sample too small for 7758824319047053.00
+sample too small for 8443657568728348.00
+sample too small for 9188937680019554.00
+sample too small for 10000000000000000.00
+sample too small for 2181601935337768.75
+sample too small for 2374161204816352.00
+sample too small for 2583716733631498.50
+sample too small for 2811768697974225.00
+sample too small for 3059949687207196.00
+sample too small for 3330036391323825.00
+sample too small for 3623962320002086.50
+sample too small for 3943831644306433.50
+sample too small for 4291934260128778.50
+sample too small for 4670762181205290.00
+sample too small for 5083027379064073.00
+sample too small for 5531681197617238.00
+sample too small for 6019935481383572.00
+sample too small for 6551285568595496.00
+sample too small for 7129535313794352.00
+sample too small for 7758824319047053.00
+sample too small for 8443657568728348.00
+sample too small for 9188937680019554.00
+sample too small for 10000000000000000.00
+sample too small for 2.40
+sample too small for 2.46
+sample too small for 2.51
+sample too small for 2.57
+sample too small for 2.62
+sample too small for 2.68
+sample too small for 2.73
+sample too small for 2.79
+sample too small for 2.84
+sample too small for 2.90
+</pre></div></div>
+</div>
+<p>This following plotting routine will create a cornerplot of all the parameters you have included in the <code class="docutils literal notranslate"><span class="pre">variable_params</span></code> dictionary</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Make some analysis plots</span>
+<span class="n">PosteriorAnalysis</span><span class="o">.</span><span class="n">cornerplot</span><span class="p">(</span><span class="s1">&#39;../../examples/chains_example/&#39;</span> <span class="o">+</span> <span class="n">run_name</span><span class="p">,</span> <span class="n">variable_params</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/CS_example_18_0.png" src="_images/CS_example_18_0.png" />
+</div>
+</div>
+<p>This will plot the data you have used to define the likelihood. So these are the masses and radii of the neutron stars that have been included in the analysis. Note that this will also plot the masses and radii of any gravitational wave events included in the data.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">PosteriorAnalysis</span><span class="o">.</span><span class="n">mass_radius_posterior_plot</span><span class="p">(</span><span class="s1">&#39;../../examples/chains_example/&#39;</span> <span class="o">+</span> <span class="n">run_name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/CS_example_20_0.png" src="_images/CS_example_20_0.png" />
+</div>
+</div>
+<p>This routine will plot the posterior on the mass-radius relationship of neutron stars according to the inference process, the <code class="docutils literal notranslate"><span class="pre">label_name</span></code> parameter will be the label used in the legend.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">PosteriorAnalysis</span><span class="o">.</span><span class="n">mass_radius_prior_predictive_plot</span><span class="p">(</span><span class="s1">&#39;../../examples/chains_example/&#39;</span> <span class="o">+</span> <span class="n">run_name</span><span class="p">,</span><span class="n">variable_params</span><span class="p">,</span> <span class="n">label_name</span><span class="o">=</span><span class="s1">&#39;+ J0740 + GW170817&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/CS_example_22_0.png" src="_images/CS_example_22_0.png" />
+</div>
+</div>
+<p>This routine will plot the posterior on the equation of state itself.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">PosteriorAnalysis</span><span class="o">.</span><span class="n">eos_posterior_plot</span><span class="p">(</span><span class="s1">&#39;../../examples/chains_example/&#39;</span> <span class="o">+</span> <span class="n">run_name</span><span class="p">,</span><span class="n">variable_params</span><span class="p">)</span>
+<span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/CS_example_24_0.png" src="_images/CS_example_24_0.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ADM_MR_Tidal_tutorial.html" class="btn btn-neutral float-left" title="ADM M-R and M-Tidal Example" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="CS_prior_example.html" class="btn btn-neutral float-right" title="Speed of Sound Prior Example" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2024 the NEoST Core Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

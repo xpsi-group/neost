@@ -1,0 +1,359 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>neost.Likelihood &mdash; NEoST 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            NEoST
+              <img src="../../_static/neostlogo_small.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../applications.html">Publications</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../acknowledgements.html">Team and acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../citation.html">Citation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../todo.html">Future</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Start_here.html">Start here</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../PP_example.html">Piecewise Polytropic Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../PP_prior_example.html">Piecewise Polytropic Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../PP_with_ADM_example.html">Piecewise Polytropic with ADM Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../PP_with_ADM_prior_example.html">Piecewise Polytropic Prior with ADM Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ADM_MR_Tidal_tutorial.html">ADM M-R and M-Tidal Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CS_example.html">Speed of Sound Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CS_prior_example.html">Speed of Sound Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tabulated_example.html">Tabulated Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Tabulated_prior_example.html">Tabulated Prior Example</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">neost</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NEoST</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">neost.Likelihood</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for neost.Likelihood</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">UnivariateSpline</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">from</span> <span class="nn">neost.Star</span> <span class="kn">import</span> <span class="n">Star</span>
+<span class="kn">from</span> <span class="nn">neost</span> <span class="kn">import</span> <span class="n">global_imports</span>
+<span class="kn">from</span> <span class="nn">neost.utils</span> <span class="kn">import</span> <span class="n">m1_from_mc_m2</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_c</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_G</span>
+<span class="n">Msun</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_M_s</span>
+<span class="n">pi</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_pi</span>
+<span class="n">rho_ns</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_rhons</span>
+<span class="n">n_ns</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_n_ns</span>
+
+
+<div class="viewcode-block" id="Likelihood">
+<a class="viewcode-back" href="../../neost.html#neost.Likelihood.Likelihood">[docs]</a>
+<span class="k">class</span> <span class="nc">Likelihood</span><span class="p">():</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prior</span><span class="p">,</span> <span class="n">likelihood_functions</span><span class="p">,</span>
+                 <span class="n">likelihood_params</span><span class="p">,</span> <span class="n">chirp_masses</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">likelihood_functions</span> <span class="o">=</span> <span class="n">likelihood_functions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">likelihood_params</span> <span class="o">=</span> <span class="n">likelihood_params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chirp_masses</span> <span class="o">=</span> <span class="n">chirp_masses</span>
+
+<div class="viewcode-block" id="Likelihood.call">
+<a class="viewcode-back" href="../../neost.html#neost.Likelihood.Likelihood.call">[docs]</a>
+    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pr</span><span class="p">):</span>
+
+        <span class="n">likelihoods</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">pr_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">pr</span>
+
+        <span class="n">constraints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">check_constraints</span><span class="p">()</span>
+        
+        <span class="k">if</span> <span class="n">constraints</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">number_stars</span><span class="p">):</span>            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">adm_type</span> <span class="o">==</span> <span class="s1">&#39;Bosonic&#39;</span><span class="p">:</span>
+                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">find_epsdm_cent</span><span class="p">(</span><span class="n">ADM_fraction</span><span class="o">=</span><span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;adm_fraction&#39;</span><span class="p">],</span>
+                                                            <span class="n">epscent</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;rhoc_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]))</span>
+                <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">==</span> <span class="kc">False</span><span class="p">):</span>
+                        <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+
+                <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">==</span> <span class="kc">True</span><span class="p">):</span>
+                    <span class="n">star</span> <span class="o">=</span> <span class="n">Star</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;rhoc_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]),</span> <span class="n">epsdm_cent</span><span class="p">)</span>
+                    <span class="n">star</span><span class="o">.</span><span class="n">solve_structure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">energydensities</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">pressures</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">energydensities_dm</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">pressures_dm</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">dm_halo</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">two_fluid_tidal</span><span class="p">)</span>
+                    <span class="n">Mgrav</span> <span class="o">=</span> <span class="n">star</span><span class="o">.</span><span class="n">Mrot</span>
+                    <span class="n">Req</span> <span class="o">=</span> <span class="n">star</span><span class="o">.</span><span class="n">Req</span>
+                    <span class="n">Rdm_halo</span> <span class="o">=</span> <span class="n">star</span><span class="o">.</span><span class="n">Rdm_halo</span>
+                    <span class="n">tidal</span> <span class="o">=</span> <span class="n">star</span><span class="o">.</span><span class="n">tidal</span>
+                <span class="c1">#print(&#39;adm: &#39;, Mgrav, Req, Rdm_halo,np.log10(pr_dict[&#39;mchi&#39;]), np.log10(pr_dict[&#39;gchi_over_mphi&#39;]), pr_dict[&#39;adm_fraction&#39;])</span>
+                
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">adm_type</span> <span class="o">==</span> <span class="s1">&#39;Fermionic&#39;</span><span class="p">:</span>
+                <span class="c1">#Hard cut-off imposed as all stars within these boxes have masses well below 1 Msun [~0.4 Msun down to ~0.001 Msun], thus this will save computation time if the code doesn&#39;t even have to compute them.</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;mchi&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;gchi_over_mphi&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mf">3.5</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;adm_fraction&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">0.01</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+                <span class="k">elif</span> <span class="p">(</span><span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;mchi&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;gchi_over_mphi&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;adm_fraction&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">0.01</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+                <span class="k">elif</span> <span class="p">(</span><span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;mchi&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;gchi_over_mphi&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;adm_fraction&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">0.01</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+                <span class="k">elif</span> <span class="p">(</span><span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;mchi&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mf">8.5</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;gchi_over_mphi&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;adm_fraction&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">0.01</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">find_epsdm_cent</span><span class="p">(</span><span class="n">ADM_fraction</span><span class="o">=</span><span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;adm_fraction&#39;</span><span class="p">],</span><span class="n">epscent</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;rhoc_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]))</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">==</span> <span class="kc">False</span><span class="p">):</span>
+                        <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+
+                    <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">==</span> <span class="kc">True</span><span class="p">):</span>
+                        <span class="n">star</span> <span class="o">=</span> <span class="n">Star</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;rhoc_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]),</span> <span class="n">epsdm_cent</span><span class="p">)</span>
+                        <span class="n">star</span><span class="o">.</span><span class="n">solve_structure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">energydensities</span><span class="p">,</span> 
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">pressures</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">energydensities_dm</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">pressures_dm</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">dm_halo</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">two_fluid_tidal</span><span class="p">)</span>
+                
+                        <span class="n">Mgrav</span> <span class="o">=</span> <span class="n">star</span><span class="o">.</span><span class="n">Mrot</span>
+                        <span class="n">Req</span> <span class="o">=</span> <span class="n">star</span><span class="o">.</span><span class="n">Req</span>
+                        <span class="n">Rdm_halo</span> <span class="o">=</span> <span class="n">star</span><span class="o">.</span><span class="n">Rdm_halo</span>
+                        <span class="n">tidal</span> <span class="o">=</span> <span class="n">star</span><span class="o">.</span><span class="n">tidal</span>
+                    
+                
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">adm_type</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+                <span class="n">star</span> <span class="o">=</span> <span class="n">Star</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;rhoc_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]),</span> <span class="mf">0.0</span><span class="p">)</span>
+                <span class="n">star</span><span class="o">.</span><span class="n">solve_structure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">energydensities</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">pressures</span><span class="p">)</span>
+                <span class="n">Mgrav</span> <span class="o">=</span> <span class="n">star</span><span class="o">.</span><span class="n">Mrot</span>
+                <span class="n">Req</span> <span class="o">=</span> <span class="n">star</span><span class="o">.</span><span class="n">Req</span>
+                <span class="n">tidal</span> <span class="o">=</span> <span class="n">star</span><span class="o">.</span><span class="n">tidal</span>
+                <span class="n">Rdm_halo</span> <span class="o">=</span> <span class="mf">0.0</span>
+                
+                
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">Mgrav</span> <span class="o">&gt;</span> <span class="mf">3.</span> <span class="ow">or</span> <span class="n">Mgrav</span> <span class="o">&lt;</span> <span class="mf">1.</span> <span class="ow">or</span> <span class="n">Req</span> <span class="o">&gt;</span> <span class="mf">16.</span> <span class="ow">or</span> <span class="n">Req</span> <span class="o">&lt;</span> <span class="n">Mgrav</span> <span class="o">/</span> <span class="n">Msun</span> <span class="o">*</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">G</span> <span class="o">/</span> <span class="n">c</span><span class="o">**</span><span class="mf">2.</span> <span class="o">/</span> <span class="mf">1e5</span><span class="p">):</span> 
+                <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">dm_halo</span> <span class="o">==</span> <span class="kc">False</span> <span class="ow">and</span> <span class="n">Rdm_halo</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">chirp_masses</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">MassRadiusTidal</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Mass&#39;</span><span class="p">:</span><span class="n">Mgrav</span><span class="p">,</span> <span class="s1">&#39;Radius&#39;</span><span class="p">:</span><span class="n">Req</span><span class="p">,</span>
+                                   <span class="s1">&#39;Lambda&#39;</span><span class="p">:</span><span class="n">tidal</span><span class="p">}</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">MassRadiusTidal</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">likelihood_params</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+                <span class="n">like</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">likelihood_functions</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">tmp</span><span class="p">)</span>
+                <span class="n">likelihoods</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array_to_scalar</span><span class="p">(</span><span class="n">like</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">adm_type</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Two-fluid tidal deformability only implemented in python. Performance will slow!!&quot;</span><span class="p">)</span>
+
+                <span class="n">M2</span> <span class="o">=</span> <span class="n">Mgrav</span>
+                <span class="n">M1</span> <span class="o">=</span> <span class="n">m1_from_mc_m2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chirp_masses</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">M2</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">M1</span> <span class="o">&lt;</span> <span class="n">M2</span> <span class="ow">or</span> <span class="n">M1</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">MRT</span><span class="p">[:,</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+                <span class="n">MTspline</span> <span class="o">=</span> <span class="n">UnivariateSpline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">MRT</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">MRT</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">point</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">chirp_masses</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">M2</span> <span class="o">/</span> <span class="n">M1</span><span class="p">,</span>
+                                    <span class="n">MTspline</span><span class="p">(</span><span class="n">M1</span><span class="p">),</span> <span class="n">tidal</span><span class="p">])</span>
+                <span class="n">like</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">likelihood_functions</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">point</span><span class="p">)</span>
+                <span class="n">likelihoods</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array_to_scalar</span><span class="p">(</span><span class="n">like</span><span class="p">))</span>
+
+        
+        <span class="n">like_total</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">likelihoods</span><span class="p">))</span>
+        <span class="c1"># print(&#39;lnlike is&#39;, like_total)</span>
+        <span class="k">if</span> <span class="n">like_total</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">like_total</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="Likelihood.array_to_scalar">
+<a class="viewcode-back" href="../../neost.html#neost.Likelihood.Likelihood.array_to_scalar">[docs]</a>
+    <span class="k">def</span> <span class="nf">array_to_scalar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">):</span>
+        <span class="c1"># np no longer accepts ragged arrays,</span>
+        <span class="c1"># check that if var is an array it only has one element and return it</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="s1">&#39;__len__&#39;</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">var</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">AssertionError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Malformed likelihood&#39;</span><span class="p">)</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="n">var</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">var</span></div>
+
+
+<div class="viewcode-block" id="Likelihood.loglike_prior">
+<a class="viewcode-back" href="../../neost.html#neost.Likelihood.Likelihood.loglike_prior">[docs]</a>
+    <span class="k">def</span> <span class="nf">loglike_prior</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pr</span><span class="p">):</span>
+        <span class="n">pr_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">pr</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">check_constraints</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">constraints</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">adm_type</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+            <span class="n">star</span> <span class="o">=</span> <span class="n">Star</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">max_edsc</span><span class="p">)</span>
+            <span class="n">star</span><span class="o">.</span><span class="n">solve_structure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">energydensities</span><span class="p">,</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">pressures</span><span class="p">)</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">star</span><span class="o">.</span><span class="n">Mrot</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">number_stars</span><span class="p">):</span>
+                <span class="n">star</span> <span class="o">=</span> <span class="n">Star</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;rhoc_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]),</span> <span class="mf">0.0</span><span class="p">)</span>
+                <span class="n">star</span><span class="o">.</span><span class="n">solve_structure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">energydensities</span><span class="p">,</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">pressures</span><span class="p">)</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">star</span><span class="o">.</span><span class="n">Mrot</span> <span class="o">&lt;</span> <span class="mf">1.</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">adm_type</span> <span class="o">==</span> <span class="s1">&#39;Bosonic&#39;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">adm_type</span> <span class="o">==</span> <span class="s1">&#39;Fermionic&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;mchi&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;gchi_over_mphi&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mf">3.5</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;adm_fraction&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">0.01</span><span class="p">):</span>
+                <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;mchi&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;gchi_over_mphi&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;adm_fraction&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">0.01</span><span class="p">):</span>
+                <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;mchi&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;gchi_over_mphi&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;adm_fraction&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">0.01</span><span class="p">):</span>
+                <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;mchi&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mf">8.5</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;gchi_over_mphi&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;adm_fraction&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">0.01</span><span class="p">):</span>
+                <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">find_epsdm_cent</span><span class="p">(</span><span class="n">ADM_fraction</span><span class="o">=</span><span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;adm_fraction&#39;</span><span class="p">],</span>
+                                                            <span class="n">epscent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">max_edsc</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+
+                <span class="n">star</span> <span class="o">=</span> <span class="n">Star</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">max_edsc</span><span class="p">,</span><span class="n">epsdm_cent</span><span class="p">)</span>
+                <span class="n">star</span><span class="o">.</span><span class="n">solve_structure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">energydensities</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">pressures</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">energydensities_dm</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">pressures_dm</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">dm_halo</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">two_fluid_tidal</span><span class="p">)</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">star</span><span class="o">.</span><span class="n">Mrot</span> <span class="o">&lt;</span> <span class="mf">1.</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">dm_halo</span> <span class="o">==</span> <span class="kc">False</span> <span class="ow">and</span> <span class="n">star</span><span class="o">.</span><span class="n">Rdm_halo</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">number_stars</span><span class="p">):</span>
+                    <span class="n">epsdm_cent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">find_epsdm_cent</span><span class="p">(</span><span class="n">ADM_fraction</span><span class="o">=</span><span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;adm_fraction&#39;</span><span class="p">],</span>
+                                                            <span class="n">epscent</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;rhoc_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]))</span>
+
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">reach_fraction</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+
+                    <span class="n">star</span> <span class="o">=</span> <span class="n">Star</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">pr_dict</span><span class="p">[</span><span class="s1">&#39;rhoc_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]),</span> <span class="n">epsdm_cent</span><span class="p">)</span>
+                    <span class="n">star</span><span class="o">.</span><span class="n">solve_structure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">energydensities</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">pressures</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">energydensities_dm</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">pressures_dm</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">dm_halo</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">two_fluid_tidal</span><span class="p">)</span>
+                    <span class="k">if</span><span class="p">(</span><span class="n">star</span><span class="o">.</span><span class="n">Mrot</span> <span class="o">&lt;</span> <span class="mf">1.</span><span class="p">):</span>
+                        <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">EOS</span><span class="o">.</span><span class="n">dm_halo</span> <span class="o">==</span> <span class="kc">False</span> <span class="ow">and</span> <span class="n">star</span><span class="o">.</span><span class="n">Rdm_halo</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="o">-</span><span class="mf">1e101</span>
+
+            
+        <span class="n">loglike_const</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="k">return</span> <span class="n">loglike_const</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2024 the NEoST Core Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,388 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tabulated Example &mdash; NEoST 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tabulated Prior Example" href="Tabulated_prior_example.html" />
+    <link rel="prev" title="Speed of Sound Prior Example" href="CS_prior_example.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NEoST
+              <img src="_static/neostlogo_small.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applications.html">Publications</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Team and acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="citation.html">Citation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">Future</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Start_here.html">Start here</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_example.html">Piecewise Polytropic Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_prior_example.html">Piecewise Polytropic Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_with_ADM_example.html">Piecewise Polytropic with ADM Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_with_ADM_prior_example.html">Piecewise Polytropic Prior with ADM Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ADM_MR_Tidal_tutorial.html">ADM M-R and M-Tidal Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CS_example.html">Speed of Sound Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CS_prior_example.html">Speed of Sound Prior Example</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tabulated Example</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Equation-of-state-object">Equation of state object</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Tabulated_prior_example.html">Tabulated Prior Example</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">neost</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NEoST</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Tabulated Example</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Tabulated_example.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Tabulated-Example">
+<h1>Tabulated Example<a class="headerlink" href="#Tabulated-Example" title="Link to this heading"></a></h1>
+<p>To run this tutorial, you should install NEoST following the install guide. Some extra data files are also required, these are the <code class="docutils literal notranslate"><span class="pre">ap4_new.dat</span></code> file and is included in the GitHub repository along with this notebook.</p>
+<p>Before continuing with this tutorial, please read the inference process overview to familiarise yourself with the way NEoST parametrises the equation of state.</p>
+<p>The following block of code will properly import NEoST and its prerequisites, furthermore it also defines a name for the inference run, this name is what will be prefixed to all of NEoST’s output files.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">neost</span>
+<span class="kn">import</span> <span class="nn">kalepy</span>
+<span class="kn">from</span> <span class="nn">neost.eos</span> <span class="kn">import</span> <span class="n">speedofsound</span><span class="p">,</span> <span class="n">tabulated</span>
+<span class="kn">from</span> <span class="nn">neost.Prior</span> <span class="kn">import</span> <span class="n">Prior</span>
+<span class="kn">from</span> <span class="nn">neost.Star</span> <span class="kn">import</span> <span class="n">Star</span>
+<span class="kn">from</span> <span class="nn">neost.Likelihood</span> <span class="kn">import</span> <span class="n">Likelihood</span>
+<span class="kn">from</span> <span class="nn">neost</span> <span class="kn">import</span> <span class="n">PosteriorAnalysis</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">multivariate_normal</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">gaussian_kde</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span>
+<span class="kn">from</span> <span class="nn">pymultinest.solve</span> <span class="kn">import</span> <span class="n">solve</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">neost.global_imports</span> <span class="k">as</span> <span class="nn">global_imports</span>
+
+<span class="c1"># Some physical constants</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_c</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_G</span>
+<span class="n">Msun</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_M_s</span>
+<span class="n">pi</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_pi</span>
+<span class="n">rho_ns</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_rhons</span>
+
+<span class="c1"># Define name for run, extra - at the end is for nicer formatting of output</span>
+<span class="n">run_name</span> <span class="o">=</span> <span class="s2">&quot;tabulated_AP4_test_2D_gaussian&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+using c code
+</pre></div></div>
+</div>
+<p>Defining and loading in the AP4 nuclear equation of state</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">eos_name</span> <span class="o">=</span> <span class="s1">&#39;tabulated&#39;</span>
+
+<span class="n">baryondensity</span><span class="p">,</span> <span class="n">pressure_B</span><span class="p">,</span> <span class="n">energydensity_B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s1">&#39;../../examples/ap4_new.dat&#39;</span><span class="p">,</span> <span class="n">unpack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#in units of g/cm^3 for all values</span>
+
+<span class="n">pressure_B</span> <span class="o">=</span> <span class="n">pressure_B</span><span class="o">*</span><span class="n">c</span><span class="o">**</span><span class="mi">2</span> <span class="c1">#(in units of g/(cm s^2))</span>
+
+<span class="n">energydensity_B</span> <span class="o">=</span> <span class="n">energydensity_B</span>
+</pre></div>
+</div>
+</div>
+<section id="Equation-of-state-object">
+<h2>Equation of state object<a class="headerlink" href="#Equation-of-state-object" title="Link to this heading"></a></h2>
+<p>With NEoST properly imported the equation of state needs to be defined. For the CS parametrisation this is done by creating a <code class="docutils literal notranslate"><span class="pre">tabulated.TabulatedEoS()</span></code> object. This object takes can take an input the <code class="docutils literal notranslate"><span class="pre">crust</span></code> parameter and the <code class="docutils literal notranslate"><span class="pre">rho_t</span></code> parameter. However, none of these parameters are required if you wish to use only a tabulated equation of state.</p>
+<p>Valid input for the crust parameter consists of one of the following values: <code class="docutils literal notranslate"><span class="pre">'ceft-Hebeler'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceft-Tews'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceft-Lynn'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceft-Drischler'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ceft-old'</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>. This instructs NEoST on which cEFT model to use, in order of listing these would be: the band based on the work by Hebeler et al., Tews et al., Lynn et al., Drischler et al., an old implementation of the Hebeler band from Raaijmakers et al., or no cEFT at all.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">rho_t</span></code> parameter tells NEoST at which density to transition between the cEFT crust parametrisation and the core parametrisation. This value must not exceed a value of twice the nuclear saturation density, although for the currently implemented cEFT models it should not exceed 1.1 times the nuclear saturation density.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Defining the base EoS model</span>
+<span class="n">tabulated_example</span> <span class="o">=</span> <span class="n">tabulated</span><span class="o">.</span><span class="n">TabulatedEoS</span><span class="p">(</span><span class="n">energydensity_B</span><span class="p">,</span><span class="n">pressure_B</span><span class="p">)</span>
+<span class="n">tabulated_example</span><span class="o">.</span><span class="n">update</span><span class="p">({},</span> <span class="n">max_edsc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>This next block of code defines the measurements used to create the likelihood function for the Bayesian analysis. It shows you how to define measurements using the <code class="docutils literal notranslate"><span class="pre">Scipy</span></code> library, as well as what parameters need to be past for a mass-radius measurement synthetic data.</p>
+<p>To define a mass-radius measurement you need to have your mean mass and radius mesurements (muM and muR, respectively), and the uncertainties (<code class="docutils literal notranslate"><span class="pre">sigM</span></code> and <code class="docutils literal notranslate"><span class="pre">sigR</span></code>, respectively). Since we are using a synthetic case, we define the probability density function of these sources using the <code class="docutils literal notranslate"><span class="pre">multivariate_normal</span></code> function in <code class="docutils literal notranslate"><span class="pre">Scipy</span></code> to define the two-dimension gaussian of the mass-radius measurements.</p>
+<p>These PDFs are then passed to NEoST. This is done through the <code class="docutils literal notranslate"><span class="pre">likelihood_functions</span></code> and <code class="docutils literal notranslate"><span class="pre">likelihood_params</span></code> lists. The first one is a list of all the (callable) PDFs, and the second one is a list of as many instances of <code class="docutils literal notranslate"><span class="pre">['Mass',</span> <span class="pre">'Radius']</span></code> as you have mass-radius measurements. The ordering of this list matters insofar as that you need to put any mass-radius measurements first in the <code class="docutils literal notranslate"><span class="pre">likelihood_functions</span></code> list and any gravitational wave events second.</p>
+<p>You will also need to define a <code class="docutils literal notranslate"><span class="pre">chirp_mass</span></code> list containing the median values of the chirp masses of your events, in case your event is a mass-radius measurement, enter <code class="docutils literal notranslate"><span class="pre">None</span></code> instead.</p>
+<p>Finally you will also need to define how many events you pass to NEoST, a quick and easy way to do this is shown in the example code below.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Here just a simple 2D gaussian.</span>
+
+<span class="n">muM</span> <span class="o">=</span> <span class="mf">2.0947</span>   <span class="c1">#synthetic source with log_10(central energy density) = 15.240180657118929</span>
+<span class="n">muR</span> <span class="o">=</span> <span class="mf">10.808</span>
+<span class="n">sigM</span> <span class="o">=</span> <span class="mf">0.05</span><span class="o">*</span><span class="n">muM</span> <span class="c1"># 5% uncertainty in mass</span>
+<span class="n">sigR</span> <span class="o">=</span> <span class="mf">0.05</span><span class="o">*</span><span class="n">muR</span> <span class="c1"># 5% uncertainty in radius</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="p">[</span><span class="n">muM</span><span class="p">,</span> <span class="n">muR</span><span class="p">],</span> <span class="n">cov</span><span class="o">=</span><span class="p">[[</span><span class="n">sigM</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">sigR</span><span class="p">]])</span>
+
+<span class="n">muM2</span> <span class="o">=</span> <span class="mf">1.7090</span>   <span class="c1">#synthetic source with log_10(central energy density) = 15.07681219601247</span>
+<span class="n">muR2</span> <span class="o">=</span> <span class="mf">11.312</span>
+<span class="n">sigM2</span> <span class="o">=</span> <span class="mf">0.05</span><span class="o">*</span><span class="n">muM2</span> <span class="c1"># 5% uncertainty in mass</span>
+<span class="n">sigR2</span> <span class="o">=</span> <span class="mf">0.05</span><span class="o">*</span><span class="n">muR2</span> <span class="c1"># 5% uncertainty in radius</span>
+<span class="n">test2</span> <span class="o">=</span> <span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="p">[</span><span class="n">muM2</span><span class="p">,</span> <span class="n">muR2</span><span class="p">],</span> <span class="n">cov</span><span class="o">=</span><span class="p">[[</span><span class="n">sigM2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">sigR2</span><span class="p">]])</span>
+
+<span class="n">muM3</span> <span class="o">=</span> <span class="mf">1.0814</span>   <span class="c1">#synthetic source with log_10(central energy density) = 14.913443734906012</span>
+<span class="n">muR3</span> <span class="o">=</span> <span class="mf">11.4587</span>
+<span class="n">sigM3</span> <span class="o">=</span> <span class="mf">0.05</span><span class="o">*</span><span class="n">muM3</span> <span class="c1"># 5% uncertainty in mass</span>
+<span class="n">sigR3</span> <span class="o">=</span> <span class="mf">0.05</span><span class="o">*</span><span class="n">muR3</span> <span class="c1"># 5% uncertainty in radius</span>
+<span class="n">test3</span> <span class="o">=</span> <span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="p">[</span><span class="n">muM3</span><span class="p">,</span> <span class="n">muR3</span><span class="p">],</span> <span class="n">cov</span><span class="o">=</span><span class="p">[[</span><span class="n">sigM3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">sigR3</span><span class="p">]])</span>
+
+<span class="n">likelihood_functions</span> <span class="o">=</span> <span class="p">[</span><span class="n">test</span><span class="o">.</span><span class="n">pdf</span><span class="p">,</span><span class="n">test2</span><span class="o">.</span><span class="n">pdf</span><span class="p">,</span><span class="n">test3</span><span class="o">.</span><span class="n">pdf</span><span class="p">]</span>
+<span class="n">likelihood_params</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;Mass&#39;</span><span class="p">,</span> <span class="s1">&#39;Radius&#39;</span><span class="p">],[</span><span class="s1">&#39;Mass&#39;</span><span class="p">,</span> <span class="s1">&#39;Radius&#39;</span><span class="p">],[</span><span class="s1">&#39;Mass&#39;</span><span class="p">,</span> <span class="s1">&#39;Radius&#39;</span><span class="p">]]</span>
+
+<span class="c1"># This is not a GW event so we set chirp mass to None</span>
+<span class="n">chirp_mass</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="n">number_stars</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">chirp_mass</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>With our data defined, the next step is to define both the prior and the likelihood function.</p>
+<p>The prior is defined through a pair of dictionaries, <code class="docutils literal notranslate"><span class="pre">variable_params</span></code> and <code class="docutils literal notranslate"><span class="pre">static_params</span></code>. Here <code class="docutils literal notranslate"><span class="pre">variable_params</span></code> takes in the equation of state parameters that will be allowed to vary, and <code class="docutils literal notranslate"><span class="pre">static_params</span></code> will take in those that won’t. Entries into <code class="docutils literal notranslate"><span class="pre">variable_params</span></code> should be formatted as follows: <code class="docutils literal notranslate"><span class="pre">'param_name':[lower_bound,upper_bound]</span></code></p>
+<p>Additionally, for each of the measurements you must also append a dictionary item <code class="docutils literal notranslate"><span class="pre">'rhoc_i':[14.6,</span> <span class="pre">16]</span></code> to the end of <code class="docutils literal notranslate"><span class="pre">variable_params</span></code>, this parameter covers the central density of star i and needs to be appended for each star individually. Entries into <code class="docutils literal notranslate"><span class="pre">static_params</span></code> should be formatted in the following manner: <code class="docutils literal notranslate"><span class="pre">'param_name':value</span></code>.</p>
+<p>Finally, the prior object must be created using the following function call:<code class="docutils literal notranslate"><span class="pre">neost.Prior.Prior(EOS,</span> <span class="pre">variable_params,</span> <span class="pre">static_params,</span> <span class="pre">chirp_masses)</span></code> where the <code class="docutils literal notranslate"><span class="pre">EOS</span></code> argument is the equation of state object that was created in the previous step. When this prior is called it will then uniformly sample sets of parameters from the defined parameter ranges.</p>
+<p>The likelihood is defined by providing both the previously defined prior object and the likelihood functions defined in the previous codeblock. This is done with the following code: <code class="docutils literal notranslate"><span class="pre">likelihood</span> <span class="pre">=</span> <span class="pre">Likelihood(prior,</span> <span class="pre">likelihood_functions,</span> <span class="pre">likelihood_params,</span> <span class="pre">chirp_mass)</span></code></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Only vary the central densities on the sources because there are no parameters to vary in a tabulated equation of state</span>
+<span class="n">variable_params</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number_stars</span><span class="p">):</span>
+    <span class="n">variable_params</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;rhoc_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">):[</span><span class="mf">14.6</span><span class="p">,</span> <span class="mi">16</span><span class="p">]})</span>
+
+<span class="c1"># and set the rest to static parameters in the sampling</span>
+<span class="n">static_params</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="c1"># Then we define the prior and likelihood accordingly</span>
+<span class="n">prior</span> <span class="o">=</span> <span class="n">Prior</span><span class="p">(</span><span class="n">tabulated_example</span><span class="p">,</span> <span class="n">variable_params</span><span class="p">,</span> <span class="n">static_params</span><span class="p">,</span> <span class="n">chirp_mass</span><span class="p">)</span>
+<span class="n">likelihood</span> <span class="o">=</span> <span class="n">Likelihood</span><span class="p">(</span><span class="n">prior</span><span class="p">,</span> <span class="n">likelihood_functions</span><span class="p">,</span> <span class="n">likelihood_params</span><span class="p">,</span> <span class="n">chirp_mass</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>After defining your prior and likelihood function, it is best practice to test your prior and likelihood function. This is done with the short loop in the code block below. This loop will for each iteration first take a sample from the prior, and then compute the corresponding likelihood of said prior sample and print the likelihood as output.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Bounds of prior are&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">variable_params</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;number of parameters is </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span><span class="k">len</span>(variable_params))
+
+<span class="c1"># First we test if everything is working as expected</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Testing prior and likelihood&quot;</span><span class="p">)</span>
+<span class="n">cube</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">variable_params</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cube</span><span class="p">)):</span>
+    <span class="n">par</span> <span class="o">=</span> <span class="n">prior</span><span class="o">.</span><span class="n">inverse_sample</span><span class="p">(</span><span class="n">cube</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Testing done&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Bounds of prior are
+{&#39;rhoc_1&#39;: [14.6, 16], &#39;rhoc_2&#39;: [14.6, 16], &#39;rhoc_3&#39;: [14.6, 16]}
+number of parameters is 3
+Testing prior and likelihood
+Testing done
+</pre></div></div>
+</div>
+<p>When finished with testing your likelihood and prior you can proceed to the actual inference process. This is done in the code block below. Warning: depending on the performance of your platform, this might be a very slow process. However, here we only show a relatively fast example with a decreased number of live points.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Then we start the sampling with MultiNest</span>
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">LogLikelihood</span><span class="o">=</span><span class="n">likelihood</span><span class="o">.</span><span class="n">call</span><span class="p">,</span> <span class="n">Prior</span><span class="o">=</span><span class="n">prior</span><span class="o">.</span><span class="n">inverse_sample</span><span class="p">,</span> <span class="n">n_live_points</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">evidence_tolerance</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+               <span class="n">n_dims</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">variable_params</span><span class="p">),</span> <span class="n">sampling_efficiency</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">outputfiles_basename</span><span class="o">=</span><span class="s1">&#39;../../examples/chains/&#39;</span> <span class="o">+</span> <span class="n">run_name</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+  analysing data from ../../examples/chains/tabulated_AP4_test_2D_gaussian.txt
+843.1442375183105
+</pre></div></div>
+</div>
+<p>Finally, NEoST also includes functionality to perform the first steps of posterior analysis. The first step in this process is to call the <code class="docutils literal notranslate"><span class="pre">PosteriorAnalysis.compute_auxiliary_data()</span></code> function with the code block below. This will generate as output a set of files that can subsequently be used with several additional plotting routines included in NEoST, or you can analyse these files on your own.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute auxiliary data for posterior analysis</span>
+<span class="n">PosteriorAnalysis</span><span class="o">.</span><span class="n">compute_auxiliary_data</span><span class="p">(</span><span class="s1">&#39;../../examples/chains/&#39;</span> <span class="o">+</span> <span class="n">run_name</span><span class="p">,</span> <span class="n">tabulated_example</span><span class="p">,</span>
+                                         <span class="n">variable_params</span><span class="p">,</span> <span class="n">static_params</span><span class="p">,</span> <span class="n">chirp_mass</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Total number of samples is 2327
+|████████████████████████████████████████| 2327/2327 [100%] in 9:29.0 (4.09/s)
+</pre></div></div>
+</div>
+<p>This following plotting routine will create a cornerplot of all the parameters you have included in the <code class="docutils literal notranslate"><span class="pre">variable_params</span></code> dictionary</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Make some analysis plots</span>
+<span class="n">PosteriorAnalysis</span><span class="o">.</span><span class="n">cornerplot</span><span class="p">(</span><span class="s1">&#39;../../examples/chains/&#39;</span> <span class="o">+</span> <span class="n">run_name</span><span class="p">,</span> <span class="n">variable_params</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>This will plot the data you have used to define the likelihood. So these are the masses and radii of the neutron stars that have been included in the analysis. Note that this will also plot the masses and radii of any gravitational wave events included in the data.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">PosteriorAnalysis</span><span class="o">.</span><span class="n">mass_radius_posterior_plot</span><span class="p">(</span><span class="s1">&#39;../../examples/chains/&#39;</span> <span class="o">+</span> <span class="n">run_name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/Tabulated_example_19_0.png" src="_images/Tabulated_example_19_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/Tabulated_example_19_1.png" src="_images/Tabulated_example_19_1.png" />
+</div>
+</div>
+<p>This routine will plot the posterior on the mass-radius relationship of neutron stars according to the inference process, the <code class="docutils literal notranslate"><span class="pre">label_name</span></code> parameter will be the label used in the legend. Note, for the tabulated equation of state with no varying equation of state parameters, one cannot make the below <code class="docutils literal notranslate"><span class="pre">PosteriorAnalysis.py</span></code> files since EoS is tabulated and cannot be varied. If you do try to run these, the code will throw an <code class="docutils literal notranslate"><span class="pre">Error</span></code> message stating that you cannot do this.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="CS_prior_example.html" class="btn btn-neutral float-left" title="Speed of Sound Prior Example" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Tabulated_prior_example.html" class="btn btn-neutral float-right" title="Tabulated Prior Example" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2024 the NEoST Core Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

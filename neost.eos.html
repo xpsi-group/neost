@@ -1,0 +1,483 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>neost.eos package &mdash; NEoST 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="neost package" href="neost.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NEoST
+              <img src="_static/neostlogo_small.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applications.html">Publications</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Team and acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="citation.html">Citation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">Future</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Start_here.html">Start here</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_example.html">Piecewise Polytropic Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_prior_example.html">Piecewise Polytropic Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_with_ADM_example.html">Piecewise Polytropic with ADM Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_with_ADM_prior_example.html">Piecewise Polytropic Prior with ADM Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ADM_MR_Tidal_tutorial.html">ADM M-R and M-Tidal Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CS_example.html">Speed of Sound Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CS_prior_example.html">Speed of Sound Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tabulated_example.html">Tabulated Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tabulated_prior_example.html">Tabulated Prior Example</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">neost</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="neost.html">neost package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="neost.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">neost.eos package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="neost.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="neost.html#module-neost.Likelihood">neost.Likelihood module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="neost.html#module-neost.Prior">neost.Prior module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="neost.html#module-neost.Star">neost.Star module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="neost.html#module-neost.PosteriorAnalysis">neost.PosteriorAnalysis module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="neost.html#module-neost.tovsolvers.TOVh">neost.tovsolvers.TOVh module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="neost.html#module-neost.tovsolvers.TOVr">neost.tovsolvers.TOVr module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="neost.html#module-neost.tovsolvers.TOVdm">neost.tovsolvers.TOVdm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="neost.html#module-neost.tovsolvers.TidalDef">neost.tovsolvers.TidalDef module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="neost.html#module-neost.utils">neost.utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="neost.html#module-neost">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NEoST</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">neost</a></li>
+          <li class="breadcrumb-item"><a href="neost.html">neost package</a></li>
+      <li class="breadcrumb-item active">neost.eos package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/neost.eos.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="neost-eos-package">
+<h1>neost.eos package<a class="headerlink" href="#neost-eos-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-neost.eos.base">
+<span id="neost-eos-base-module"></span><h2>neost.eos.base module<a class="headerlink" href="#module-neost.eos.base" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="neost.eos.base.BaseEoS">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neost.eos.base.</span></span><span class="sig-name descname"><span class="pre">BaseEoS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crust</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ceft-Hebeler'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200000000000000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/base.html#BaseEoS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.base.BaseEoS" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class representing an equation of state object.</p>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>crust: str</dt><dd><p>The name of the EoS crust model to use. Can be either ‘ceft-Hebeler’,
+‘ceft-Drischler’, ‘ceft-Lynn’, ‘ceft-Tews’, ‘ceft-old’, ‘BPS’, or None
+if a tabulated EoS with a crust model already included is used.</p>
+</dd>
+<dt>rho_t: float</dt><dd><p>The transition density between the crust EOS and the high density
+parameterization in cgs.</p>
+</dd>
+</dl>
+</section>
+<section id="methods">
+<h3>Methods<a class="headerlink" href="#methods" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>update(eos_params, max_edsc=True)</dt><dd><p>Update the EoS object with a given set of parameters</p>
+</dd>
+<dt>get_eos_crust()</dt><dd><p>Construct the crust of the equation of state, with or without cEFT.</p>
+</dd>
+<dt>plot()</dt><dd><p>Plot the equation of state.</p>
+</dd>
+<dt>plot_massradius()</dt><dd><p>Plot the mass-radius curve of the equation of state.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.base.BaseEoS.CofE">
+<span class="sig-name descname"><span class="pre">CofE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">E</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsgrid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">presgrid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/base.html#BaseEoS.CofE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.base.BaseEoS.CofE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.base.BaseEoS.EofP">
+<span class="sig-name descname"><span class="pre">EofP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsgrid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">presgrid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/base.html#BaseEoS.EofP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.base.BaseEoS.EofP" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.base.BaseEoS.EofRho">
+<span class="sig-name descname"><span class="pre">EofRho</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/base.html#BaseEoS.EofRho"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.base.BaseEoS.EofRho" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.base.BaseEoS.Mass_Radius">
+<span class="sig-name descname"><span class="pre">Mass_Radius</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epscent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epscent_dm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/base.html#BaseEoS.Mass_Radius"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.base.BaseEoS.Mass_Radius" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.base.BaseEoS.PofE">
+<span class="sig-name descname"><span class="pre">PofE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">E</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsgrid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">presgrid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/base.html#BaseEoS.PofE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.base.BaseEoS.PofE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.base.BaseEoS.SLYfit">
+<span class="sig-name descname"><span class="pre">SLYfit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/base.html#BaseEoS.SLYfit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.base.BaseEoS.SLYfit" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.base.BaseEoS.ceft_band_func">
+<span class="sig-name descname"><span class="pre">ceft_band_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_norm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_norm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/base.html#BaseEoS.ceft_band_func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.base.BaseEoS.ceft_band_func" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.base.BaseEoS.edens">
+<span class="sig-name descname"><span class="pre">edens</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/base.html#BaseEoS.edens"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.base.BaseEoS.edens" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.base.BaseEoS.f_chi_calc">
+<span class="sig-name descname"><span class="pre">f_chi_calc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epscent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epscent_dm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/base.html#BaseEoS.f_chi_calc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.base.BaseEoS.f_chi_calc" title="Link to this definition"></a></dt>
+<dd><p>Method to calculate the ADM mass-fraction given the baryonic and ADM central densities, respectively.</p>
+<section id="id1">
+<h4>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>epscent<span class="classifier">float</span></dt><dd><p>Baryonic central energy density in cgs units for mass-density, i.e., divided by the speed of light squared.</p>
+</dd>
+<dt>epscent_dm: float</dt><dd><p>ADM central energy density in cgs units for mass-density, i.e., divided by the speed of light squared.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.base.BaseEoS.find_epsdm_cent">
+<span class="sig-name descname"><span class="pre">find_epsdm_cent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ADM_fraction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epscent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/base.html#BaseEoS.find_epsdm_cent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.base.BaseEoS.find_epsdm_cent" title="Link to this definition"></a></dt>
+<dd><p>Method to calculate the ADM central energy density given the baryonic central energy
+density and ADM mass-fraction. Uses a wide array of different intervals of central energy densities 
+to determine the ADM central energy density as a root finding problem.</p>
+<section id="id2">
+<h4>Parameters<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>ADM_fraction: float</dt><dd><p>Given ADM mass-fraction as a percentage [%]</p>
+</dd>
+<dt>epscent<span class="classifier">float</span></dt><dd><p>Baryonic central energy density in cgs units for mass-density, i.e., divided by the speed of light squared.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.base.BaseEoS.find_max_edsc">
+<span class="sig-name descname"><span class="pre">find_max_edsc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/base.html#BaseEoS.find_max_edsc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.base.BaseEoS.find_max_edsc" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.base.BaseEoS.get_BPS">
+<span class="sig-name descname"><span class="pre">get_BPS</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/base.html#BaseEoS.get_BPS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.base.BaseEoS.get_BPS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.base.BaseEoS.get_eos_crust">
+<span class="sig-name descname"><span class="pre">get_eos_crust</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/base.html#BaseEoS.get_eos_crust"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.base.BaseEoS.get_eos_crust" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.base.BaseEoS.get_minmax_edsc_chirp">
+<span class="sig-name descname"><span class="pre">get_minmax_edsc_chirp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chirp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/base.html#BaseEoS.get_minmax_edsc_chirp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.base.BaseEoS.get_minmax_edsc_chirp" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.base.BaseEoS.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'None'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/base.html#BaseEoS.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.base.BaseEoS.plot" title="Link to this definition"></a></dt>
+<dd><p>Plot the EoS. If dm is not ‘None’ will include ADM contribution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.base.BaseEoS.plot_massradius">
+<span class="sig-name descname"><span class="pre">plot_massradius</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/base.html#BaseEoS.plot_massradius"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.base.BaseEoS.plot_massradius" title="Link to this definition"></a></dt>
+<dd><p>Plot the mass-radius curve.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.base.BaseEoS.polytropic_func">
+<span class="sig-name descname"><span class="pre">polytropic_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/base.html#BaseEoS.polytropic_func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.base.BaseEoS.polytropic_func" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.base.BaseEoS.rhodens">
+<span class="sig-name descname"><span class="pre">rhodens</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/base.html#BaseEoS.rhodens"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.base.BaseEoS.rhodens" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.base.BaseEoS.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eos_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_edsc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/base.html#BaseEoS.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.base.BaseEoS.update" title="Link to this definition"></a></dt>
+<dd><p>Method to update a given EoS object with specified parameters.</p>
+<section id="id3">
+<h4>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>eos_params<span class="classifier">dict</span></dt><dd><p>A dictionary containing the parameter values of the EoS model.</p>
+</dd>
+<dt>max_edsc: bool</dt><dd><p>If True, compute the maximum central energy density allowed
+by this set of parameters (default is True).</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+<section id="module-neost.eos.polytropes">
+<span id="neost-eos-polytropes-module"></span><h2>neost.eos.polytropes module<a class="headerlink" href="#module-neost.eos.polytropes" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="neost.eos.polytropes.PolytropicEoS">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neost.eos.polytropes.</span></span><span class="sig-name descname"><span class="pre">PolytropicEoS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crust</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adm_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'None'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dm_halo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">two_fluid_tidal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/polytropes.html#PolytropicEoS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.polytropes.PolytropicEoS" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#neost.eos.base.BaseEoS" title="neost.eos.base.BaseEoS"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEoS</span></code></a></p>
+<p>Class representing a polytropic equation of state object.</p>
+<section id="id4">
+<h3>Parameters<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>rho_t: float</dt><dd><p>The transition density between the crust EOS and the high density
+parameterization in cgs.</p>
+</dd>
+<dt>ceft: bool</dt><dd><p>If True a low-density cEFT parameterization is used.</p>
+</dd>
+<dt>ceft_method: str</dt><dd><p>The name of the cEFT calculations used at low density.
+Can be one of ‘Hebeler’, ‘Drischler’, ‘Lynn’, ‘Keller-N2LO’, ‘Keller-N3L0’, or ‘Tews’.</p>
+</dd>
+<dt>adm_type: str</dt><dd><p>The name of the ADM particle type. Can be ‘None’, ‘Bosonic’, or ‘Fermionic’</p>
+</dd>
+<dt>dm_halo: bool</dt><dd><p>If True, ADM halos will be allowed.</p>
+</dd>
+<dt>two_fluid_tidal: bool</dt><dd><p>If True, the two-fluid tidal deformability solver will be used. See TidalDef.py file</p>
+</dd>
+</dl>
+</section>
+<section id="id5">
+<h3>Methods<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>update(eos_params, max_edsc=True)</dt><dd><p>Update the EoS object with a given set of parameters</p>
+</dd>
+<dt>get_eos_crust()</dt><dd><p>Construct the crust of the equation of state, with or without cEFT.</p>
+</dd>
+<dt>get_eos()</dt><dd><p>Construct the high-density parameterization of the equation of state.</p>
+</dd>
+<dt>eos_core_pp()</dt><dd><p>Function to compute the polytropic equation of state parameterization.</p>
+</dd>
+<dt>add_adm_eos()</dt><dd><p>Function to compute the ADM EoS, whether it be bosonic or fermionic in nature.</p>
+</dd>
+<dt>plot()</dt><dd><p>Plot the equation of state.</p>
+</dd>
+<dt>plot_massradius()</dt><dd><p>Plot the mass-radius curve of the equation of state.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.polytropes.PolytropicEoS.add_adm_eos">
+<span class="sig-name descname"><span class="pre">add_adm_eos</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/polytropes.html#PolytropicEoS.add_adm_eos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.polytropes.PolytropicEoS.add_adm_eos" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.polytropes.PolytropicEoS.check_constraints">
+<span class="sig-name descname"><span class="pre">check_constraints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/polytropes.html#PolytropicEoS.check_constraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.polytropes.PolytropicEoS.check_constraints" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.polytropes.PolytropicEoS.eos_core_pp">
+<span class="sig-name descname"><span class="pre">eos_core_pp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P_t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/polytropes.html#PolytropicEoS.eos_core_pp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.polytropes.PolytropicEoS.eos_core_pp" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.polytropes.PolytropicEoS.get_eos">
+<span class="sig-name descname"><span class="pre">get_eos</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/polytropes.html#PolytropicEoS.get_eos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.polytropes.PolytropicEoS.get_eos" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.polytropes.PolytropicEoS.polytropic_func">
+<span class="sig-name descname"><span class="pre">polytropic_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/polytropes.html#PolytropicEoS.polytropic_func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.polytropes.PolytropicEoS.polytropic_func" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+<section id="module-neost.eos.speedofsound">
+<span id="neost-eos-speedofsound-module"></span><h2>neost.eos.speedofsound module<a class="headerlink" href="#module-neost.eos.speedofsound" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="neost.eos.speedofsound.SpeedofSoundEoS">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neost.eos.speedofsound.</span></span><span class="sig-name descname"><span class="pre">SpeedofSoundEoS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crust</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adm_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'None'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dm_halo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">two_fluid_tidal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/speedofsound.html#SpeedofSoundEoS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.speedofsound.SpeedofSoundEoS" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#neost.eos.base.BaseEoS" title="neost.eos.base.BaseEoS"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEoS</span></code></a></p>
+<p>Class representing an equation of state object.</p>
+<section id="id6">
+<h3>Parameters<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>eos_name<span class="classifier">str</span></dt><dd><p>The name of the EOS parameterization. Should be one of ‘polytropes’,
+‘speedofsound’ or ‘spectral’.</p>
+</dd>
+<dt>rho_t: float</dt><dd><p>The transition density between the crust EOS and the high density
+parameterization in cgs.</p>
+</dd>
+<dt>ceft: bool</dt><dd><p>If True a low-density cEFT parameterization is used.</p>
+</dd>
+<dt>ceft_method: str</dt><dd><p>The name of the cEFT calculations used at low density.
+Can be one of ‘Hebeler’, ‘Drischler’, ‘Lynn’, ‘Keller-N2LO’, ‘Keller-N3L0’, or ‘Tews’.</p>
+</dd>
+<dt>adm_type: str</dt><dd><p>The name of the ADM particle type. Can be ‘None’, ‘Bosonic’, or ‘Fermionic’</p>
+</dd>
+<dt>dm_halo: bool</dt><dd><p>If True, ADM halos will be allowed.</p>
+</dd>
+<dt>two_fluid_tidal: bool</dt><dd><p>If True, the two-fluid tidal deformability solver will be used. See TidalDef.py file</p>
+</dd>
+</dl>
+</section>
+<section id="id7">
+<h3>Methods<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>update(eos_params, max_edsc=True)</dt><dd><p>Update the EoS object with a given set of parameters</p>
+</dd>
+<dt>get_eos_crust()</dt><dd><p>Construct the crust of the equation of state, with or without cEFT.</p>
+</dd>
+<dt>get_eos()</dt><dd><p>Construct the high-density parameterization of the equation of state.</p>
+</dd>
+<dt>add_adm_eos()</dt><dd><p>Function to compute the ADM EoS, whether it be bosonic or fermionic in nature.</p>
+</dd>
+<dt>plot()</dt><dd><p>Plot the equation of state.</p>
+</dd>
+<dt>plot_massradius()</dt><dd><p>Plot the mass-radius curve of the equation of state.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.speedofsound.SpeedofSoundEoS.Cs_model_core">
+<span class="sig-name descname"><span class="pre">Cs_model_core</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">negative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1e+100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/speedofsound.html#SpeedofSoundEoS.Cs_model_core"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.speedofsound.SpeedofSoundEoS.Cs_model_core" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.speedofsound.SpeedofSoundEoS.Cs_model_total">
+<span class="sig-name descname"><span class="pre">Cs_model_total</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/speedofsound.html#SpeedofSoundEoS.Cs_model_total"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.speedofsound.SpeedofSoundEoS.Cs_model_total" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.speedofsound.SpeedofSoundEoS.add_adm_eos">
+<span class="sig-name descname"><span class="pre">add_adm_eos</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/speedofsound.html#SpeedofSoundEoS.add_adm_eos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.speedofsound.SpeedofSoundEoS.add_adm_eos" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.speedofsound.SpeedofSoundEoS.check_constraints">
+<span class="sig-name descname"><span class="pre">check_constraints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/speedofsound.html#SpeedofSoundEoS.check_constraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.speedofsound.SpeedofSoundEoS.check_constraints" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.speedofsound.SpeedofSoundEoS.get_eos">
+<span class="sig-name descname"><span class="pre">get_eos</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/speedofsound.html#SpeedofSoundEoS.get_eos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.speedofsound.SpeedofSoundEoS.get_eos" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.speedofsound.SpeedofSoundEoS.logistic">
+<span class="sig-name descname"><span class="pre">logistic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/speedofsound.html#SpeedofSoundEoS.logistic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.speedofsound.SpeedofSoundEoS.logistic" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neost.eos.speedofsound.SpeedofSoundEoS.match_func">
+<span class="sig-name descname"><span class="pre">match_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cscrust</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/neost/eos/speedofsound.html#SpeedofSoundEoS.match_func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neost.eos.speedofsound.SpeedofSoundEoS.match_func" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="neost.html" class="btn btn-neutral float-left" title="neost package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2024 the NEoST Core Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
