@@ -93,7 +93,9 @@ To install NEoST itself, see Installing NEoST below.
 Installing on MAC M-series chips (arm-64)
 -----------------------------------------
 
-Errors may occur when installing MultiNest/PyMultiNest on MAC M-series chips as there are no arm-64 coda builds for `MultiNest <https://anaconda.org/conda-forge/multinest>`_. Although we do not have any definite solutions, we can offer a possible troubleshooting method that has worked in the past.
+Currently, the NEoST code doest not offer Cython support for MAC M-series chips (arm-64), thus the Cython TOV solvers will not work upon installation. So we please ask MAC M-series chip users to install NEoST without cythonizing (see the last paragraph at the end of the Install NEoST section). However, we are currently looking into this issue so that the Cython TOV solvers are available to all users. Until then, only the Python TOV solvers will be functional for MAC M-series chip users. 
+
+Errors may also occur when installing MultiNest/PyMultiNest on MAC M-series chips as there are no arm-64 coda builds for `MultiNest <https://anaconda.org/conda-forge/multinest>`_. Although we do not have any definite solutions, we can offer a possible troubleshooting method that has worked in the past.
 
 The first step is to remove PyMultiNest from the enviroment.yml file and re-run
 
