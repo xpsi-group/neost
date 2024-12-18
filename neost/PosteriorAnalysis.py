@@ -544,7 +544,7 @@ def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp
         M = np.zeros(len(rhocs))
         R = np.zeros(len(rhocs))
 
-        rhoc = np.random.rand() *(np.log10(EOS.max_edsc) - 14.6) + 14.6
+        
         rhocpar = np.array([10**v for k,v in par.items() if 'rhoc' in k])
         tmp = []
 
@@ -580,6 +580,7 @@ def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp
 
             scattered.append(tmp)
             radii[:,i] = MR(masses)
+            rhoc = np.random.rand() *(np.log10(EOS.max_edsc) - 14.6) + 14.6
             star = Star(10**rhoc)
             star.solve_structure(EOS.energydensities, EOS.pressures)
             MR_prpr_pp[i] = star.Mrot, star.Req
@@ -665,6 +666,7 @@ def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp
                 rhocs_admixed = rhocs[indices] + rhocsdm[indices]
                 rhocM = 0
 
+            rhoc = np.random.rand() *(np.log10(EOS.max_edsc) - 14.6) + 14.6
             epsdm = EOS.find_epsdm_cent(EOS.adm_fraction,10**rhoc)
             star = Star(10**rhoc,epsdm)
             star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo)
