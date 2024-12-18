@@ -41,8 +41,8 @@ Changes from JOSS review process.
 
 Added
 ^^^^^
-*Notes for those attempting to compile and run on Mac M-series chips
-*Details of Cython vs Python speed-up
+* Notes for those attempting to compile and run on Mac M-series chips
+* Details of Cython vs Python speed-up
 
 Changed
 ^^^^^^^
