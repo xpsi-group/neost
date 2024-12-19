@@ -72,7 +72,7 @@ def compute_table_data(root_name, EOS, variable_params, static_params,dm = False
     """
     Function to compute the table data in Raaijmakers et al. 2021 & Rutherford et al. 2024.
     In particular: M_TOV, R_TOV, eps_cent_TOV, rho_cent_TOV, P_cent_TOV, R_1.4, eps_cent_1.4, rho_cent_1.4, P_cent_1.4,
-    R_2.0, eps_cent_2.0, rho_cent_2.0, P_cent_2.0. From v2.0.0, the user has the choice to include ADM or not.
+    R_2.0, eps_cent_2.0, rho_cent_2.0, P_cent_2.0. Begining from v2.0.0 onward, the user has the choice to include ADM or not.
 
 
     Parameters
