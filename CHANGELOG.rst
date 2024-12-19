@@ -49,6 +49,10 @@ Changed
 * Small changes to JOSS paper
 * Updated install.rst to use python -m pip install
 
+Fixed
+^^^^^
+* rhoc overwritten in PosteriorAnalysis.compute_auxiliary_data(), which caused a power overflow error in star = Star(10**rhoc).
+
 Attribution
 ^^^^^^^^^^^
 * NEoST core team
