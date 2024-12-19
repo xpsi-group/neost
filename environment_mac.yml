@@ -1,0 +1,16 @@
+name: neost
+channels:
+        - defaults
+        - conda-forge
+dependencies:
+        - python # Just to ensure we're not using system-wide python. See PEP 668
+        - numpy
+        - matplotlib
+        - scipy
+        - pytest
+        - numba
+        - seaborn
+        - corner
+        - gsl
+        - kalepy
+        - jupyter # Optional, only required for running the example notebooks in docs/source/
