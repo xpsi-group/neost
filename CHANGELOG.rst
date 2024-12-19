@@ -33,6 +33,32 @@ and this project adheres to
 .. Attribution
 .. ^^^^^^^^^^^
 
+[v2.1.0 - 2024-12-18]
+~~~~~~~~~~~~~~~~~~~~~
+Summary
+^^^^^^^
+Changes from JOSS review process. 
+
+Added
+^^^^^
+* Notes for those attempting to compile and run on Mac M-series chips
+* Details of Cython vs Python speed-up
+
+Changed
+^^^^^^^
+* Small changes to JOSS paper
+* Updated install.rst to use python -m pip install
+
+Fixed
+^^^^^
+* rhoc overwritten in PosteriorAnalysis.compute_auxiliary_data(), which caused a power overflow error in star = Star(10**rhoc).
+
+Attribution
+^^^^^^^^^^^
+* NEoST core team
+* Axel Donath
+
+
 [v2.0.0 - 2024-10-01]
 ~~~~~~~~~~~~~~~~~~~~~
 Summary

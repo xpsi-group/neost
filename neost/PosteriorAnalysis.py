@@ -72,7 +72,7 @@ def compute_table_data(root_name, EOS, variable_params, static_params,dm = False
     """
     Function to compute the table data in Raaijmakers et al. 2021 & Rutherford et al. 2024.
     In particular: M_TOV, R_TOV, eps_cent_TOV, rho_cent_TOV, P_cent_TOV, R_1.4, eps_cent_1.4, rho_cent_1.4, P_cent_1.4,
-    R_2.0, eps_cent_2.0, rho_cent_2.0, P_cent_2.0. With v2.0.0, the user has the choice to include ADM or not.
+    R_2.0, eps_cent_2.0, rho_cent_2.0, P_cent_2.0. Begining from v2.0.0 onward, the user has the choice to include ADM or not.
 
 
     Parameters
@@ -544,7 +544,7 @@ def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp
         M = np.zeros(len(rhocs))
         R = np.zeros(len(rhocs))
 
-        rhoc = np.random.rand() *(np.log10(EOS.max_edsc) - 14.6) + 14.6
+        
         rhocpar = np.array([10**v for k,v in par.items() if 'rhoc' in k])
         tmp = []
 
@@ -580,6 +580,7 @@ def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp
 
             scattered.append(tmp)
             radii[:,i] = MR(masses)
+            rhoc = np.random.rand() *(np.log10(EOS.max_edsc) - 14.6) + 14.6
             star = Star(10**rhoc)
             star.solve_structure(EOS.energydensities, EOS.pressures)
             MR_prpr_pp[i] = star.Mrot, star.Req
@@ -665,6 +666,7 @@ def compute_auxiliary_data(root_name, EOS, variable_params, static_params, chirp
                 rhocs_admixed = rhocs[indices] + rhocsdm[indices]
                 rhocM = 0
 
+            rhoc = np.random.rand() *(np.log10(EOS.max_edsc) - 14.6) + 14.6
             epsdm = EOS.find_epsdm_cent(EOS.adm_fraction,10**rhoc)
             star = Star(10**rhoc,epsdm)
             star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo)
