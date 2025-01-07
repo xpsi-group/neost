@@ -10,19 +10,19 @@ authors:
       affiliation: 1
     - name: Nathan Rutherford
       orcid: 0000-0002-9626-7257
-      affiliation: 3
+      affiliation: 2
     - name: Patrick Timmerman
       orcid: 0009-0003-2793-1569
-      affiliation: 2
+      affiliation: 3
     - name: Tuomo Salmi
       orcid: 0000-0001-6356-125X
-      affiliation: 2
+      affiliation: 3
     - name: Anna L. Watts
       orcid: 0000-0002-1009-2354
-      affiliation: 2
+      affiliation: 3
     - name:  Chanda Prescod-Weinstein
       orcid: 0000-0002-6742-4532
-      affiliation: 3
+      affiliation: 2
     - name:  Isak Svensson
       orcid: 0000-0002-9211-5555
       affiliation: "4, 5, 6"
@@ -32,9 +32,9 @@ authors:
 affiliations:
    - name: GRAPPA, Anton Pannekoek Institute for Astronomy and Institute of High-Energy Physics, University of Amsterdam, Science Park 904, 1098 XH Amsterdam, Netherlands
      index: 1
-   - name: Anton Pannekoek Institute for Astronomy, University of Amsterdam, Science Park 904, 1098 XH Amsterdam, Netherlands
-     index: 2
    - name: Department of Physics and Astronomy, University of New Hampshire, Durham, New Hampshire 03824, USA
+     index: 2
+   - name: Anton Pannekoek Institute for Astronomy, University of Amsterdam, Science Park 904, 1098 XH Amsterdam, Netherlands
      index: 3
    - name: Technische Universität Darmstadt, Department of Physics, 64289 Darmstadt, Germany
      index: 4
