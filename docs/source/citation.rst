@@ -9,7 +9,7 @@ If NEoST proves to be a useful tool for your work, please cite the project as a 
 
     NEoST (\url{https://github.com/xpsi-group/neost.git}, \citet{neost})
 
-and cite the `Raaijmakers et al. (2024) NEoST Journal of Open Source Software (JOSS) paper <https://doi.org/10.21105/joss.06003>`_
+and cite the `Raaijmakers et al. (2025) NEoST Journal of Open Source Software (JOSS) paper <https://doi.org/10.21105/joss.06003>`_
 
 .. code-block:: latex
 
