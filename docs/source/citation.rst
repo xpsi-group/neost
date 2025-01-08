@@ -14,14 +14,14 @@ and cite the `Raaijmakers et al. (2025) NEoST Journal of Open Source Software (J
 .. code-block:: latex
 
     @article{neost,
-    author = {{Raaijmakers}, Geert.	and {Rutherford}, Nathan
-					and {Timmerman}, Patrick
-					and {Salmi}, Tuomo
-					and {Watts}, Anna L. 
-					and {Prescod-Weinstein}, Chanda
-					and {Svensson}, Isak
-					and {Mendes}, Melissa},
-    title = {NEoST: A Python package for nested sampling of the neutron star equation of state},
+    author = {{Raaijmakers}, Geert and {Rutherford}, Nathan 
+                                   and {Timmerman}, Patrick 
+                                   and {Salmi}, Tuomo 
+                                   and {Watts}, Anna L. 
+                                   and {Prescod-Weinstein}, Chanda
+                                   and {Svensson}, Isak
+                                   and {Mendes}, Melissa},
+    title = "{NEoST: A Python package for nested sampling of the neutron star equation of state}",
     journal = {Journal of Open Source Software},
     publisher = {The Open Journal},
     year = 2025,
