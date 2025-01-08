@@ -14,7 +14,7 @@ and cite the `Raaijmakers et al. (2025) NEoST Journal of Open Source Software (J
 .. code-block:: latex
 
     @article{neost,
-    author - {{Raaijmakers}, Geert.	and {Rutherford}, Nathan
+    author = {{Raaijmakers}, Geert.	and {Rutherford}, Nathan
 					and {Timmerman}, Patrick
 					and {Salmi}, Tuomo
 					and {Watts}, Anna L. 
