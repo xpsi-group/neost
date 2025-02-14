@@ -43,7 +43,18 @@ To speed up convergence we transform the gravitational wave posterior distributi
 	~ p(\boldsymbol{\varepsilon} \,|\, \boldsymbol{\theta}, \mathbb{M}) \\
 	& \times \prod_{i} p(\Lambda_{1,i}, \Lambda_{2,i}, q_i \,|\, \mathcal{M}_c, \boldsymbol{d}_{\rm GW, i}) \\
 	& \times \prod_{j} p(M_j, R_j \,|\, \boldsymbol{d}_{\rm NICER,j}) \\
-	& \times \prod_{k} p(M_k \,|\, \boldsymbol{d}_{\rm radio,k}) 
+	& \times \prod_{k} p(M_k \,|\, \boldsymbol{d}_{\rm radio,k})
+
+In order to account for the presence of dark matter within this inference procedure, we follow the framework outlined in `Rutherford et al. (2023) <https://ui.adsabs.harvard.edu/abs/2023PhRvD.107j3051R/abstract>`_. The inference methods above sample over the central energy density. We instead sample over the ADM mass-fraction, the fraction of ADM mass inside the neutron star, i.e., we introduce :math:`F_{\chi} = F_{\chi}(\boldsymbol{\theta}, \boldsymbol{\epsilon_{c,B}}, \boldsymbol{\epsilon_{c,ADM}})` and write the above as 
+
+.. math::
+    p(\boldsymbol{\theta}, \boldsymbol{\epsilon_{c,B}}, \nonumber \boldsymbol{F_{\chi}} |\mathbf{d}) \propto ~ 
+    & p(\boldsymbol{\theta}) p(\boldsymbol{\epsilon_{c, B}}|\boldsymbol{\theta}) p( \boldsymbol{F_{\chi}} |\boldsymbol{\theta}, \boldsymbol{\epsilon_c}) \\ 
+    & \times \prod_{i} p(\Lambda_{1,i}, \Lambda_{2,i}, q_i \,|\, \mathcal{M}_c, \boldsymbol{d}_{\rm GW, i}) \\
+    & \times \prod_{j} p(M_j, R_j \,|\, \boldsymbol{d}_{\rm NICER,j}) \\
+    & \times \prod_{k} p(M_k \,|\, \boldsymbol{d}_{\rm radio,k}),
+
+where :math:`\boldsymbol{\epsilon_{c,B}}` and :math:`\boldsymbol{\epsilon_{c,ADM}}` are the central energy densities of baryonic matter and ADM, respectively. We sample over the mass-fraction because our mass-radius algorithm is structured such that the dark matter energy density is dependent on the mass-fraction.
 
 
 
@@ -85,6 +96,9 @@ with :math:`x\equiv\varepsilon(m_nn_s)`, where :math:`m_n` is the neutron mass a
 See :doc:`Speed of Sound Example<CS_example>`.
 
 The user can alternatively choose to use a tabulated EoS model, in which case there are no free core EoS parameters.  See :doc:`Tabulated Example<Tabulated_example>`, which uses the `AP4 EoS model <https://ui.adsabs.harvard.edu/abs/1997PhRvC..56.2261A/abstract>`_.
+
+Additionally, the user can enable the presence of bosonic/fermionic asymmetric dark matter (ADM) from `Nelson et al. (2018) <https://ui.adsabs.harvard.edu/abs/2019JCAP...07..012N/abstract>`_. The Nelson et al. (2018) ADM model consideres an MeV/GeV mass-scale complex scalar/spin-1/2 dirac spinor particle with repulsive self-interactions mediative by an eV/MeV mass-scale vector gauge boson. These models were considered in the inferences of `Rutherford et al. (2023) <https://ui.adsabs.harvard.edu/abs/2023PhRvD.107j3051R/abstract>`_, which also outlines how the Bayesian inference with ADM is modified to compared to one with only baryonic matter. See :doc:`Piecewise Polytropic with Bosonic ADM Example<PP_with_ADM_example>`.
+
 
 
 Sampling
