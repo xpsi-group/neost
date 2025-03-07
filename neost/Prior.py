@@ -9,11 +9,6 @@ Msun = global_imports._M_s
 pi = global_imports._pi
 rho_ns = global_imports._rhons
 
-
-# TODO: put a constraint that the pr and hypercube must
-# be same length as bounds
-
-
 class Prior():
 
     def __init__(self, EOS, variable_params, static_params, chirp_masses, standard_normal_ceft=False):
@@ -28,12 +23,15 @@ class Prior():
             self.prior_names.append('rhoc_' + str(i + 1))
         self.standard_normal_ceft = standard_normal_ceft # Transform ceft parameter to N(0,1)?
         self.standard_normal = norm() # Only used if standard_normal_ceft is True
+        
+        ###### is this part really needed?
         if standard_normal_ceft:
             # The transform only works correctly if ceft is from U(0,1)
             tmp = variable_params.get('ceft')
             ceft_min = tmp[0]
             ceft_max = tmp[1]
             assert(ceft_min == 0 and ceft_max == 1)
+        ######
 
     def inverse_sample(self, hypercube):
         hypercube = {e:hypercube[i] for i, e in

@@ -12,10 +12,10 @@ G = global_imports._G
 Msun = global_imports._M_s
 pi = global_imports._pi
 rho_ns = global_imports._rhons
+n_ns = global_imports._n_ns
 dyncm2_to_MeVfm3 = global_imports._dyncm2_to_MeVfm3
 gcm3_to_MeVfm3 = global_imports._gcm3_to_MeVfm3
 oneoverfm_MeV = global_imports._oneoverfm_MeV
-n_ns = global_imports._n_ns
 
 
 class SpeedofSoundEoS(BaseEoS):
@@ -36,7 +36,7 @@ class SpeedofSoundEoS(BaseEoS):
         If True a low-density cEFT parameterization is used.
     ceft_method: str
         The name of the cEFT calculations used at low density.
-        Can be one of 'Hebeler', 'Drischler', 'Lynn', 'Keller-N2LO', 'Keller-N3L0', or 'Tews'.
+        Can be one of 'Hebeler', 'Drischler', 'Lynn', 'Keller-N2LO', 'Keller-N3L0', 'Goettling-N2LO', 'Goettling-N3L0'  or 'Tews' (or 'old').
     adm_type: str
         The name of the ADM particle type. Can be 'None', 'Bosonic', or 'Fermionic'
     dm_halo: bool
@@ -50,6 +50,8 @@ class SpeedofSoundEoS(BaseEoS):
         Update the EoS object with a given set of parameters
     get_eos_crust()
         Construct the crust of the equation of state, with or without cEFT.
+    get_eos_crust_GP()
+        Construct the crust of the equation of state, with normal distribution of cEFT EOS. Needs 'Goettling-N2LO' or 'Goettling-N3L0'.
     get_eos()
         Construct the high-density parameterization of the equation of state.
     add_adm_eos()
@@ -61,7 +63,7 @@ class SpeedofSoundEoS(BaseEoS):
 
     """
 
-    def __init__(self, crust, rho_t,adm_type = 'None',dm_halo = False,two_fluid_tidal = False):
+    def __init__(self, crust, rho_t, adm_type = 'None', dm_halo = False, two_fluid_tidal = False):
 
         super(SpeedofSoundEoS, self).__init__(crust, rho_t)
 
@@ -94,7 +96,13 @@ class SpeedofSoundEoS(BaseEoS):
                            self.norm, negative=0.0), self._eds_core,
                            initial=0.0) * c**2. + self.P_t)
 
-        result = solve_ivp(lambda eps, rho: self.rhodens(rho, eps),
+        if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
+            result = solve_ivp(lambda eps, rho: self.rhodens(rho, eps),
+                           t_span=(self._eds_core[0], self._eds_core[-1]),
+                           y0=[self.Rho_t], t_eval=self._eds_core,
+                           method='LSODA')                                                        #Rho_t coming from base.py instead of rho_t input by user, to avoid artificial phase transition
+        else:
+            result = solve_ivp(lambda eps, rho: self.rhodens(rho, eps),
                            t_span=(self._eds_core[0], self._eds_core[-1]),
                            y0=[self.rho_t], t_eval=self._eds_core,
                            method='LSODA')
@@ -104,7 +112,7 @@ class SpeedofSoundEoS(BaseEoS):
         totalrho = np.hstack([self._rho_crust, self._rho_core[1:]])
         totalpres = np.hstack([self._pres_crust, self._pres_core[1:]])
         totaleps = np.hstack([self._eds_crust, self._eds_core[1:]])
-        self.pressures = totalpres #orginally in cgs 
+        self.pressures = totalpres 
         self.energydensities = totaleps 
         self.massdensities = totalrho 
 
@@ -137,7 +145,10 @@ class SpeedofSoundEoS(BaseEoS):
                 cscrust)**2.
 
     def Cs_model_total(self, x, norm):
-        xt = self.rho_t / rho_ns
+        if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
+            xt = self.Rho_t / rho_ns
+        else:
+            xt = self.rho_t / rho_ns
         beta = 1e-10
         dmin = .5 * (1. - np.tanh(pi / beta * (x - xt)))
         dplus = .5 * (1. + np.tanh(pi / beta * (x - xt)))
@@ -271,5 +282,14 @@ class SpeedofSoundEoS(BaseEoS):
             check = False
         if rising.size != 0 and falling.size != 0 and rising[0] < falling[0]:
             check = False
+            
+        ### we could build another check_constraints function in base.py, just for the crust with normal distribution of cEFT, but we won't now
+        ### it could maybe speed up the sampling? we check later
+        
+        if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
+            if all(x<=y for x, y in zip(self._pres_crust, self._pres_crust[1:]))==False:   ## self._pres_crust might be overkill (includes low, BPS and cEFT)
+                check = False
+            else:
+                check = True     
 
         return check

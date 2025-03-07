@@ -12,6 +12,7 @@ G = global_imports._G
 Msun = global_imports._M_s
 pi = global_imports._pi
 rho_ns = global_imports._rhons
+n_ns = global_imports._n_ns
 dyncm2_to_MeVfm3 = global_imports._dyncm2_to_MeVfm3
 gcm3_to_MeVfm3 = global_imports._gcm3_to_MeVfm3
 oneoverfm_MeV = global_imports._oneoverfm_MeV
@@ -32,7 +33,7 @@ class PolytropicEoS(BaseEoS):
         If True a low-density cEFT parameterization is used.
     ceft_method: str
         The name of the cEFT calculations used at low density.
-        Can be one of 'Hebeler', 'Drischler', 'Lynn', 'Keller-N2LO', 'Keller-N3L0', or 'Tews'.
+        Can be one of 'Hebeler', 'Drischler', 'Lynn', 'Keller-N2LO', 'Keller-N3L0', 'Goettling-N2LO', 'Goettling-N3L0' or 'Tews' (or 'old').
     adm_type: str
         The name of the ADM particle type. Can be 'None', 'Bosonic', or 'Fermionic'
     dm_halo: bool
@@ -46,6 +47,8 @@ class PolytropicEoS(BaseEoS):
         Update the EoS object with a given set of parameters
     get_eos_crust()
         Construct the crust of the equation of state, with or without cEFT.
+    get_eos_crust_GP()
+        Construct the crust of the equation of state, with normal distribution of cEFT EOS. Needs 'Goettling-N2LO' or 'Goettling-N3L0'.
     get_eos()
         Construct the high-density parameterization of the equation of state.
     eos_core_pp()
@@ -59,7 +62,7 @@ class PolytropicEoS(BaseEoS):
 
     """
 
-    def __init__(self, crust, rho_t,adm_type = 'None',dm_halo = False,two_fluid_tidal = False):
+    def __init__(self, crust, rho_t, adm_type = 'None', dm_halo = False, two_fluid_tidal = False):
 
         super(PolytropicEoS, self).__init__(crust, rho_t)
 
@@ -84,14 +87,17 @@ class PolytropicEoS(BaseEoS):
 
 
     def get_eos(self):
-
         self.gammas = list(map(self.eos_params.get,
                                ['gamma1', 'gamma2', 'gamma3']))
         self.rho_ts = list(map(self.eos_params.get, ['rho_t1', 'rho_t2']))
+        
         self._rho_core = np.zeros(297)
 
-        self._rho_core[0:99] = np.linspace(self.rho_t / rho_ns,
-                                           self.rho_ts[0], 100)[1::]
+        if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
+            self._rho_core[0:99] = np.linspace(self.Rho_t / rho_ns, self.rho_ts[0], 100)[1::]   #Rho_t coming from base.py instead of rho_t input by user, to avoid artificial phase transition
+        else:
+            self._rho_core[0:99] = np.linspace(self.rho_t / rho_ns, self.rho_ts[0], 100)[1::]
+                        
         self._rho_core[99:198] = np.linspace(self.rho_ts[0],
                                              self.rho_ts[1], 100)[1::]
         self._rho_core[198::] = np.logspace(np.log10(self.rho_ts[1]),
@@ -107,13 +113,13 @@ class PolytropicEoS(BaseEoS):
                                self._pres_core / dyncm2_to_MeVfm3])
 
         eps0 = self._eds_crust[-1]
-        prho = 0
-        totalrho,indicies = np.unique(totalrho,return_index = True)
-        totalpres = totalpres[indicies]
+        prho = 0     ## why?
+        totalrho, indices = np.unique(totalrho,return_index = True)
+        totalpres = totalpres[indices]
         try:
             prho = UnivariateSpline(totalrho, totalpres, k=2, s=0)
         except ValueError:
-            prho = interp1d(totalrho,totalpres,kind = 'linear',fill_value = 'extrapolate')
+            prho = interp1d(totalrho, totalpres, kind = 'linear', fill_value = 'extrapolate')    ### why do we need this now?
 
         result = odeint(self.edens, eps0,
                         totalrho[totalrho >= self._rho_crust[-1]],
@@ -121,7 +127,7 @@ class PolytropicEoS(BaseEoS):
         self._eds_core = result.flatten()[1::]
 
         totaleps = np.hstack([self._eds_crust, self._eds_core])
-        self.pressures = totalpres #oringally in cgs units
+        self.pressures = totalpres 
         self.energydensities = totaleps   
         self.massdensities = totalrho
 
@@ -134,7 +140,12 @@ class PolytropicEoS(BaseEoS):
     def eos_core_pp(self, rho, P_t):
         P_ts, k = (np.zeros(len(self.gammas)) for i in range(2))
         P_ts[0] = P_t
-        k[0] = P_t / ((self.rho_t / rho_ns)**self.gammas[0])
+        
+        if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
+            k[0] = P_t / ((self.Rho_t / rho_ns)**self.gammas[0])
+        else:
+            k[0] = P_t / ((self.rho_t / rho_ns)**self.gammas[0])    
+            
         P_ts[1] = k[0] * self.rho_ts[0]**self.gammas[0]
         k[1] = P_ts[1] / (self.rho_ts[0]**self.gammas[1])
         P_ts[2] = k[1] * self.rho_ts[1]**self.gammas[1]
@@ -248,12 +259,21 @@ class PolytropicEoS(BaseEoS):
 
 
     def check_constraints(self):
-        check = True #required because there are checks in speedofsound.py file, but no constraints are needed for this file
+        check = True                   #required because there are checks in speedofsound.py file, but no constraints are needed for this file, if no DM nor normal distribution of cEFT
 
         if self.reach_fraction == True:
             check = True
         else:
             check = False
+            
+        ### we could build another check_constraints function in base.py, just for the crust with normal distribution of cEFT, but we won't now
+        ### it could maybe speed up the sampling? we check later
+        
+        if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
+            if all(x<=y for x, y in zip(self._pres_crust, self._pres_crust[1:]))==False:   ## self._pres_crust might be overkill (includes low, BPS and cEFT)
+                check = False
+            else:
+                check = True            
             
         return check
 
