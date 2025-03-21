@@ -87,6 +87,8 @@ def solveTidal(Array,dm_halo):
     start = time.time()
     depsb =  Array[:,2][0]*10**-10
     depsdm = Array[:,4][0]*10**-10
+
+    deps_total = min(depsdm, depsb)
     
     radius = Array[:,0]
     R = radius[len(radius)-1]
@@ -98,6 +100,7 @@ def solveTidal(Array,dm_halo):
     Pdm_array = Array[:,5]
     
     Pressures_total = Pb_array + Pdm_array
+    eps_total = epsb_array + epsdm_array
     
 
         
@@ -109,7 +112,7 @@ def solveTidal(Array,dm_halo):
     def dp_deps(eps,deps,epsgrid,presgrid):
         if eps <=0:
             deriv = 0
-        else:
+        if eps > 0:
             deriv = (PofE(eps+deps/2,epsgrid,presgrid)-PofE(eps-deps/2,epsgrid,presgrid))/deps
         return deriv
     
@@ -131,8 +134,7 @@ def solveTidal(Array,dm_halo):
         pdm =pdm_r(r) 
     
 
-        dpdm_depsdm = dp_deps(epsdm,depsdm,epsdm_array,Pdm_array)
-        dpb_depsb = dp_deps(epsb,depsb,epsb_array,Pb_array)
+
         
     
         P = pb+pdm
@@ -143,13 +145,16 @@ def solveTidal(Array,dm_halo):
         T3 = 4*np.pi*r*grr*y*(Eps-P)
     
         if epsb !=0 and epsdm !=0:
-            deriv = (epsb+pb)/dpb_depsb + (epsdm+pdm)/dpdm_depsdm
+            dp_deps_total = dp_deps(Eps,deps_total,eps_total,Pressures_total)
+            deriv = (Eps+P)/dp_deps_total
         
         if epsdm == 0:
+            dpb_depsb = dp_deps(epsb,depsb,epsb_array,Pb_array)
             deriv = (epsb+pb)/dpb_depsb
         
         
         if epsb == 0:
+            dpdm_depsdm = dp_deps(epsdm,depsdm,epsdm_array,Pdm_array)
             deriv = (epsdm+pdm)/dpdm_depsdm
         
         T4 = -4*np.pi*r*grr*(5.*Eps+9.*P+deriv)
