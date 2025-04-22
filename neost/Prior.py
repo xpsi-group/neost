@@ -23,6 +23,7 @@ class Prior():
             self.prior_names.append('rhoc_' + str(i + 1))
         self.standard_normal_ceft = standard_normal_ceft # Transform ceft parameter to N(0,1)?
         self.standard_normal = norm() # Only used if standard_normal_ceft is True
+
         if standard_normal_ceft:
             # The transform only works correctly if ceft is from U(0,1)
             tmp = variable_params.get('ceft')
@@ -56,6 +57,27 @@ class Prior():
                 pr['gchi_over_mphi' ] = 10**pr['gchi_over_mphi']
 
         pr.update(self.static_params)
+        
+        if self.standard_normal_ceft:
+            #print(pr.get('ceft'))
+            # Transform ceft from U(0,1) to N(0,1)
+            #print('original')
+            #print(pr.get('ceft'))
+            
+            #pr['ceft'] = self.standard_normal.ppf(pr.get('ceft'))
+            pr.update({'ceft': self.standard_normal.ppf(pr.get('ceft'))})
+            
+            #test = open("ceft_raw.txt", "a")
+            #print(pr['ceft'], file=test)
+            #test.close()
+           
+                        
+            #print('normal')
+            #print(pr['ceft'])
+            
+            #print('all values')
+            #print(list(pr.values()))
+        
         self.EOS.update({k: pr[k] for k in tuple(self.EOS.param_names)},
                         max_edsc=True)
         self.pr = pr

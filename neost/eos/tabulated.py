@@ -12,6 +12,7 @@ G = global_imports._G
 Msun = global_imports._M_s
 pi = global_imports._pi
 rho_ns = global_imports._rhons
+n_ns = global_imports._n_ns
 dyncm2_to_MeVfm3 = global_imports._dyncm2_to_MeVfm3
 gcm3_to_MeVfm3 = global_imports._gcm3_to_MeVfm3
 oneoverfm_MeV = global_imports._oneoverfm_MeV
@@ -32,7 +33,7 @@ class TabulatedEoS(BaseEoS):
         If True a low-density cEFT parameterization is used.
     ceft_method: str
         The name of the cEFT calculations used at low density.
-        Can be one of 'Hebeler', 'Drischler', 'Lynn', 'Keller-N2LO', 'Keller-N3L0', or 'Tews'.
+        Can be one of 'Hebeler', 'Drischler', 'Lynn', 'Keller-N2LO', 'Keller-N3L0', 'Goettling-N2LO', 'Goettling-N3L0'  or 'Tews' (or 'old').
     adm_type: str
         The name of the ADM particle type. Can be 'None', 'Bosonic', or 'Fermionic'
     dm_halo: bool
@@ -46,6 +47,8 @@ class TabulatedEoS(BaseEoS):
         Update the EoS object with a given set of parameters
     get_eos_crust()
         Construct the crust of the equation of state, with or without cEFT.
+    get_eos_crust_GP()
+        Construct the crust of the equation of state, with normal distribution of cEFT EOS. Needs 'Goettling-N2LO' or 'Goettling-N3L0'.
     get_eos()
         Construct the equation of state.
     add_adm_eos()
@@ -57,7 +60,7 @@ class TabulatedEoS(BaseEoS):
 
     """
 
-    def __init__(self, energydensity, pressure, crust=None, rho_t=None,adm_type = 'None',dm_halo = False,two_fluid_tidal = False):
+    def __init__(self, energydensity, pressure, crust=None, rho_t=None,adm_type = 'None', dm_halo = False, two_fluid_tidal = False):
 
         super(TabulatedEoS, self).__init__(crust, rho_t)
 
@@ -68,6 +71,7 @@ class TabulatedEoS(BaseEoS):
         self.eos_name = 'tabulated'
         self.param_names = []
 
+        # Assumes crust already included in tabulated EOS, so I won't include additional tests for check_constraints 
         self.energydensities = energydensity # Assumed to be in cgs (g/cm^3)
         self.pressures = pressure  #Assumed to be in g/(cm s^2)
         

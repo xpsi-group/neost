@@ -4,6 +4,8 @@ from scipy import optimize
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 
+import os
+
 from .. Star import Star
 from .. import global_imports
 from .. utils import m1_from_mc_m2, m1_m2_from_mc_q
@@ -13,6 +15,7 @@ G = global_imports._G
 Msun = global_imports._M_s
 pi = global_imports._pi
 rho_ns = global_imports._rhons
+n_ns = global_imports._n_ns
 dyncm2_to_MeVfm3 = global_imports._dyncm2_to_MeVfm3
 gcm3_to_MeVfm3 = global_imports._gcm3_to_MeVfm3
 oneoverfm_MeV = global_imports._oneoverfm_MeV
@@ -27,8 +30,7 @@ class BaseEoS():
     Parameters
     ----------
     crust: str
-        The name of the EoS crust model to use. Can be either 'ceft-Hebeler',
-        'ceft-Drischler', 'ceft-Lynn', 'ceft-Tews', 'ceft-old', 'BPS', or None
+        The name of the EoS crust model to use. Can be None
         if a tabulated EoS with a crust model already included is used.
     rho_t: float
         The transition density between the crust EOS and the high density
@@ -40,26 +42,28 @@ class BaseEoS():
         Update the EoS object with a given set of parameters
     get_eos_crust()
         Construct the crust of the equation of state, with or without cEFT.
+    get_eos_crust_GP()
+        Construct the crust of the equation of state, when Keller cEFT band has uncertainties calculated with Gaussian process, aka, for Goettling cEFT band
     plot()
         Plot the equation of state.
     plot_massradius()
         Plot the mass-radius curve of the equation of state.
 
     """
-
-    def __init__(self, crust='ceft-Hebeler', rho_t=2e14):
-
+    def __init__(self, filename_n2lo="Goettling_N2LO_e.txt", filename_n3lo="Goettling_N3LO_e.txt", crust='ceft-Hebeler', rho_t=2e14):  
         if crust not in ['ceft-Hebeler', 'ceft-Drischler', 'ceft-Lynn',
-                         'ceft-Tews', 'ceft-Keller-N2LO', 'ceft-Keller-N3LO', 'ceft-old', 'BPS', None]:
+                         'ceft-Tews', 'ceft-Keller-N2LO', 'ceft-Keller-N3LO', 'ceft-old', 'ceft-Goettling-N2LO', 
+                         'ceft-Goettling-N3LO', 'BPS', None]:
             raise TypeError('crust model not recognized, choose either \
                 "ceft-Hebeler", "ceft-Drischler", "ceft-Lynn", "ceft-Tews", \
-                "ceft-Keller-N2LO", "ceft-Keller-N3LO", "BPS" or None if no crust is needed')
+                "ceft-Keller-N2LO", "ceft-Keller-N3LO", "ceft-Goettling-N2LO", "ceft-Goettling-N3LO",\
+                "BPS" or None if no crust is needed')
 
         self.crust = crust
         self.rho_t = rho_t
         if crust is not None:
             self.BPS = self.get_BPS()
-            self.ceft = crust[0:4] == 'ceft'
+            self.ceft = crust[0:4] == 'ceft'  ## just to check if BPS is included
 
             if self.ceft is True:
 
@@ -71,6 +75,7 @@ class BaseEoS():
                     self._rho_start_ceft = 0.5792
                     self._rho_end_BPS = 0.5
 
+                ## should we remove the next three and 'ceft-old'? fail in sample.py anyways
                 if crust == 'ceft-Drischler':
                     self.min_norm = 2.136
                     self.max_norm = 3.339
@@ -111,6 +116,23 @@ class BaseEoS():
                     self._rho_start_ceft = 0.5792
                     self._rho_end_BPS = 0.5
 
+                if crust == 'ceft-Goettling-N2LO':
+                    self.min_norm = 0.0
+                    self.max_norm = 1.0
+                    self.min_index = 0.0
+                    self.max_index = 1.0
+                    self._rho_start_ceft = 0.6  #temp some random number, it won't actually be used
+                    self._rho_end_BPS = 0.5
+                    self.filename = filename_n2lo
+
+                if crust == 'ceft-Goettling-N3LO':
+                    self.min_norm = 0.0
+                    self.max_norm = 1.0
+                    self.min_index = 0.0
+                    self.max_index = 1.0
+                    self._rho_start_ceft = 0.6  #temp some random number, it won't actually be used
+                    self._rho_end_BPS = 0.5
+                    self.filename = filename_n3lo
 
                 if crust == 'ceft-old':
                     self.min_norm = 1.7
@@ -144,14 +166,23 @@ class BaseEoS():
 
             if self.ceft is True:
                 self.ceft_param = eos_params['ceft']
+                #print('update')                                           #### this is a good place to put a print statement to see the eos that failed check constraints
+                #print(self.ceft_param)
                 self.eos_params = {i:eos_params[i] for i in eos_params if 
                                    i != 'ceft'}
 
-                if (self.ceft_param < self.min_norm or
-                        self.ceft_param > self.max_norm):
-                    raise TypeError(f'"ceft" variable should be either "None" or a float in the range [{self.min_norm}, {self.max_norm}]')
-                self.get_eos_crust()
-
+                #### is this really needed? raises error when sampling, final ceft parameter not between 0 and 1
+                #if (self.ceft_param < self.min_norm or
+                #        self.ceft_param > self.max_norm):
+                #    raise TypeError(f'"ceft" variable should be either "None" or a float in the range [{self.min_norm}, {self.max_norm}]')
+                ####
+                
+                if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':           
+                    #print('oi')
+                    self.get_eos_crust_GP()
+                else:        
+                    self.get_eos_crust()
+                
             else:
                 self.eos_params = {i:eos_params[i] for i in eos_params}
                 self.get_eos_crust()
@@ -166,11 +197,11 @@ class BaseEoS():
         else:
             self.max_edsc = 0.0
 
+
     # Compute the crust EoS
     def get_eos_crust(self):
         if self.ceft is True:
             # TODO: add function that rho_t can be below 0.58*rho_ns
-            # attempt at making a different jump off from BPS
             
             rhocrust = self.BPS[:,0][self.BPS[:,0] <= self._rho_end_BPS]
             rhotrans = np.linspace(self._rho_end_BPS, self._rho_start_ceft, 10)
@@ -242,11 +273,110 @@ class BaseEoS():
         self.eds_t = self._eds_crust[-1]
         self.P_t = self._pres_crust[-1]
 
+
+    #Crust for Goettling chiral EFT EOS 
+    def get_eos_crust_GP(self):
+        current_path = os.path.dirname(__file__)
+        #print(self.rho_t)
+    
+        if self.crust == 'ceft-Goettling-N2LO':  #bc if this function is called, it's one of these two anyways
+            path_filename=current_path+'/'+self.filename
+            self.ceft_eos = self.get_G_N2LO(path_filename)
+        else:
+            path_filename=current_path+'/'+self.filename
+            self.ceft_eos = self.get_G_N3LO(path_filename)        #self.cEFT_eos is the unfiltered txt file as array
+
+        #### eos below ending BPS point
+        ## energy density
+        epslow = np.logspace(-2, np.log10(self.BPS[0][2]/gcm3_to_MeVfm3), 50)  #g/cm^3
+        self.epsBPS = self.BPS[:,2][self.BPS[:,0] <= self._rho_end_BPS]/gcm3_to_MeVfm3 #g/cm^3
+        ## pressure
+        preslow = ((epslow / (self.BPS[0][0] * rho_ns))**(5. / 3.) * self.BPS[0][1] / dyncm2_to_MeVfm3) #dyn/cm^2
+        self.presBPS = self.BPS[:,1][self.BPS[:,0] <= self._rho_end_BPS]/dyncm2_to_MeVfm3 #previously prescrust #dyn/cm^2
+        ### mass density or number density
+        rholow = np.logspace(-2, np.log10(self.BPS[0][0] * rho_ns), 50) #g/cm^3
+        self.rhoBPS = self.BPS[:,0][self.BPS[:,0] <= self._rho_end_BPS]*rho_ns  #g/cm^3
+
+        #### finding starting ceft point (from sampled ceft parameter)
+        self.get_start_cEFT()
+        
+        #### from BPS end to cEFT end
+        epscEFT = self.ceft_energy[self.index_start_cEFT:]/gcm3_to_MeVfm3  #g/cm^3
+        prescEFT = self.ceft_pressure_werror[self.index_start_cEFT:]/dyncm2_to_MeVfm3  #dyn/cm^2
+        rhocEFT = (self.ceft_density[self.index_start_cEFT:]/n_ns)*rho_ns  #g/cm^3
+        
+        #we tried first without extra points at the BPS/cEFT transition. But TOV solver complained, let's see if adding it here improves the situation
+        #epstrans = np.linspace(self.BPS[:,1][self.BPS[:,0] <= self._rho_end_BPS][-1]/gcm3_to_MeVfm3, self.ceft_energy[self.index_start_cEFT]/gcm3_to_MeVfm3, 10
+        #prestrans = self.presBPS[-1] * (epstrans / self.epsBPS[-1])**(
+        #        np.log10(prescEFT[0] / self.presBPS[-1]) /
+        #        np.log10(epscEFT[0] / self.epsBPS[-1]))  
+        
+        self._eds_crust = np.hstack([epslow[0:-1], self.epsBPS, epscEFT])
+        self._pres_crust = np.hstack([preslow[0:-1], self.presBPS, prescEFT])
+        self._rho_crust = np.hstack([rholow[0:-1], self.rhoBPS, rhocEFT])  
+
+        eos_crust = UnivariateSpline(self._eds_crust, self._pres_crust, k=1, s=0) #check the quality of this spline
+        self._cs_crust = eos_crust.derivative(1)
+        self.rhoeds_crust = UnivariateSpline(self._rho_crust, self._eds_crust, k=1, s=0) #check the quality of this spline 
+        
+        #used for building the core EOS starting on these points
+        self.eds_t = self._eds_crust[-1]
+        self.P_t = self._pres_crust[-1]
+        self.Rho_t = self._rho_crust[-1]  #capital rho to differentiate from rho_t input by user
+
+
     #######################
     # Auxiliary functions #
     #######################
+    
+    def get_G_N2LO(self, path_filename):
+        n2lo_eos = np.loadtxt(path_filename)
+               
+        self.ceft_density = n2lo_eos[:,0][n2lo_eos[:,0]<= (self.rho_t/rho_ns)*n_ns]  #1/fm3
+        self.ceft_energy = n2lo_eos[:,2][n2lo_eos[:,0]<= (self.rho_t/rho_ns)*n_ns]   #MeVfm3
+        
+        ceft_pressure_nucleons = n2lo_eos[:,3][n2lo_eos[:,0]<= (self.rho_t/rho_ns)*n_ns] #Mevfm3
+        ceft_pressure_electrons = n2lo_eos[:,4][n2lo_eos[:,0]<= (self.rho_t/rho_ns)*n_ns] #Mevfm3
+        
+        self.ceft_pressure = ceft_pressure_nucleons+ceft_pressure_electrons
+        
+        self.ceft_std = n2lo_eos[:,5][n2lo_eos[:,0]<= (self.rho_t/rho_ns)*n_ns]
+        self.ceft_pressure_werror = self.ceft_pressure + self.ceft_std * self.ceft_param 
+        return n2lo_eos     
+        
+    def get_G_N3LO(self, path_filename):
+        n3lo_eos = np.loadtxt(path_filename)
+        
+        self.ceft_density = n3lo_eos[:,0][n3lo_eos[:,0]<= (self.rho_t/rho_ns)*n_ns]
+        self.ceft_energy = n3lo_eos[:,2][n3lo_eos[:,0]<= (self.rho_t/rho_ns)*n_ns]
+        
+        ceft_pressure_nucleons = n3lo_eos[:,3][n3lo_eos[:,0]<= (self.rho_t/rho_ns)*n_ns] #Mevfm3
+        ceft_pressure_electrons = n3lo_eos[:,4][n3lo_eos[:,0]<= (self.rho_t/rho_ns)*n_ns] #Mevfm3
+        
+        self.ceft_pressure = ceft_pressure_nucleons+ceft_pressure_electrons
+                
+        self.ceft_std = n3lo_eos[:,5][n3lo_eos[:,0]<= (self.rho_t/rho_ns)*n_ns]
+        self.ceft_pressure_werror = self.ceft_pressure + self.ceft_std * self.ceft_param
+        return n3lo_eos
+        
+    def get_start_cEFT(self):
+        self.counter = 0
+        eps_grid = self.ceft_energy
+        for i in eps_grid:
+            if i > self.BPS[:,2][self.BPS[:,0] <= self._rho_end_BPS][-1]:
+                break
+            self.counter+=1
+        self.counter_p = 0
+        for i in self.ceft_pressure_werror[self.counter:]:    
+            if i> self.BPS[:,1][self.BPS[:,0] <= self._rho_end_BPS][-1]:
+                #print(self.BPS[:,1][self.BPS[:,0] <= self._rho_end_BPS][-1])
+                #print(i)
+                break
+            self.counter_p+= 1
+        self.index_start_cEFT = self.counter+self.counter_p
 
-    # Analytic representation of the SLy EoS, used for crust
+
+    # Analytic representation of the SLy EoS, used for crust (in the distant past)
     def SLYfit(self, rho):
 
         a = np.array([6.22, 6.121, 0.005925, 0.16326, 6.48, 11.4971, 19.105,
@@ -313,12 +443,15 @@ class BaseEoS():
     def find_max_edsc(self):
 
         min_edsc0 = 14.3
-        if self.rho_t is not None:
-            eds = np.logspace(np.log10(self.rho_t), 
-                                 np.log10(4e16), 1000) #eds is in units of g/cm^3,  
+        if self.rho_t is not None:  ## will only be none for tabulated EOS (check)
+            if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
+                eds = np.logspace(np.log10(self.Rho_t), np.log10(4e16), 1000)
+            else:
+                eds = np.logspace(np.log10(self.rho_t), np.log10(4e16), 1000) #eds is in units of g/cm^3  
                                                                 
         else:
             eds = np.logspace(14.3, np.log10(4e16), 1000) #same as above
+            
         dpde = self.eos.derivative(1)
         cs = dpde(eds)/c**2
         acausal = 1.
@@ -791,8 +924,8 @@ class BaseEoS():
                  (max_index - min_index) + min_index)
         return self.polytropic_func(rho, norm, index)
 
-    
-    def plot(self, dm = 'None'):
+ 
+    def plot(self, dm = 'None'):             ### modified to make simple checks for pp
         """
             Plot the EoS. If dm is not 'None' will include ADM contribution.
         """
@@ -804,22 +937,36 @@ class BaseEoS():
                                                         
             rho_core = np.logspace(np.log10(self.rho_t), 
                                       np.log10(8e15), 100) #same as above, but for rho_core
-
+                                      
             miny = min(self.eos(rho_crust)) #   units of g/(cm s^2)
                                                         
             maxy = max(self.eos(rho_core)) #same deal as above
 
-            ax.plot(rho_crust, self.eos(rho_crust), 
-                    c='red', label='Crust EoS', lw=1.5) 
-            ax.plot(rho_core, self.eos(rho_core),
-                    c='black', label='Core EoS', lw=1.5) 
+            #ax.plot(rho_crust, self.eos(rho_crust), 
+            #        c='red', label='Crust EoS', lw=1.5) 
+            #ax.plot(rho_core, self.eos(rho_core),
+            #        c='black', label='Core EoS', lw=1.5) 
+
+            if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
+                miny = min(self.eos(self.energydensities)) #units of g/(cm s^2)
+                maxy = max(self.eos(self.energydensities)) #same as above
+                
+                ax.plot(self.energydensities, self.pressures, color='black', marker='o', linestyle='-') #same as above, but for energydensities and pressures 
+                #color='green', marker='o', linestyle='dashed',linewidth=2, markersize=12)
+                
+                #aux=np.logspace(-2, np.log10(self.BPS[0][2]/gcm3_to_MeVfm3), 50)[-1]
+                
+                ax.vlines(self.eds_t, ymin=miny, ymax=maxy, color='black', linestyle='--', label='end chiral')
+                ax.vlines(self.epsBPS[-1], ymin=miny, ymax=maxy, color='red', linestyle='--', label ='end BPS')
+                ax.vlines(self.eos_params['rho_t1']*rho_ns, ymin=miny, ymax=maxy, color='blue', linestyle='--', label ='rho t1')   ## only works for rho_t1
+                #ax.vlines(aux, ymin=miny, ymax=maxy, color='blue', linestyle='--', label ='start BPS')
+                #ax.hline(self.P_t, ymin=0, ymax=1, '--')
 
         else:
             miny = min(self.eos(self.energydensities)) #units of g/(cm s^2)
             maxy = max(self.eos(self.energydensities)) #same as above
-            ax.plot(self.energydensities, 
-                    self.pressures, c='black', lw=1.5, label='EoS') #same as above, but for energydensities and pressures
-
+            ax.plot(self.energydensities, self.pressures, c='black', ls='-', lw=1.5, label='EoS') #same as above, but for energydensities and pressures
+            
         if dm in ['Bosonic', 'Fermionic']:
             ax.plot(self.energydensities_dm, 
                     self.pressures_dm, c='steelblue', 
@@ -829,15 +976,16 @@ class BaseEoS():
             
         ax.set_xscale('log')
         ax.set_yscale('log')
-        ax.set_ylim(miny, maxy)
-
+        
+        #ax.set_ylim(miny, maxy)
+        ax.set_xlim(self.epsBPS[-2], 1e+17) #a bit random choice
 
         ax.tick_params(axis='both', which='major', labelsize=14)
         ax.set_xlabel(r'$\varepsilon$ [g/cm$^3$]', fontsize=15)
         ax.set_ylabel(r'Pressure [dyn/cm$^2$]', fontsize=15)
         ax.legend(prop={'size': 12})
         plt.tight_layout()
-        fig.savefig('testEoS_cgs.png')
+        fig.savefig(f'./repro/prior/pp/g-n3lo-attempt2/15/testEOS_cgs_'+str(self.ceft_param)+'.png')   ## for multiple eos plotting
         plt.show()
 
     def plot_massradius(self):

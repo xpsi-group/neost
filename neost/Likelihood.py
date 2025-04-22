@@ -6,6 +6,8 @@ from neost.Star import Star
 from neost import global_imports
 from neost.utils import m1_from_mc_m2
 
+#from neost.eos.base import BaseEoS  ### just for testing
+
 c = global_imports._c
 G = global_imports._G
 Msun = global_imports._M_s
@@ -13,6 +15,8 @@ pi = global_imports._pi
 rho_ns = global_imports._rhons
 n_ns = global_imports._n_ns
 
+gcm3_to_MeVfm3 = global_imports._gcm3_to_MeVfm3
+dyncm2_to_MeVfm3 = global_imports._dyncm2_to_MeVfm3
 
 class Likelihood():
 
@@ -94,8 +98,9 @@ class Likelihood():
                 Rdm_halo = 0.0
                 
                 
-
-            if (Mgrav > 3. or Mgrav < 1. or Req > 16. or Req < Mgrav / Msun * 2. * G / c**2. / 1e5): 
+            ## can temporarily comment it out to avoid the M<1 constraint
+            if (Mgrav > 3. or Mgrav < 1. or Req > 16. or Req < Mgrav / Msun * 2. * G / c**2. / 1e5):
+            ##if (Mgrav > 3. or Req > 16. or Req < Mgrav / Msun * 2. * G / c**2. / 1e5): 
                 return -1e101
 
             if self.prior.EOS.dm_halo == False and Rdm_halo > 0:
@@ -145,23 +150,53 @@ class Likelihood():
     def loglike_prior(self,pr):
         pr_dict = self.prior.pr
         constraints = self.prior.EOS.check_constraints()
-
+        
         if constraints is False:
+            #print(list(pr_dict.values()))
             return -1e101
 
         if self.prior.EOS.adm_type == 'None':
             star = Star(self.prior.EOS.max_edsc)
             star.solve_structure(self.prior.EOS.energydensities,
                                  self.prior.EOS.pressures)
+                
+            ## temporarily commenting it out                     
             if(star.Mrot < 1):
-                    return -1e101
+                return -1e101
 
             for i in range(self.prior.number_stars):
                 star = Star(10**(pr_dict['rhoc_' + str(i + 1)]), 0.0)
                 star.solve_structure(self.prior.EOS.energydensities,
                                  self.prior.EOS.pressures)
+                
+                ## temporarily commenting it out
                 if(star.Mrot < 1.):
                     return -1e101
+                
+                #print(10**(pr_dict['rhoc_' + str(i + 1)]))
+                #print('pr')
+                #print(pr_dict['ceft'])
+                #print(self.prior.EOS.max_edsc)
+                #print(star.Mrot)
+                #print('eos')
+                #print(list(pr_dict.values()))
+                #print(self.prior.EOS.Rho_t/rho_ns)
+                #print(self.prior.EOS._rho_crust[-1]/rho_ns)
+                #print(self.prior.EOS._rho_core[0])
+                #print(self.prior.EOS._pres_crust[-1])
+                #print(self.prior.EOS._pres_core[0]/dyncm2_to_MeVfm3)
+                #print(self.prior.EOS.epsBPS[-1]*gcm3_to_MeVfm3)
+                #print(self.prior.EOS.presBPS[-1]*dyncm2_to_MeVfm3)
+                #print(self.prior.EOS.rhoBPS[-1])
+                #print(self.prior.EOS.index_start_cEFT)
+                #print(self.prior.EOS.ceft_energy[self.prior.EOS.index_start_cEFT])
+                #print(self.prior.EOS.ceft_pressure_werror[self.prior.EOS.index_start_cEFT])
+                #print(self.prior.EOS.counter)
+                #print(self.prior.EOS.counter_p)
+                #print(np.asarray(self.prior.EOS.ceft_pressure_werror))
+                #print('EOS')
+                #print(self.prior.EOS.ceft_param)
+                #BaseEoS.plot(self.prior.EOS, dm = 'None')   ## works :)
 
         if self.prior.EOS.adm_type == 'Bosonic' or self.prior.EOS.adm_type == 'Fermionic':
             if (pr_dict['mchi'] >= pow(10,6) and pr_dict['gchi_over_mphi'] <= pow(10,-3.5) and pr_dict['adm_fraction'] >= 0.01):

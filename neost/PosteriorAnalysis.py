@@ -1,4 +1,4 @@
-import numpy as np
+import numpy as np                                       
 from matplotlib.lines import Line2D
 import matplotlib.patches as mpatches
 from matplotlib.colors import ListedColormap
@@ -323,9 +323,11 @@ def compute_prior_auxiliary_data(root_name, EOS, variable_params, static_params,
     if flag == True:
         pressures = np.zeros((len(energydensities), len(ewprior)))
         pressures_rho = np.zeros((len(energydensities), len(ewprior)))
+        massdensities = np.zeros((len(energydensities), len(ewprior)))  
     else:
         pressures = np.zeros((len(energydensities), len(ewprior)))
         pressures_rho = np.zeros((len(energydensities), len(ewprior)))
+        massdensities = np.zeros((len(energydensities), len(ewprior)))
         minpres = np.zeros((3, len(energydensities)))
         maxpres = np.zeros((3, len(energydensities)))
         minpres_rho = np.zeros((3, len(energydensities)))
@@ -336,8 +338,28 @@ def compute_prior_auxiliary_data(root_name, EOS, variable_params, static_params,
 
         pr = ewprior[i][0:len(variable_params)]
         par = {e:pr[j] for j, e in enumerate(list(variable_params.keys()))}
+        #print(par)
+        #print('next')
         par.update(static_params)
         EOS.update(par, max_edsc=True)
+        
+        #print(par['ceft'])
+        #print(EOS.Rho_t / rho_ns)
+        #print(EOS._rho_core[0])
+        #print(EOS._rho_crust[-1]/rho_ns)
+        #print(EOS._pres_crust[-1])
+        #print(EOS._pres_core[0]/dyncm2_to_MeVfm3)
+        #print(EOS.epsBPS[-1]*gcm3_to_MeVfm3)
+        #print(EOS.presBPS[-1]*dyncm2_to_MeVfm3)
+        #print(EOS.rhoBPS[-1])
+        #print(EOS.index_start_cEFT)
+        #print(EOS.index_start_cEFT)
+        #print(EOS.ceft_energy[EOS.index_start_cEFT])
+        #print(EOS.ceft_pressure_werror[EOS.index_start_cEFT])
+        #print(EOS.counter)
+        #print(EOS.counter_p)
+        #print(np.asarray(EOS.ceft_pressure_werror))
+        #print(EOS.ceft_param)
 
         rhoc = 10**par['rhoc_1']
 
@@ -345,14 +367,18 @@ def compute_prior_auxiliary_data(root_name, EOS, variable_params, static_params,
             rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0)
             edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0)
             max_rhoc = edsrho(EOS.max_edsc)
+            #print(EOS.max_edsc)
+            
+            #massdensities[:,i][energydensities<max_rhoc] = energydensities[energydensities<max_rhoc] 
             pressures_rho[:,i][energydensities<max_rhoc] = rhopres(energydensities[energydensities<max_rhoc])
             pressures[:,i][energydensities<EOS.max_edsc] = EOS.eos(energydensities[energydensities<EOS.max_edsc])
 
             star = Star(rhoc)
             star.solve_structure(EOS.energydensities, EOS.pressures)
+            #print(star.Mrot)
             MR_prpr_pp[i] = star.Mrot, star.Req
 
-        else:
+        else:                                                                                              ### no saving mass densities here
             rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0, ext = 1)
             edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0, ext = 1)
             max_rhoc = edsrho(EOS.max_edsc)
@@ -419,8 +445,12 @@ def compute_prior_auxiliary_data(root_name, EOS, variable_params, static_params,
     MR_prpr_pp = MR_prpr_pp[MR_prpr_pp[:,1] != 0]
 
     # save everything
+    
+    #np.save(root_name + 'massdensities', massdensities) 
     np.save(root_name + 'pressures', pressures)
+    np.save(root_name + 'pressures_rho', pressures_rho)
     np.savetxt(root_name + 'MR_prpr.txt', MR_prpr_pp)
+    #shouldn't we also be saving min/maxpres_rho and min/maxpres?
 
     if dm == True:
         np.save(root_name + 'pressures_baryon', pressures_b)
