@@ -281,6 +281,7 @@ def load_equal_weighted_samples(path, sampler, identifier):
         sample_file = f'{path}/{identifier}post_equal_weights.dat'
 
     # Load and return the samples
+    print(f'Analyzing file {sample_file}')
     return np.loadtxt(sample_file, skiprows=skiprows)
 
 def save_auxiliary_data(path, identifier, data, fnames):
