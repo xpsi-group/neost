@@ -139,6 +139,7 @@ class BaseEoS():
 
         """
 
+        self.reach_fraction = True
         if self.crust is not None:
 
             if self.ceft is True:
@@ -148,8 +149,7 @@ class BaseEoS():
 
                 if (self.ceft_param < self.min_norm or
                         self.ceft_param > self.max_norm):
-                    raise TypeError('"ceft" variable should be either "None" \
-                                    or a float in the range [1.7, 2.76]')
+                    raise TypeError(f'"ceft" variable should be either "None" or a float in the range [{self.min_norm}, {self.max_norm}]')
                 self.get_eos_crust()
 
             else:
@@ -369,6 +369,400 @@ class BaseEoS():
         self.centraleds = eds_c
         self.massradius = Ms
 
+    
+    def f_chi_calc(self,epscent,epscent_dm):
+        """
+        Method to calculate the ADM mass-fraction given the baryonic and ADM central densities, respectively.
+
+
+        Parameters
+        ----------
+        epscent : float
+            Baryonic central energy density in cgs units for mass-density, i.e., divided by the speed of light squared.
+        epscent_dm: float
+            ADM central energy density in cgs units for mass-density, i.e., divided by the speed of light squared.
+
+        """
+        star = Star(epscent, epscent_dm) 
+        star.solve_structure(self.energydensities, self.pressures, self.energydensities_dm, self.pressures_dm,self.dm_halo)
+        try:
+            fchi = (star.Mdm/star.Mrot)*100
+        except ZeroDivisionError:
+            fchi = 999.0
+        return fchi
+
+
+    
+    def find_epsdm_cent(self, ADM_fraction,epscent): ##(Also these all get implemented in g/cm^3), just like epscent
+        """
+        Method to calculate the ADM central energy density given the baryonic central energy
+        density and ADM mass-fraction. Uses a wide array of different intervals of central energy densities 
+        to determine the ADM central energy density as a root finding problem.
+
+
+        Parameters
+        ----------
+        ADM_fraction: float
+            Given ADM mass-fraction as a percentage [%]
+        epscent : float
+            Baryonic central energy density in cgs units for mass-density, i.e., divided by the speed of light squared.
+        """
+        f = lambda y: self.f_chi_calc(epscent,y) - ADM_fraction
+        x = 1 #variable to track which interval the solver fails/passes on
+        try:
+            sol = optimize.brenth(f,0 ,epscent ,maxiter = 3000, xtol = 1e-24,full_output = True)  #epscent
+            
+        except ValueError:
+            x = 2
+            try:
+                sol = optimize.brenth(f,1e14 ,1e20,maxiter = 3000, xtol = 1e-24,full_output = True)
+                
+            except ValueError:
+                x = 3
+                try:
+                    sol = optimize.brenth(f, 9e19,5e22 ,maxiter = 3000, xtol = 1e-24,full_output = True)
+                    
+                except ValueError:
+                    x = 4
+                    try:
+                        sol = optimize.brenth(f,1e22 ,1e24,maxiter = 3000,xtol = 1e-24,full_output = True)
+                        
+                    except ValueError:
+                        x = 5
+                        try:
+                            sol = optimize.brenth(f,9e23,1e25,maxiter = 3000,xtol = 1e-24,full_output = True) 
+                            #eliminate
+                        except ValueError:
+                            sol = np.array([1e10]) #a specific value that is obvious to point out, needs to be an array since solvers have full_output = True so we can see details about them
+        
+        ADM_fracplus = ADM_fraction + .05*ADM_fraction
+        ADM_fracminus = ADM_fraction - .05*ADM_fraction
+        epsdm_cent = sol[0]
+        f_chi_calc = self.f_chi_calc(epscent,epsdm_cent)
+
+
+
+        if (f_chi_calc > ADM_fracplus or f_chi_calc < ADM_fracminus):
+
+            if f_chi_calc > ADM_fraction:
+                if (epsdm_cent == 0.0): #epsdm_cent can still wind up being zero, so need to account for it
+                    self.reach_fraction = False
+                else:
+                    try:
+                        sol = optimize.brenth(f,epsdm_cent*.75,epsdm_cent,maxiter = 3000,xtol=1e-24)
+                        epsdm_cent = sol
+                    except ValueError:
+                        try:
+                            low = int(np.log10(abs(epsdm_cent))) - 0.5
+                            low = 5*pow(10,low)
+                            high = int(np.log10(abs(epsdm_cent))) + 0.5
+                            high = pow(10,high)
+                            sol = optimize.brenth(f,low,high,maxiter = 3000,xtol = 1e-24)
+                            epsdm_cent = sol
+                        except ValueError:
+                            epsdm_cent = epsdm_cent
+
+                    f_chi_calc = self.f_chi_calc(epscent,epsdm_cent)
+                    if (f_chi_calc > ADM_fracplus or f_chi_calc < ADM_fracminus):                 
+                        try:
+                            sol = optimize.brenth(f,epsdm_cent*.75,epsdm_cent*1.01,maxiter = 3000,xtol=1e-24)
+                            epsdm_cent = sol
+                        except ValueError:
+                            epsdm_cent = epsdm_cent
+                            
+                        f_chi_calc = self.f_chi_calc(epscent,epsdm_cent)
+
+                    if (f_chi_calc > ADM_fracplus or f_chi_calc < ADM_fracminus):
+                        if(abs(epsdm_cent) < 1e18 and abs(epsdm_cent) > 1e5):
+                            try:
+                                sol = optimize.brenth(f,1e5,1e18,maxiter = 3000,xtol = 1e-24)
+                                epsdm_cent = sol
+                            except ValueError:
+                                epsdm_cent = epsdm_cent
+                            f_chi_calc = self.f_chi_calc(epscent,epsdm_cent)
+                        elif(abs(epsdm_cent) < 1e21 and abs(epsdm_cent)>1e18):
+                            try:
+                                sol = optimize.brenth(f,1e18,1e21,maxiter = 3000,xtol = 1e-24)
+                                epsdm_cent = sol
+                            except ValueError:
+                                epsdm_cent = epsdm_cent
+                            f_chi_calc = self.f_chi_calc(epscent,epsdm_cent)
+                        elif(abs(epsdm_cent) < 1e22 and abs(epsdm_cent) > 1e21):
+                            try:
+                                sol = optimize.brenth(f,1e21,1e22,maxiter = 3000,xtol = 1e-24)
+                                epsdm_cent = sol
+                            except ValueError:
+                                epsdm_cent = epsdm_cent
+
+                            f_chi_calc = self.f_chi_calc(epscent,epsdm_cent) 
+                        elif(abs(epsdm_cent) < 1e24 and abs(epsdm_cent) > 1e22):
+                            try:
+                                sol = optimize.brenth(f,1e22,1e24,maxiter = 3000,xtol = 1e-24)
+                                epsdm_cent = sol
+                            except ValueError:
+                                epsdm_cent = epsdm_cent
+
+                            f_chi_calc = self.f_chi_calc(epscent,epsdm_cent)
+                        elif(abs(epsdm_cent) < 5e24 and abs(epsdm_cent) > 1e24):
+                            try:
+                                sol = optimize.brenth(f,1e24,5e24,maxiter = 3000,xtol = 1e-24)
+                                epsdm_cent = sol
+                            except ValueError:
+                                epsdm_cent = epsdm_cent
+                            f_chi_calc = self.f_chi_calc(epscent,epsdm_cent)
+                        elif(abs(epsdm_cent) < 1e25 and abs(epsdm_cent) > 5e24):
+                            try:
+                                sol = optimize.brenth(f,5e24,1e25,maxiter = 3000,xtol = 1e-24)
+                                epsdm_cent = sol
+                            except ValueError:
+                                epsdm_cent = epsdm_cent
+                                
+                            f_chi_calc = self.f_chi_calc(epscent,epsdm_cent)
+
+                        if(f_chi_calc > ADM_fracplus or f_chi_calc < ADM_fracminus):
+                            try:
+                                sol = optimize.brenth(f,4e24,1e25,maxiter = 3000, xtol = 1e-24)
+                                epsdm_cent = sol
+                            except ValueError:
+                                epsdm_cent = epsdm_cent
+                                    
+                            f_chi_calc = self.f_chi_calc(epscent,epsdm_cent)
+                            if(f_chi_calc > ADM_fracplus or f_chi_calc < ADM_fracminus):
+                                try:
+                                    sol = optimize.brenth(f,6e24,1e25,maxiter = 3000, xtol = 1e-24)
+                                    epsdm_cent = sol
+                                except ValueError:
+                                    epsdm_cent = epsdm_cent 
+                                        
+                                f_chi_calc = self.f_chi_calc(epscent,epsdm_cent)
+                                if(f_chi_calc > ADM_fracplus or f_chi_calc < ADM_fracminus):
+                                    self.reach_fraction = False
+                                else:
+                                    self.reach_fraction = True
+                            else:
+                                self.reach_fraction = True
+                        else:
+                            self.reach_fraction = True
+                    else: 
+                        self.reach_fraction = True
+                    
+            elif f_chi_calc < ADM_fraction:
+                if x < 3: 
+                    try:
+                        sol = optimize.brenth(f,1e10,5e22,maxiter = 3000, xtol = 1e-24)
+                        epsdm_cent  = sol
+                    except ValueError: 
+                        epsdm_cent = 1e15
+                        
+                    f_chi_calc = self.f_chi_calc(epscent,epsdm_cent)
+
+                    if(f_chi_calc > ADM_fracplus or f_chi_calc < ADM_fracminus):
+                        self.reach_fraction = False
+                    else:
+                        self.reach_fraction = True
+
+                elif x == 3: #x = 3 ---> solver for 5e19 to 5e22
+                    try:
+                        sol = optimize.toms748(f,1e21,5e22, maxiter = 3000, xtol  = 1e-24,k=2)
+                        epsdm_cent = sol
+                    except ValueError:
+                        epsdm_cent = 1e22 # a test value in the range! Since next attempt is based on epsdm_cent
+                        
+                    f_chi_calc = self.f_chi_calc(epscent,epsdm_cent)
+
+                    if (f_chi_calc > ADM_fracplus or f_chi_calc < ADM_fracminus):
+                        try:
+                            low = int(np.log10(abs(epsdm_cent))) - 1
+                            low = 5*pow(10,low)
+                            high = int(np.log10(abs(epsdm_cent))) + 1
+                            high = pow(10,high)
+                            sol = optimize.brenth(f,low,high,maxiter = 3000,xtol = 1e-24)
+                            epsdm_cent = sol
+                        except ValueError:
+                            epsdm_cent = 1e22
+
+                        f_chi_calc = self.f_chi_calc(epscent,epsdm_cent)
+                    else:
+                        self.reach_fraction = True
+                        
+                        
+
+                    if (f_chi_calc > ADM_fracplus or f_chi_calc < ADM_fracminus):
+                        if(abs(epsdm_cent) < 1e22 and abs(epsdm_cent) > 1e21):
+                            try:
+                                sol = optimize.brenth(f,1e21,1e22,maxiter = 3000,xtol = 1e-24)
+                                epsdm_cent = sol
+                            except ValueError:
+                                epsdm_cent = epsdm_cent
+                            f_chi_calc = self.f_chi_calc(epscent,epsdm_cent)
+                        elif(abs(epsdm_cent) < 1e23 and abs(epsdm_cent) > 5e21):
+                            try:
+                                sol = optimize.brenth(f,5e21,1e23,maxiter = 3000,xtol = 1e-24)
+                                epsdm_cent = sol
+                            except ValueError:
+                                epsdm_cent = epsdm_cent
+                            
+                            f_chi_calc = self.f_chi_calc(epscent,epsdm_cent)
+
+                        if(f_chi_calc > ADM_fracplus or f_chi_calc < ADM_fracminus):
+                            self.reach_fraction = False
+                        else:
+                            self.reach_fraction = True
+                    else:
+                        self.reach_fraction = True
+                
+                elif x == 4:  # x = 4 ---> solver in 1e22 to 1e24
+                    try:
+                        sol = optimize.brenth(f,1e22,1e23, maxiter = 3000, xtol = 1e-24)
+                        epsdm_cent = sol
+                    except ValueError:
+                        try:
+                            sol = optimize.brenth(f,1e23,1e25, maxiter = 3000, xtol = 1e-24)
+                            epsdm_cent = sol
+                        except ValueError:
+                            epsdm_cent = epsdm_cent
+                    
+                    f_chi_calc = self.f_chi_calc(epscent, epsdm_cent)
+
+                    if(f_chi_calc > ADM_fracplus or f_chi_calc < ADM_fracminus):
+                        if (abs(epsdm_cent) < 5e22 and abs(epsdm_cent) > 1e22):
+                            try:
+                                sol  = optimize.brenth(f,1e22,5e22,maxiter = 3000, xtol = 1e-24)
+                                epsdm_cent = sol
+                            except ValueError:
+                                epsdm_cent = epsdm_cent
+
+                        elif(abs(epsdm_cent) < 1e23 and abs(epsdm_cent) > 5e22):
+                            try:
+                                sol = optimize.brenth(f,5e22,1e23,maxiter = 3000, xtol = 1e-24)
+                                epsdm_cent = sol
+                            except ValueError:
+                                epsdm_cent = epsdm_cent
+                            f_chi_calc = self.f_chi_calc(epscent,epsdm_cent)
+                        elif (abs(epsdm_cent) < 5e23 and abs(epsdm_cent) > 1e23):
+                            try:
+                                sol  = optimize.brenth(f,1e23,5e23,maxiter = 3000, xtol = 1e-24)
+                                epsdm_cent = sol
+                            except ValueError:
+                                epsdm_cent = epsdm_cent
+                            f_chi_calc = self.f_chi_calc(epscent,epsdm_cent)
+                        elif(abs(epsdm_cent) < 1e24 and abs(epsdm_cent) > 5e23):
+                            try:
+                                sol = optimize.brenth(f,5e23,1e24,maxiter = 3000, xtol = 1e-24)
+                                epsdm_cent = sol
+                            except ValueError:
+                                epsdm_cent = epsdm_cent
+
+                            f_chi_calc = self.f_chi_calc(epscent,epsdm_cent)
+
+                        if(f_chi_calc > ADM_fracplus or f_chi_calc < ADM_fracminus):
+                            self.reach_fraction = False
+                        else:
+                            self.reach_fraction = True
+                            
+                    else:
+                        self.reach_fraction = True 
+                        
+                elif x == 5:  #x = 5 --> solver in 9e23 and 1e25
+                    try:
+                        sol = optimize.brenth(f,1e24,5e24,maxiter = 3000, xtol = 1e-24) #1e24 5e24
+                        epsdm_cent = sol
+                    except ValueError:
+                        try:
+                            sol = optimize.brenth(f,5e24,1e25,maxiter=3000,xtol = 1e-24) #5e24 1e25 
+                            epsdm_cent = sol
+                        except ValueError:
+                            epsdm_cent = epsdm_cent
+                           
+                        f_chi_calc = self.f_chi_calc(epscent,epsdm_cent)
+
+                    if(f_chi_calc > ADM_fracplus or f_chi_calc < ADM_fracminus):
+                        try:
+                            sol = optimize.toms748(f,1e24,5e24,maxiter = 3000, xtol = 1e-24)
+                            epsdm_cent = sol
+                        except ValueError:
+                            try:
+                                sol  = optimize.toms748(f,5e24,1e25,maxiter = 3000, xtol = 1e-24)
+                                epsdm_cent = sol
+                            except ValueError:
+                                epsdm_cent = epsdm_cent
+                                
+                        f_chi_calc = self.f_chi_calc(epscent,epsdm_cent)
+
+                    if (f_chi_calc > ADM_fracplus or f_chi_calc < ADM_fracminus):
+                        try:
+                            low  = epsdm_cent - .5e24
+                            high = epsdm_cent + .5e24
+                            sol = optimize.brenth(f,low,high,maxiter = 3000, xtol = 1e-24)
+                            epsdm_cent = sol
+                        except ValueError:
+                            epsdm_cent = epsdm_cent
+                            
+                        f_chi_calc = self.f_chi_calc(epscent,epsdm_cent)
+                        if (f_chi_calc > ADM_fracplus or f_chi_calc < ADM_fracminus):
+                            try:
+                                low  = epsdm_cent - .5e24
+                                high = epsdm_cent + .5e24
+                                sol = optimize.toms748(f,low,high,maxiter = 3000, xtol = 1e-24)
+                                epsdm_cent = sol
+                            except ValueError:
+                                epsdm_cent = epsdm_cent
+                                
+                            f_chi_calc = self.f_chi_calc(epscent,epsdm_cent)
+                            
+                            if (f_chi_calc > ADM_fracplus or f_chi_calc < ADM_fracminus):
+                                if(abs(epsdm_cent) < pow(10,24.5) and abs(epsdm_cent) > 1e24):
+                                    try:
+                                        sol = optimize.brenth(f,1e24,pow(10,24.5),maxiter = 3000, xtol = 1e-24)
+                                        epsdm_cent = sol
+                                    except ValueError:
+                                        epsdm_cent = epsdm_cent
+
+                                    f_chi_calc = self.f_chi_calc(epscent, epsdm_cent)
+
+                                elif(abs(epsdm_cent) < 1e25 and abs(epsdm_cent) > pow(10,24.5)):
+                                    try:
+                                        sol = optimize.brenth(f,pow(10,24.5), 1e25, maxiter = 3000, xtol = 1e-24)
+                                        epsdm_cent = sol
+                                    except ValueError:
+                                        epsdm_cent = epsdm_cent
+
+                                    f_chi_calc = self.f_chi_calc(epscent, epsdm_cent)
+
+                                else:
+                                    try:
+                                        sol = optimize.toms748(f,9e23,1e25,maxiter = 3000, xtol = 1e-24)
+                                        epsdm_cent = sol
+                                    except ValueError:
+                                        epsdm_cent = pow(10,24.4) #just an explicit answer in case the above fails, so pick a middle guess
+
+                                    f_chi_calc = self.f_chi_calc(epscent, epsdm_cent)
+                                    
+                                if(f_chi_calc > ADM_fracplus or f_chi_calc < ADM_fracminus):
+                                    self.reach_fraction = False
+                                else:
+                                    self.reach_fraction = True
+
+                            else:
+                                self.reach_fraction = True
+                       
+                        else:
+                            self.reach_fraction = True
+                    else:
+                        self.reach_fraction = True
+                       
+        else:
+            self.reach_fraction = True
+    
+        if np.isnan(f_chi_calc) == True:
+                self.reach_fraction = False
+        return epsdm_cent
+
+    def Mass_Radius(self,epscent,epscent_dm):
+        star = Star(epscent, epscent_dm) 
+        star.solve_structure(self.energydensities, self.pressures, self.energydensities_dm, self.pressures_dm)
+        return star.Mgrav,star.Req, star.Mdm,star.Rdm
+
 
     def get_minmax_edsc_chirp(self, chirp):
 
@@ -397,10 +791,10 @@ class BaseEoS():
                  (max_index - min_index) + min_index)
         return self.polytropic_func(rho, norm, index)
 
-    # Plotting functions #
-    def plot(self):
+    
+    def plot(self, dm = 'None'):
         """
-            Plot the EoS.
+            Plot the EoS. If dm is not 'None' will include ADM contribution.
         """
 
         fig, ax = plt.subplots(1,1, figsize=(8,6))
@@ -426,6 +820,13 @@ class BaseEoS():
             ax.plot(self.energydensities, 
                     self.pressures, c='black', lw=1.5, label='EoS') #same as above, but for energydensities and pressures
 
+        if dm in ['Bosonic', 'Fermionic']:
+            ax.plot(self.energydensities_dm, 
+                    self.pressures_dm, c='steelblue', 
+                    label='DM EoS', lw=1.5)
+            ax.set_xlim(1e13, 1e19)
+            ax.set_ylim(1e30, 1e38)
+            
         ax.set_xscale('log')
         ax.set_yscale('log')
         ax.set_ylim(miny, maxy)
@@ -455,6 +856,7 @@ class BaseEoS():
         fig.savefig('testEoS_MR_cgs.png')
         plt.show()
 
+    
     def get_BPS(self):
         BPS = np.array([[2.97500000e-14, 6.30300000e-24, 4.40700000e-12], [3.06900000e-14, 6.30300000e-23, 4.54700000e-12], [4.36900000e-14, 7.55100000e-22, 6.47200000e-12],
                            [6.18700000e-14, 8.73700000e-21, 9.15000000e-12], [1.70000000e-13, 1.06100000e-19, 2.51600000e-11], [7.93700000e-13, 3.63200000e-18, 1.18300000e-10],
