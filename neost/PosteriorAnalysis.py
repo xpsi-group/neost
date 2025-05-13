@@ -151,7 +151,7 @@ def compute_table_data(root_name, EOS, variable_params, static_params,dm = False
                     pres_14 = np.nan
                 else:
                     eps_14 = epsM(1.4)
-                    rho_14 = edsrho(eps_14) / rho_ns + edsrhodm()
+                    rho_14 = edsrho(eps_14) / rho_ns
                     pres_14 = EOS.eos(eps_14)
 
                 R_2 = MR(2.0)
