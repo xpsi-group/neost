@@ -469,10 +469,8 @@ def compute_prior_auxiliary_data(path, EOS, variable_params, static_params, samp
         else:
             minpres, maxpres = calc_bands(energydensities, pressures)
             minpres_rho, maxpres_rho = calc_bands(energydensities, pressures_rho)
-            np.save(root_name + 'minpres_rho', minpres_rho)
-            np.save(root_name + 'maxpres_rho', maxpres_rho)
-            np.save(root_name + 'minpres', minpres)
-            np.save(root_name + 'maxpres', maxpres)
+            savedata += [minpres_rho, maxpres_rho, minpres, maxpres]
+            fnames += ['minpres_rho.npy', 'maxpres_rho.npy', 'minpres.npy', 'maxpres.npy']
     save_auxiliary_data(path, identifier, savedata, fnames)
 
 
