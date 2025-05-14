@@ -1,14 +1,19 @@
+# Standard libraries
+import pathlib
+
+# 3rd party
 import numpy as np
 from matplotlib.lines import Line2D
 import matplotlib.patches as mpatches
 from matplotlib.colors import ListedColormap
 import matplotlib.pyplot as plt
-import pathlib
+from mpi4py import MPI
 import seaborn as sns
 from scipy.interpolate import UnivariateSpline
 from scipy.stats import gaussian_kde
 import corner
 
+# Local imports
 import neost
 from neost.eos import polytropes, tabulated
 from neost.Prior import Prior
@@ -16,14 +21,17 @@ from neost.Star import Star
 from neost.Likelihood import Likelihood
 import neost.global_imports as global_imports
 
+# Constants
 c = global_imports._c
 G = global_imports._G
 Msun = global_imports._M_s
 pi = global_imports._pi
 rho_ns = global_imports._rhons
 
+# Define color scheme
 colors = np.array(["#c6878f", "#b79d94", "#969696", "#67697c", "#233b57", "#BCBEC7"])
 
+# Units
 dyncm2_to_MeVfm3 = 1./(1.6022e33)
 gcm3_to_MeVfm3 = 1./(1.7827e12)
 oneoverfm_MeV = 197.33
