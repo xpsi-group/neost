@@ -105,7 +105,8 @@ def compute_table_data(root_name, EOS, variable_params, static_params,dm = False
 
     """
     ewposterior = np.loadtxt(root_name + 'post_equal_weights.dat')
-    print("Total number of samples is %d" %(len(ewposterior)))
+    num_samples = num_samples
+    print("Total number of samples is %d" %(num_samples))
     try:
         Data_array = np.loadtxt(root_name + 'table_data.txt')
         print('M_TOV: ', get_quantiles(Data_array[:,0]))
@@ -123,13 +124,13 @@ def compute_table_data(root_name, EOS, variable_params, static_params,dm = False
         print('P_cent 2.0: ', get_quantiles(Data_array[:,12]))
         print('Delta R = R_2.0 - R_1.4: ', get_quantiles(Data_array[:,9] - Data_array[:,5]))
     except OSError:
-        Data_array = np.zeros((len(ewposterior),13)) #contains Mtov, Rtov, eps_cent TOV, rho_cent TOV, P_cent TOV,R 1.4, eps_cent 1.4, rho_cent 1.4,
+        Data_array = np.zeros((num_samples,13)) #contains Mtov, Rtov, eps_cent TOV, rho_cent TOV, P_cent TOV,R 1.4, eps_cent 1.4, rho_cent 1.4,
                                                                 #P_cent 1.4, R 2.0, eps_cent 2.0, rho_cent 2.0, P_cent 2.0
                                                                 #NOTE: ALL VALUES ARE THEIR ADMIXED VERSIONS WHEN dm == True!!
 
 
 
-        for i in range(0, len(ewposterior), 1):
+        for i in range(0, num_samples, 1):
             pr = ewposterior[i][0:len(variable_params)]
             par = {e:pr[j] for j, e in enumerate(list(variable_params.keys()))}
             par.update(static_params)
@@ -331,8 +332,9 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
 
 
     """
-    ewposterior = load_equal_weighted_samples(path, sampler, identifier)
-    print("Total number of samples is %d" %(len(ewposterior)))
+    equal_weighted_samples = load_equal_weighted_samples(path, sampler, identifier)
+    num_samples = len(equal_weighted_samples)
+    print(f'Total number of samples is {num_samples}')
 
     num_stars = len(np.array([v for k,v in variable_params.items() if 'rhoc' in k]))
 
@@ -346,7 +348,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
     if dm == False:
         masses = np.linspace(.2, 2.9, 50)
         energydensities = np.logspace(14.2, 16, 50)
-        MR_prpr_pp = np.zeros((len(ewposterior), 2))
+        MR_prpr_pp = np.zeros(num_samples, 2))
     else:
         masses = np.linspace(.2, 2.9, 200)
 
@@ -356,24 +358,24 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
         energydensities_dm = np.logspace(12, 18, 200)
         energydensities = energydensities_b + energydensities_dm
 
-        MR_prpr_pp = np.zeros((len(ewposterior), 2))
+        MR_prpr_pp = np.zeros((num_samples, 2))
 
-        pressures_dm = np.zeros((len(energydensities), len(ewposterior)))
-        pressures_rho_dm = np.zeros((len(energydensities), len(ewposterior)))
-        pressures_b = np.zeros((len(energydensities), len(ewposterior)))
-        pressures_rho_b = np.zeros((len(energydensities), len(ewposterior)))
+        pressures_dm = np.zeros((len(energydensities), num_samples))
+        pressures_rho_dm = np.zeros((len(energydensities), num_samples))
+        pressures_b = np.zeros((len(energydensities), num_samples))
+        pressures_rho_b = np.zeros((len(energydensities), num_samples))
 
     scattered = []
 
     if flag == True:
-        radii = np.zeros((len(masses), len(ewposterior)))
-        pressures = np.zeros((len(masses), len(ewposterior)))
-        pressures_rho = np.zeros((len(masses), len(ewposterior)))
+        radii = np.zeros((len(masses), num_samples))
+        pressures = np.zeros((len(masses), num_samples))
+        pressures_rho = np.zeros((len(masses), num_samples))
 
     else:
-        radii = np.zeros((len(masses), len(ewposterior)))
-        pressures = np.zeros((len(masses), len(ewposterior)))
-        pressures_rho = np.zeros((len(masses), len(ewposterior)))
+        radii = np.zeros((len(masses), num_samples))
+        pressures = np.zeros((len(masses), num_samples))
+        pressures_rho = np.zeros((len(masses), num_samples))
         minradii = np.zeros((3, len(masses)))
         maxradii = np.zeros((3, len(masses)))
         minpres = np.zeros((3, len(energydensities)))
@@ -381,7 +383,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
         minpres_rho = np.zeros((3, len(energydensities)))
         maxpres_rho = np.zeros((3, len(energydensities)))
 
-    for i in range(0, len(ewposterior), 1):
+    for i in range(0, num_samples, 1):
 
         pr = ewposterior[i][0:len(variable_params)]
         par = {e:pr[j] for j, e in enumerate(list(variable_params.keys()))}
