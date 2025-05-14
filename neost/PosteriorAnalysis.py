@@ -344,10 +344,12 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
     num_processes = comm.Get_size() # Number of MPI processes
     samples = [[] for i in range(num_processes)] # This is essentially a rearranged 'equal_weighted_samples'
 
+    # Load samples
     equal_weighted_samples = load_equal_weighted_samples(path, sampler, identifier)
     num_samples = len(equal_weighted_samples)
     print(f'Total number of samples is {num_samples}')
 
+    # Get number of stars and set 'flag' that avoids unneeded calculations
     num_stars = len(np.array([v for k,v in variable_params.items() if 'rhoc' in k]))
     flag = True if len(list(variable_params.keys())) == num_stars else False
 
@@ -360,27 +362,24 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
     energydensities = np.logspace(14.2, 16, num_grid_points)
     num_energydensities = num_grid_points # TODO maybe this isn't necessary?
     mass_radius = np.zeros((num_samples, 2))
+    radii = np.zeros((num_masses, num_samples))
+    pressures = np.zeros((num_masses, num_samples))
+    pressures_rho = np.zeros((num_masses, num_samples))
     scattered = []
 
     if dm:
+        # We can always specify these even if they're not used I think
         energydensities_b = np.logspace(14.2, 16, 200)
         energydensities_dm = np.logspace(12, 18, 200)
-        energydensities = energydensities_b + energydensities_dm # Overwrite energydensities
-        num_energydensities = len(energydensities) # TODO is this necessary? Probably not
+        energydensities = energydensities_b + energydensities_dm # Overwrite energydensities, length is the same
 
         pressures_dm = np.zeros((num_energydensities, num_samples))
         pressures_rho_dm = np.zeros((num_energydensities, num_samples))
         pressures_b = np.zeros((num_energydensities, num_samples))
         pressures_rho_b = np.zeros((num_energydensities, num_samples))
 
-    if flag == True:
-        radii = np.zeros((num_masses, num_samples))
-        pressures = np.zeros((num_masses, num_samples))
-        pressures_rho = np.zeros((num_masses, num_samples))
-    else:
-        radii = np.zeros((num_masses, num_samples))
-        pressures = np.zeros((num_masses, num_samples))
-        pressures_rho = np.zeros((num_masses, num_samples))
+    if not flag:
+        # We can always specify these even if they're not used I think
         minradii = np.zeros((3, num_masses))
         maxradii = np.zeros((3, num_masses))
         minpres = np.zeros((3, num_energydensities))
@@ -563,14 +562,14 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
     savedata = [pressures, radii, scattered, mass_radius]
     fnames = ['pressures.npy', 'radii.npy', 'scattered.npy', 'MR_prpr.txt'] # TODO change the name of MR_prpr.txt? Check with the team
 
-    if dm == True:
+    if dm:
         fnames += ['pressures_baryon.npy', 'pressures_dm.npy']
         savedata += [pressures_b, pressures_dm]
-    if flag == False:
+    if not flag:
         minradii, maxradii = calc_bands(masses, radii)
         savedata += [minradii, maxradii]
         fnames += ['minradii.npy', 'maxradii.npy']
-        if dm == True:
+        if dm:
             minpres, maxpres = calc_bands(energydensities_b, pressures)
             minpres_rho, maxpres_rho = calc_bands(energydensities_b, pressures_rho)
             minpres_b, maxpres_b = calc_bands(energydensities_b, pressures_b)
