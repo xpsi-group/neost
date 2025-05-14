@@ -440,7 +440,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
             rhoc = np.random.rand() *(np.log10(EOS.max_edsc) - 14.6) + 14.6
             star = Star(10**rhoc)
             star.solve_structure(EOS.energydensities, EOS.pressures)
-            MR_prpr_pp[i] = star.Mrot, star.Req
+            mass_radius[i] = star.Mrot, star.Req
 
         else:
             rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0, ext = 1)
@@ -527,10 +527,10 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
             epsdm = EOS.find_epsdm_cent(EOS.adm_fraction,10**rhoc)
             star = Star(10**rhoc,epsdm)
             star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo)
-            MR_prpr_pp[i] = star.Mrot, star.Req
+            mass_radius[i] = star.Mrot, star.Req
 
             if EOS.reach_fraction == False:
-                MR_prpr_pp[i] = star.Mrot, 0.0
+                mass_radius[i] = star.Mrot, 0.0
 
             for j, e in enumerate(rhocpar):
                 epsdm = EOS.find_epsdm_cent(EOS.adm_fraction,e)
@@ -556,12 +556,12 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
             if MR != 0:
                 radii[:,i] = MR(masses)
 
-    MR_prpr_pp = MR_prpr_pp[MR_prpr_pp[:,1] != 0]
+    mass_radius = mass_radius[mass_radius[:,1] != 0]
 
     # Save everything
     scattered = np.array(scattered)
-    savedata = [pressures, radii, scattered, MR_prpr_pp]
-    fnames = ['pressures.npy', 'radii.npy', 'scattered.npy', 'MR_prpr.txt']
+    savedata = [pressures, radii, scattered, mass_radius]
+    fnames = ['pressures.npy', 'radii.npy', 'scattered.npy', 'MR_prpr.txt'] # TODO change the name of MR_prpr.txt? Check with the team
 
     if dm == True:
         fnames += ['pressures_baryon.npy', 'pressures_dm.npy']
