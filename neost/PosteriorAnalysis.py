@@ -303,6 +303,12 @@ def save_auxiliary_data(path, identifier, data, fnames):
         savefunc(fname, data[i])
         print(f'Writing {fname} to disk')
 
+def print_samples_per_core(samples):
+    print('Number of samples to be analyzed per core:', end=' ')
+    for a in samples:
+        print(len(a), end=' ')
+    print()
+
 def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_masses, dm=False, sampler='multinest', identifier=''):
     """
     Function to compute the posterior auxiliary data used to generate standard NEoST plots, such as, the pressures, (if dm = True)
