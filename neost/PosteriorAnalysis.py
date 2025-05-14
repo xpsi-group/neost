@@ -343,51 +343,44 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
     print(f'Total number of samples is {num_samples}')
 
     num_stars = len(np.array([v for k,v in variable_params.items() if 'rhoc' in k]))
+    flag = True if len(list(variable_params.keys())) == num_stars else False
 
-    if len(list(variable_params.keys())) == num_stars:
-        flag = True
-
-    else:
-        flag = False
-
-
-    if dm == False:
-        masses = np.linspace(.2, 2.9, 50)
-        energydensities = np.logspace(14.2, 16, 50)
-        MR_prpr_pp = np.zeros(num_samples, 2))
-    else:
-        masses = np.linspace(.2, 2.9, 200)
-
-        #More points are added to account for larger energy density spread from ADM
-        #total ADM [1e12,1e18] + baryonic energy densities [1e14.2,1e16]
-        energydensities_b = np.logspace(14.2, 16, 200)
-        energydensities_dm = np.logspace(12, 18, 200)
-        energydensities = energydensities_b + energydensities_dm
-
-        MR_prpr_pp = np.zeros((num_samples, 2))
-
-        pressures_dm = np.zeros((len(energydensities), num_samples))
-        pressures_rho_dm = np.zeros((len(energydensities), num_samples))
-        pressures_b = np.zeros((len(energydensities), num_samples))
-        pressures_rho_b = np.zeros((len(energydensities), num_samples))
-
+    # Grids
+    # More points are added to account for larger energy density spread from ADM
+    # total ADM [1e12,1e18] + baryonic energy densities [1e14.2,1e16]
+    num_grid_points = 200 if dm else 50
+    masses = np.linspace(.2, 2.9, num_grid_points)
+    num_masses = num_grid_points # TODO maybe this isn't necessary?
+    energydensities = np.logspace(14.2, 16, num_grid_points)
+    num_energydensities = num_grid_points # TODO maybe this isn't necessary?
+    mass_radius = np.zeros((num_samples, 2))
     scattered = []
 
-    if flag == True:
-        radii = np.zeros((len(masses), num_samples))
-        pressures = np.zeros((len(masses), num_samples))
-        pressures_rho = np.zeros((len(masses), num_samples))
+    if dm:
+        energydensities_b = np.logspace(14.2, 16, 200)
+        energydensities_dm = np.logspace(12, 18, 200)
+        energydensities = energydensities_b + energydensities_dm # Overwrite energydensities
+        num_energydensities = len(energydensities) # TODO is this necessary? Probably not
 
+        pressures_dm = np.zeros((num_energydensities, num_samples))
+        pressures_rho_dm = np.zeros((num_energydensities, num_samples))
+        pressures_b = np.zeros((num_energydensities, num_samples))
+        pressures_rho_b = np.zeros((num_energydensities, num_samples))
+
+    if flag == True:
+        radii = np.zeros((num_masses, num_samples))
+        pressures = np.zeros((num_masses, num_samples))
+        pressures_rho = np.zeros((num_masses, num_samples))
     else:
-        radii = np.zeros((len(masses), num_samples))
-        pressures = np.zeros((len(masses), num_samples))
-        pressures_rho = np.zeros((len(masses), num_samples))
-        minradii = np.zeros((3, len(masses)))
-        maxradii = np.zeros((3, len(masses)))
-        minpres = np.zeros((3, len(energydensities)))
-        maxpres = np.zeros((3, len(energydensities)))
-        minpres_rho = np.zeros((3, len(energydensities)))
-        maxpres_rho = np.zeros((3, len(energydensities)))
+        radii = np.zeros((num_masses, num_samples))
+        pressures = np.zeros((num_masses, num_samples))
+        pressures_rho = np.zeros((num_masses, num_samples))
+        minradii = np.zeros((3, num_masses))
+        maxradii = np.zeros((3, num_masses))
+        minpres = np.zeros((3, num_energydensities))
+        maxpres = np.zeros((3, num_energydensities))
+        minpres_rho = np.zeros((3, num_energydensities))
+        maxpres_rho = np.zeros((3, num_energydensities))
 
     for i in range(0, num_samples, 1):
 
