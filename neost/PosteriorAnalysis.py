@@ -338,6 +338,12 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
 
 
     """
+    # Set up some MPI things
+    comm = MPI.COMM_WORLD
+    mpi_rank = comm.Get_rank() # The rank of the current MPI process
+    num_processes = comm.Get_size() # Number of MPI processes
+    samples = [[] for i in range(num_processes)] # This is essentially a rearranged 'equal_weighted_samples'
+
     equal_weighted_samples = load_equal_weighted_samples(path, sampler, identifier)
     num_samples = len(equal_weighted_samples)
     print(f'Total number of samples is {num_samples}')
