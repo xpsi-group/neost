@@ -343,6 +343,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
     mpi_rank = comm.Get_rank() # The rank of the current MPI process
     num_processes = comm.Get_size() # Number of MPI processes
     samples = [[] for i in range(num_processes)] # This is essentially a rearranged 'equal_weighted_samples'
+    num_samples = None
 
     # Get number of stars and set 'eos_is_fixed' that avoids unneeded calculations
     num_stars = len(np.array([v for k,v in variable_params.items() if 'rhoc' in k]))
@@ -366,38 +367,46 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
 
     # Scatter samples to the different processes and compute
     samples = comm.scatter(samples, root=0)
-    results = _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params, chirp_masses, dm, eos_is_fixed, mpi_rank)
+    results, num_grid_points = _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params, chirp_masses, dm, eos_is_fixed, mpi_rank)
 
     # Gather
     results = comm.gather(results, root=0)
-    pressures = None
-    masses = None
-    radii = None
-    scattered = None
-    mass_radius = None
-    energydensities = None
 
     if mpi_rank == 0:
+        # TODO Use list comprehension instead!
+        masses = None
+        energydensities = None
+        energydensities_b = None # Only DM
+        energydensities_dm = None # Only DM
+        mass_radius = np.empty((0, 2))
+        radii = np.zeros((num_grid_points, 0))
+        pressures = np.empty((num_grid_points, 0))
+        pressures_rho = np.empty((num_grid_points, 0))
+        scattered = None
+        pressures_b = np.empty((num_grid_points, 0)) # Only DM
+        pressures_dm = np.empty((num_grid_points, 0)) # Only DM
         for result in results:
-            if pressures is None:
-                pressures = result.get('pressures')
-                pressures_rho = result.get('pressures_rho')
+            if masses is None:
                 masses = result.get('masses')
-                radii = result.get('radii')
-                scattered = result.get('scattered')
-                mass_radius = result.get('mass_radius')
                 energydensities = result.get('energydensities')
-            else:
-                pressures = np.concatenate((pressures, result.get('pressures')), axis=1)
-                radii = np.concatenate((radii, result.get('radii')), axis=1)
-                scattered = np.concatenate((scattered, result.get('scattered')))
-                mass_radius = np.concatenate((mass_radius, result.get('mass_radius')))
+                scattered_shape = np.array(result.get('scattered')).shape
+                scattered = np.empty((0, scattered_shape[1], scattered_shape[2]))
+                if dm:
+                    energydensities_b = result.get('energydensities_b')
+                    energydensities_dm = result.get('energydensities_dm')
+            mass_radius = np.concatenate((mass_radius, result.get('mass_radius')))
+            radii = np.concatenate((radii, result.get('radii')), axis=1)
+            pressures = np.concatenate((pressures, result.get('pressures')), axis=1)
+            pressures_rho = np.concatenate((pressures_rho, result.get('pressures_rho')), axis=1)
+            scattered = np.concatenate((scattered, result.get('scattered')))
+            if dm:
+                pressures_b = np.concatenate((pressures_b, result.get('pressures_b')), axis=1)
+                pressures_dm = np.concatenate((pressures_dm, result.get('pressures_dm')), axis=1)
 
         # Filter out unphysical results
         mass_radius = mass_radius[mass_radius[:,1] != 0]
 
         # Save everything
-        scattered = np.array(scattered)
         savedata = [pressures, radii, scattered, mass_radius]
         fnames = ['pressures.npy', 'radii.npy', 'scattered.npy', 'MR_prpr.txt'] # TODO change the name of MR_prpr.txt? Check with the team
 
@@ -421,8 +430,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
                 minpres_rho, maxpres_rho = calc_bands(energydensities, pressures_rho)
                 savedata += [minpres_rho, maxpres_rho, minpres, maxpres]
                 fnames += ['minpres_rho.npy', 'maxpres_rho.npy', 'minpres.npy', 'maxpres.npy']
-        if mpi_rank == 0:
-            save_auxiliary_data(path, identifier, savedata, fnames)
+        save_auxiliary_data(path, identifier, savedata, fnames)
 
 
 def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params, chirp_masses, dm, eos_is_fixed, thread_number):
@@ -435,13 +443,11 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
     num_grid_points = 200 if dm else 50
     masses = np.linspace(.2, 2.9, num_grid_points)
     energydensities = np.logspace(14.2, 16, num_grid_points)
-    num_masses = num_grid_points # TODO maybe this isn't necessary?
-    num_energydensities = num_grid_points # TODO maybe this isn't necessary?
 
     mass_radius = np.zeros((num_samples, 2))
-    radii = np.zeros((num_masses, num_samples))
-    pressures = np.zeros((num_masses, num_samples))
-    pressures_rho = np.zeros((num_masses, num_samples))
+    radii = np.zeros((num_grid_points, num_samples))
+    pressures = np.zeros((num_grid_points, num_samples))
+    pressures_rho = np.zeros((num_grid_points, num_samples))
     scattered = []
 
     if dm:
@@ -450,10 +456,10 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
         energydensities_dm = np.logspace(12, 18, num_grid_points)
         energydensities = energydensities_b + energydensities_dm # Overwrite energydensities, length is the same
 
-        pressures_dm = np.zeros((num_energydensities, num_samples))
-        pressures_rho_dm = np.zeros((num_energydensities, num_samples))
-        pressures_b = np.zeros((num_energydensities, num_samples))
-        pressures_rho_b = np.zeros((num_energydensities, num_samples))
+        pressures_dm = np.zeros((num_grid_points, num_samples))
+        pressures_rho_dm = np.zeros((num_grid_points, num_samples))
+        pressures_b = np.zeros((num_grid_points, num_samples))
+        pressures_rho_b = np.zeros((num_grid_points, num_samples))
 
     for i in range(0, num_samples):
         pr = samples[i][0:len(variable_params)]
@@ -618,7 +624,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
         return_values['pressures_dm'] = pressures_dm
         return_values['energydensities_b'] = energydensities_b
         return_values['energydensities_dm'] = energydensities_dm
-    return return_values
+    return return_values, num_grid_points
 
 def cornerplot(root_name, variable_params, dm = False): #Add ADM functionality
     ewposterior = np.loadtxt(root_name + 'post_equal_weights.dat')
