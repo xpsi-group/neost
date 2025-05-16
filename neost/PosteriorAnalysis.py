@@ -373,35 +373,22 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
     results = comm.gather(results, root=0)
 
     if mpi_rank == 0:
-        # TODO Use list comprehension instead!
-        masses = None
-        energydensities = None
-        energydensities_b = None # Only DM
-        energydensities_dm = None # Only DM
-        mass_radius = np.empty((0, 2))
-        radii = np.zeros((num_grid_points, 0))
-        pressures = np.empty((num_grid_points, 0))
-        pressures_rho = np.empty((num_grid_points, 0))
-        scattered = None
-        pressures_b = np.empty((num_grid_points, 0)) # Only DM
-        pressures_dm = np.empty((num_grid_points, 0)) # Only DM
-        for result in results:
-            if masses is None:
-                masses = result.get('masses')
-                energydensities = result.get('energydensities')
-                scattered_shape = np.array(result.get('scattered')).shape
-                scattered = np.empty((0, scattered_shape[1], scattered_shape[2]))
-                if dm:
-                    energydensities_b = result.get('energydensities_b')
-                    energydensities_dm = result.get('energydensities_dm')
-            mass_radius = np.concatenate((mass_radius, result.get('mass_radius')))
-            radii = np.concatenate((radii, result.get('radii')), axis=1)
-            pressures = np.concatenate((pressures, result.get('pressures')), axis=1)
-            pressures_rho = np.concatenate((pressures_rho, result.get('pressures_rho')), axis=1)
-            scattered = np.concatenate((scattered, result.get('scattered')))
-            if dm:
-                pressures_b = np.concatenate((pressures_b, result.get('pressures_b')), axis=1)
-                pressures_dm = np.concatenate((pressures_dm, result.get('pressures_dm')), axis=1)
+        masses = results[0].get('masses')
+        energydensities = results[0].get('energydensities')
+        mass_radius = np.concatenate([result.get('mass_radius') for result in results])
+        radii = np.concatenate([result.get('radii') for result in results], axis=1)
+        pressures = np.concatenate([result.get('pressures') for result in results], axis=1)
+        pressures_rho = np.concatenate([result.get('pressures_rho') for result in results], axis=1)
+        scattered = np.concatenate([result.get('scattered') for result in results])
+
+        # Dark matter
+        energydensities_b = None
+        energydensities_dm = None
+        if dm:
+            energydensities_b = results[0].get('energydensities_b')
+            energydensities_dm = results[0].get('energydensities_dm')
+            pressures_b = np.concatenate([result.get('pressures_b') for result in results], axis=1)
+            pressures_dm = np.concatenate([result.get('pressures_dm') for result in results], axis=1)
 
         # Filter out unphysical results
         mass_radius = mass_radius[mass_radius[:,1] != 0]
