@@ -318,8 +318,12 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
     Parameters
     ----------
 
-    root_name: str
-        Name of the inference run to refer back to. Used to get the Multinest outputs.
+    path: str
+        The path to where the sampler output is stored.
+
+    identifier: str
+        The name given to the sampling. So the sampler output would be called something like <path>/<identifier>post_equal_weights.dat.
+        Only used with Multinest, ignored for Ultranest.
 
     EOS: obj
         equation of state object initialized in the inference script, i.e., the parameters that are sampled during inferencing.
@@ -336,6 +340,8 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
     dm: bool
         If True, ADM is included when computing the table data.
 
+    sampler: str
+        The sampler used, either 'multinest' or 'ultranest'.
 
     """
     # Set up some MPI things
@@ -421,6 +427,11 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
 
 
 def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params, chirp_masses, dm, eos_is_fixed, thread_number):
+    '''
+    Here the calculations of auxiliary data is done.
+    Reading/writing of files and parallelization is done by compute_auxiliary_data(),
+    this function just calculates and returns. Not meant to be called manually.
+    '''
     num_samples = len(samples)
     print(f'MPI-process {thread_number} is processing {num_samples} samples ...')
 
