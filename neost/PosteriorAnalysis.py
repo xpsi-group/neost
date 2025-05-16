@@ -363,9 +363,6 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
                     break
                 samples[current_core].append(equal_weighted_samples[idx])
         print_samples_per_core(samples)
-        #samples = np.array(samples)
-        #samples = samples.reshape((-1,samples.shape[-1]))
-        #print(f'samples.shape = {samples.shape}')
 
     # Scatter samples to the different processes and compute
     samples = comm.scatter(samples, root=0)
@@ -393,7 +390,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
             else:
                 pressures = np.concatenate((pressures, result.get('pressures')), axis=1)
                 radii = np.concatenate((radii, result.get('radii')), axis=1)
-                scattered = np.concatenate((scattered, result.get('scattered'))) # Probably wrong, TODO
+                scattered = np.concatenate((scattered, result.get('scattered')))
                 mass_radius = np.concatenate((mass_radius, result.get('mass_radius')))
 
         # Filter out unphysical results
@@ -520,129 +517,117 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             star.solve_structure(EOS.energydensities, EOS.pressures)
             mass_radius[i] = star.Mrot, star.Req
         else:
-            pass # TODO
+            rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0, ext = 1)
+            edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0, ext = 1)
+            max_rhoc = edsrho(EOS.max_edsc)
 
-    return_values = {'pressures':pressures, 'pressures_rho':pressures_rho, 'masses':masses, 'radii':radii, 'scattered':scattered, 'mass_radius':mass_radius, 'energydensities':energydensities}
-    # Return more if dm
-   # if not eos_is_fixed:
-   #     return_values['minradii'] = minradii
-   #     return_values['maxradii'] = maxradii]
-   #     if dm:
-   #         pass
-   #     else:
-   #         pass
-    return return_values
+            rhopres_dm = UnivariateSpline(EOS.massdensities_dm, EOS.pressures_dm, k=1, s=0, ext = 1)
+            edsrho_dm = UnivariateSpline(EOS.energydensities_dm, EOS.massdensities_dm, k=1, s=0, ext = 1)
+            eos_dm = UnivariateSpline(EOS.energydensities_dm, EOS.pressures_dm, k=1, s=0, ext = 1)
 
-def compute_auxiliary_datum():
-    # TODO
-    return # TODO
+            max_edsc_dm = EOS.find_epsdm_cent(EOS.adm_fraction,EOS.max_edsc)
 
-def compute_auxiliary_datum_dark_matter():
-    # TODO
-    rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0, ext = 1)
-    edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0, ext = 1)
-    max_rhoc = edsrho(EOS.max_edsc)
+            if EOS.reach_fraction == False:
+                max_rhoc_dm = 0.0
+                max_edsc_dm = 0.0
+            else:
+                max_rhoc_dm = edsrho_dm(max_edsc_dm)
 
-    rhopres_dm = UnivariateSpline(EOS.massdensities_dm, EOS.pressures_dm, k=1, s=0, ext = 1)
-    edsrho_dm = UnivariateSpline(EOS.energydensities_dm, EOS.massdensities_dm, k=1, s=0, ext = 1)
-    eos_dm = UnivariateSpline(EOS.energydensities_dm, EOS.pressures_dm, k=1, s=0, ext = 1)
+            max_rhoc_admixed = max_rhoc + max_rhoc_dm
+            max_edsc_admixed = EOS.max_edsc + max_edsc_dm
 
-    max_edsc_dm = EOS.find_epsdm_cent(EOS.adm_fraction,EOS.max_edsc)
+            pressures_rho_b[:,i][energydensities_b<max_rhoc] = rhopres(energydensities_b[energydensities_b<max_rhoc])
+            dm_pres_rho = rhopres_dm(energydensities_dm[energydensities_dm<max_rhoc_dm])
 
-    if EOS.reach_fraction == False:
-        max_rhoc_dm = 0.0
-        max_edsc_dm = 0.0
-    else:
-        max_rhoc_dm = edsrho_dm(max_edsc_dm)
+            if len(dm_pres_rho) != 0:
+                pressures_rho_dm[:,i][energydensities_dm<max_rhoc_dm] = dm_pres_rho
+                dm_pres_rho_interp = UnivariateSpline(energydensities_dm[energydensities_dm<max_rhoc_dm], dm_pres_rho, k=1, s=0, ext = 1)
 
-    max_rhoc_admixed = max_rhoc + max_rhoc_dm
-    max_edsc_admixed = EOS.max_edsc + max_edsc_dm
+                #Only want see impact of ADM where we have baryonic central desnities
+                pressures_rho[:,i][energydensities_b<max_rhoc] = pressures_rho_b[:,i][energydensities_b<max_rhoc] + dm_pres_rho_interp(energydensities_b[energydensities_b<max_rhoc])
 
-    pressures_rho_b[:,i][energydensities_b<max_rhoc] = rhopres(energydensities_b[energydensities_b<max_rhoc])
-    dm_pres_rho = rhopres_dm(energydensities_dm[energydensities_dm<max_rhoc_dm])
+            else:
+                pressures_rho[:,i][energydensities_b<max_rhoc] = pressures_rho_b[:,i][energydensities_b<max_rhoc]
 
-    if len(dm_pres_rho) != 0:
-        pressures_rho_dm[:,i][energydensities_dm<max_rhoc_dm] = dm_pres_rho
-        dm_pres_rho_interp = UnivariateSpline(energydensities_dm[energydensities_dm<max_rhoc_dm], dm_pres_rho, k=1, s=0, ext = 1)
+            pressures_b[:,i][energydensities_b<EOS.max_edsc] = EOS.eos(energydensities_b[energydensities_b<EOS.max_edsc])
+            dm_pres_eps = eos_dm(energydensities_dm[energydensities_dm<max_edsc_dm])
 
-        #Only want see impact of ADM where we have baryonic central desnities
-        pressures_rho[:,i][energydensities_b<max_rhoc] = pressures_rho_b[:,i][energydensities_b<max_rhoc] + dm_pres_rho_interp(energydensities_b[energydensities_b<max_rhoc])
+            if len(dm_pres_eps) != 0:
+                pressures_dm[:,i][energydensities_dm<max_edsc_dm] = dm_pres_eps
+                dm_pres_eps_interp = UnivariateSpline(energydensities_dm[energydensities_dm<max_edsc_dm], dm_pres_eps, k=1, s=0, ext = 1)
 
-    else:
-        pressures_rho[:,i][energydensities_b<max_rhoc] = pressures_rho_b[:,i][energydensities_b<max_rhoc]
+                #Only want to see impact of ADM where we have baryonic central energy densities
+                pressures[:,i][energydensities_b<EOS.max_edsc] = pressures_b[:,i][energydensities_b<EOS.max_edsc] + dm_pres_eps_interp(energydensities_b[energydensities_b<EOS.max_edsc])
 
-    pressures_b[:,i][energydensities_b<EOS.max_edsc] = EOS.eos(energydensities_b[energydensities_b<EOS.max_edsc])
-    dm_pres_eps = eos_dm(energydensities_dm[energydensities_dm<max_edsc_dm])
+            else:
+                pressures[:,i][energydensities_b<EOS.max_edsc] = pressures_b[:,i][energydensities_b<EOS.max_edsc]
 
-    if len(dm_pres_eps) != 0:
-        pressures_dm[:,i][energydensities_dm<max_edsc_dm] = dm_pres_eps
-        dm_pres_eps_interp = UnivariateSpline(energydensities_dm[energydensities_dm<max_edsc_dm], dm_pres_eps, k=1, s=0, ext = 1)
+            for j, e in enumerate(rhocs):
+                epsdm = EOS.find_epsdm_cent(EOS.adm_fraction,e)
+                rhocsdm[j] = epsdm
+                star = Star(e,epsdm)
+                star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo)
+                M[j] = star.Mrot
+                R[j] = star.Req
 
-        #Only want to see impact of ADM where we have baryonic central energy densities
-        pressures[:,i][energydensities_b<EOS.max_edsc] = pressures_b[:,i][energydensities_b<EOS.max_edsc] + dm_pres_eps_interp(energydensities_b[energydensities_b<EOS.max_edsc])
+                if EOS.reach_fraction == False:
+                    R[j] = 0.0
+                    rhocsdm[j] = 0.0
 
-    else:
-        pressures[:,i][energydensities_b<EOS.max_edsc] = pressures_b[:,i][energydensities_b<EOS.max_edsc]
+            idx_no_zero = np.nonzero(R)
+            M = M[idx_no_zero]
+            R = R[idx_no_zero]
+            rhocs = rhocs[idx_no_zero]
+            rhocsdm = rhocsdm[idx_no_zero]
 
-    for j, e in enumerate(rhocs):
-        epsdm = EOS.find_epsdm_cent(EOS.adm_fraction,e)
-        rhocsdm[j] = epsdm
-        star = Star(e,epsdm)
-        star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo)
-        M[j] = star.Mrot
-        R[j] = star.Req
+            M, indices = np.unique(M, return_index=True)
+            try:
+                MR = UnivariateSpline(M, R[indices], k=1, s=0, ext=1)
 
-        if EOS.reach_fraction == False:
-            R[j] = 0.0
-            rhocsdm[j] = 0.0
+                rhocs_admixed = rhocs[indices] + rhocsdm[indices]
+                rhocM = UnivariateSpline(M, rhocs_admixed, k=1, s=0, ext = 1)
+            except Exception:
+                MR = 0
+                rhocs_admixed = rhocs[indices] + rhocsdm[indices]
+                rhocM = 0
 
-    idx_no_zero = np.nonzero(R)
-    M = M[idx_no_zero]
-    R = R[idx_no_zero]
-    rhocs = rhocs[idx_no_zero]
-    rhocsdm = rhocsdm[idx_no_zero]
+            rhoc = np.random.rand() *(np.log10(EOS.max_edsc) - 14.6) + 14.6
+            epsdm = EOS.find_epsdm_cent(EOS.adm_fraction,10**rhoc)
+            star = Star(10**rhoc,epsdm)
+            star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo)
+            mass_radius[i] = star.Mrot, star.Req
 
-    M, indices = np.unique(M, return_index=True)
-    try:
-        MR = UnivariateSpline(M, R[indices], k=1, s=0, ext=1)
+            if EOS.reach_fraction == False:
+                mass_radius[i] = star.Mrot, 0.0
 
-        rhocs_admixed = rhocs[indices] + rhocsdm[indices]
-        rhocM = UnivariateSpline(M, rhocs_admixed, k=1, s=0, ext = 1)
-    except Exception:
-        MR = 0
-        rhocs_admixed = rhocs[indices] + rhocsdm[indices]
-        rhocM = 0
-
-    rhoc = np.random.rand() *(np.log10(EOS.max_edsc) - 14.6) + 14.6
-    epsdm = EOS.find_epsdm_cent(EOS.adm_fraction,10**rhoc)
-    star = Star(10**rhoc,epsdm)
-    star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo)
-    mass_radius[i] = star.Mrot, star.Req
-
-    if EOS.reach_fraction == False:
-        mass_radius[i] = star.Mrot, 0.0
-
-    for j, e in enumerate(rhocpar):
-        epsdm = EOS.find_epsdm_cent(EOS.adm_fraction,e)
-        star = Star(e,epsdm)  #two_fluid_tidal not used here since chirp_masses are none, so compute two fluid tidal is waste of time
-        star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo)
-        if EOS.reach_fraction == True:
-            tmp.append([e + epsdm, EOS.eos(e) + eos_dm(epsdm), star.Mrot, star.Req, star.Rdm_halo])
-        if chirp_masses[j] is not None:
-            if rhocM != 0:
-                M2 = m1(chirp_masses[j], tmp[j][4])
-                rhoc = rhocM(M2)
-                epsdm = EOS.find_epsdm_cent(EOS.adm_fraction,rhoc)
-                star = Star(rhoc,epsdm)  #two_fluid_tidal used here since we need star.tidal
-                star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo, EOS.two_fluid_tidal)
-
+            for j, e in enumerate(rhocpar):
+                epsdm = EOS.find_epsdm_cent(EOS.adm_fraction,e)
+                star = Star(e,epsdm)  #two_fluid_tidal not used here since chirp_masses are none, so compute two fluid tidal is waste of time
+                star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo)
                 if EOS.reach_fraction == True:
                     tmp.append([e + epsdm, EOS.eos(e) + eos_dm(epsdm), star.Mrot, star.Req, star.Rdm_halo])
-    if tmp != []:
-        scattered.append(tmp)
-    if MR != 0:
-        radii[:,i] = MR(masses)
-    return #TODO
+                if chirp_masses[j] is not None:
+                    if rhocM != 0:
+                        M2 = m1(chirp_masses[j], tmp[j][4])
+                        rhoc = rhocM(M2)
+                        epsdm = EOS.find_epsdm_cent(EOS.adm_fraction,rhoc)
+                        star = Star(rhoc,epsdm)  #two_fluid_tidal used here since we need star.tidal
+                        star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo, EOS.two_fluid_tidal)
+
+                        if EOS.reach_fraction == True:
+                            tmp.append([e + epsdm, EOS.eos(e) + eos_dm(epsdm), star.Mrot, star.Req, star.Rdm_halo])
+            if tmp != []:
+                scattered.append(tmp)
+            if MR != 0:
+                radii[:,i] = MR(masses)
+
+    return_values = {'pressures':pressures, 'pressures_rho':pressures_rho, 'masses':masses, 'radii':radii, 'scattered':scattered, 'mass_radius':mass_radius, 'energydensities':energydensities}
+    if dm:
+        return_values['pressures_b'] = pressures_b
+        return_values['pressures_dm'] = pressures_dm
+        return_values['energydensities_b'] = energydensities_b
+        return_values['energydensities_dm'] = energydensities_dm
+    return return_values
 
 def cornerplot(root_name, variable_params, dm = False): #Add ADM functionality
     ewposterior = np.loadtxt(root_name + 'post_equal_weights.dat')
