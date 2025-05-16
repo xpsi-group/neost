@@ -76,7 +76,6 @@ def get_quantiles(array, quantiles=[0.025, 0.5, 0.975]):
         plus = high - median
         return np.round(median,2),np.round(plus,2),np.round(minus,2)
 
-
 def compute_table_data(root_name, EOS, variable_params, static_params,dm = False):
     """
     Function to compute the table data in Raaijmakers et al. 2021 & Rutherford et al. 2024.
@@ -293,14 +292,12 @@ def load_equal_weighted_samples(path, sampler, identifier):
     print(f'Analyzing file {sample_file}')
     return np.loadtxt(sample_file, skiprows=skiprows)
 
-def save_auxiliary_data(path, identifier, data, fnames):
-    # data and fnames should be lists.
-    assert(len(data) == len(fnames))
-    for i in range(len(data)):
-        extension = pathlib.Path(fnames[i]).suffix.lower()
+def save_auxiliary_data(path, identifier, data):
+    for fname, value in data.items():
+        extension = pathlib.Path(fname).suffix.lower()
         savefunc = np.savetxt if extension == '.txt' else np.save
-        fname = f'{path}/{identifier}{fnames[i]}'
-        savefunc(fname, data[i])
+        fname = f'{path}/{identifier}{fname}'
+        savefunc(fname, value)
         print(f'Writing {fname} to disk')
 
 def print_samples_per_core(samples):
@@ -400,31 +397,36 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
         mass_radius = mass_radius[mass_radius[:,1] != 0]
 
         # Save everything
-        savedata = [pressures, radii, scattered, mass_radius]
-        fnames = ['pressures.npy', 'radii.npy', 'scattered.npy', 'MR_prpr.txt'] # TODO change the name of MR_prpr.txt? Check with the team
+        savedata = {'pressures.npy':pressures, 'radii.npy':radii, 'scattered.npy':scattered, 'MR_prpr.txt':mass_radius}
 
         if dm:
-            fnames += ['pressures_baryon.npy', 'pressures_dm.npy']
-            savedata += [pressures_b, pressures_dm]
+            savedata['pressures_baryon.npy'] = pressures_b
+            savedata['pressures_dm.npy'] = pressures_dm
         if not eos_is_fixed:
             minradii, maxradii = calc_bands(masses, radii)
-            savedata += [minradii, maxradii]
-            fnames += ['minradii.npy', 'maxradii.npy']
+            savedata['minradii.npy'] = minradii
+            savedata['maxradii.npy'] = maxradii
             if dm:
                 minpres, maxpres = calc_bands(energydensities_b, pressures)
                 minpres_rho, maxpres_rho = calc_bands(energydensities_b, pressures_rho)
                 minpres_b, maxpres_b = calc_bands(energydensities_b, pressures_b)
                 minpres_dm, maxpres_dm = calc_bands(energydensities_dm, pressures_dm)
-                savedata += [minpres_rho, maxpres_rho, minpres, maxpres, minpres_b, maxpres_b, minpres_dm, maxpres_dm]
-                fnames += ['minpres_rho.npy', 'maxpres_rho.npy', 'minpres.npy', 'maxpres.npy']
-                fnames += ['minpres_baryon.npy', 'maxpres_baryon.npy', 'minpres_dm.npy', 'maxpres_dm.npy']
+                savedata['minpres_rho.npy'] = minpres_rho
+                savedata['maxpres_rho.npy'] = maxpres_rho
+                savedata['minpres.npy'] = minpres
+                savedata['maxpres.npy'] = maxpres
+                savedata['minpres_baryon.npy'] = minpres_b
+                savedata['maxpres_baryon.npy'] = maxpres_b
+                savedata['minpres_dm.npy'] = minpres_dm
+                savedata['maxpres_dm.npy'] = maxpres_dm
             else:
                 minpres, maxpres = calc_bands(energydensities, pressures)
                 minpres_rho, maxpres_rho = calc_bands(energydensities, pressures_rho)
-                savedata += [minpres_rho, maxpres_rho, minpres, maxpres]
-                fnames += ['minpres_rho.npy', 'maxpres_rho.npy', 'minpres.npy', 'maxpres.npy']
-        save_auxiliary_data(path, identifier, savedata, fnames)
-
+                savedata['minpres_rho.npy'] = minpres_rho
+                savedata['maxpres_rho.npy'] = maxpres_rho
+                savedata['minpres.npy'] = minpres
+                savedata['maxpres.npy'] = maxpres
+        save_auxiliary_data(path, identifier, savedata)
 
 def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params, chirp_masses, dm, eos_is_fixed, thread_number):
     '''
