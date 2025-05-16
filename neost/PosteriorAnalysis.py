@@ -477,7 +477,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
         R = np.zeros(len(rhocs))
 
         rhocpar = np.array([10**v for k,v in par.items() if 'rhoc' in k])
-        tmp = []
+        scattered_elements = []
 
         if not dm:
             rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0)
@@ -501,16 +501,16 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             for j, e in enumerate(rhocpar):
                 star = Star(e)
                 star.solve_structure(EOS.energydensities, EOS.pressures)
-                tmp.append([e, EOS.eos(e), star.Mrot, star.Req, star.tidal])
+                scattered_elements.append([e, EOS.eos(e), star.Mrot, star.Req, star.tidal])
 
                 if chirp_masses[j] is not None:
-                    M2 = m1(chirp_masses[j], tmp[j][2])
+                    M2 = m1(chirp_masses[j], scattered_elements[j][2])
                     rhoc = rhocM(M2)
                     star = Star(rhoc)
                     star.solve_structure(EOS.energydensities, EOS.pressures)
-                    tmp.append([rhoc, EOS.eos(rhoc), star.Mrot, star.Req, star.tidal])
+                    scattered_elements.append([rhoc, EOS.eos(rhoc), star.Mrot, star.Req, star.tidal])
 
-            scattered.append(tmp)
+            scattered.append(scattered_elements)
             radii[:,i] = MR(masses)
             rhoc = np.random.rand() *(np.log10(EOS.max_edsc) - 14.6) + 14.6
             star = Star(10**rhoc)
@@ -605,19 +605,19 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
                 star = Star(e,epsdm)  #two_fluid_tidal not used here since chirp_masses are none, so compute two fluid tidal is waste of time
                 star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo)
                 if EOS.reach_fraction == True:
-                    tmp.append([e + epsdm, EOS.eos(e) + eos_dm(epsdm), star.Mrot, star.Req, star.Rdm_halo])
+                    scattered_elements.append([e + epsdm, EOS.eos(e) + eos_dm(epsdm), star.Mrot, star.Req, star.Rdm_halo])
                 if chirp_masses[j] is not None:
                     if rhocM != 0:
-                        M2 = m1(chirp_masses[j], tmp[j][4])
+                        M2 = m1(chirp_masses[j], scattered_elements[j][4])
                         rhoc = rhocM(M2)
                         epsdm = EOS.find_epsdm_cent(EOS.adm_fraction,rhoc)
                         star = Star(rhoc,epsdm)  #two_fluid_tidal used here since we need star.tidal
                         star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo, EOS.two_fluid_tidal)
 
                         if EOS.reach_fraction == True:
-                            tmp.append([e + epsdm, EOS.eos(e) + eos_dm(epsdm), star.Mrot, star.Req, star.Rdm_halo])
-            if tmp != []:
-                scattered.append(tmp)
+                            scattered_elements.append([e + epsdm, EOS.eos(e) + eos_dm(epsdm), star.Mrot, star.Req, star.Rdm_halo])
+            if scattered_elements != []:
+                scattered.append(scattered_elements)
             if MR != 0:
                 radii[:,i] = MR(masses)
 
