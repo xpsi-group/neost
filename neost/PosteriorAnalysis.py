@@ -455,15 +455,6 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
         pressures_b = np.zeros((num_energydensities, num_samples))
         pressures_rho_b = np.zeros((num_energydensities, num_samples))
 
-    if not eos_is_fixed:
-        # We can always specify these even if they're not used I think
-        minradii = np.zeros((3, num_masses))
-        maxradii = np.zeros((3, num_masses))
-        minpres = np.zeros((3, num_energydensities))
-        maxpres = np.zeros((3, num_energydensities))
-        minpres_rho = np.zeros((3, num_energydensities))
-        maxpres_rho = np.zeros((3, num_energydensities))
-
     for i in range(0, num_samples):
         pr = samples[i][0:len(variable_params)]
         par = {e:pr[j] for j, e in enumerate(list(variable_params.keys()))}
