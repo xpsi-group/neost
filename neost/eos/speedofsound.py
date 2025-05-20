@@ -116,6 +116,15 @@ class SpeedofSoundEoS(BaseEoS):
         self.energydensities = totaleps 
         self.massdensities = totalrho 
 
+        ### debugging
+        if self._eds_crust[-1] == self._eds_core[0]:
+            print('same energy density at transition')
+            print([i for i in self.eos_params])
+        
+        if all(x<y for x, y in zip(self._eds_core, self._eds_core[1:]))==False:
+            print('energy density of the core not monotonically increasing')
+            print([i for i in self.eos_params])
+
         self.eos = UnivariateSpline(self.energydensities,
                                     self.pressures, k=1, s=0)
 
@@ -289,7 +298,7 @@ class SpeedofSoundEoS(BaseEoS):
         ### temporarily commenting it out for a check
         #if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
         #    if all(x<=y for x, y in zip(self.ceft_pressure_werror, self.ceft_pressure_werror[1:]))==False:   ## self._pres_crust might be overkill (includes low, BPS and cEFT)
-        #        #print('oi')
+                #print('oi')
         #        check = False
         #    else:
         #        check = True     

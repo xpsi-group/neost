@@ -273,7 +273,6 @@ class BaseEoS():
         self.eds_t = self._eds_crust[-1]
         self.P_t = self._pres_crust[-1]
 
-
     #Crust for Goettling chiral EFT EOS 
     def get_eos_crust_GP(self):
         current_path = os.path.dirname(__file__)
@@ -305,25 +304,52 @@ class BaseEoS():
         prescEFT = self.ceft_pressure_werror[self.index_start_cEFT:]/dyncm2_to_MeVfm3  #dyn/cm^2
         rhocEFT = (self.ceft_density[self.index_start_cEFT:]/n_ns)*rho_ns  #g/cm^3
         
-        #we tried first without extra points at the BPS/cEFT transition. But TOV solver complained, let's see if adding it here improves the situation
-        #epstrans = np.linspace(self.BPS[:,1][self.BPS[:,0] <= self._rho_end_BPS][-1]/gcm3_to_MeVfm3, self.ceft_energy[self.index_start_cEFT]/gcm3_to_MeVfm3, 10
-        #prestrans = self.presBPS[-1] * (epstrans / self.epsBPS[-1])**(
-        #        np.log10(prescEFT[0] / self.presBPS[-1]) /
-        #        np.log10(epscEFT[0] / self.epsBPS[-1]))  
+        #we tried first without extra points at the BPS/cEFT transition. But some mysterious errors appeared, let's see if adding it here improves the situation
+        #following exactly the footsteps of the function above
+        self.rhotrans = np.linspace(self.rhoBPS[-1], rhocEFT[0], 10)
         
-        self._eds_crust = np.hstack([epslow[0:-1], self.epsBPS, epscEFT])
-        self._pres_crust = np.hstack([preslow[0:-1], self.presBPS, prescEFT])
-        self._rho_crust = np.hstack([rholow[0:-1], self.rhoBPS, rhocEFT])  
+        self.prestrans = self.presBPS[-1] * (self.rhotrans / self.rhoBPS[-1])**(
+                np.log10(prescEFT[0] / self.presBPS[-1]) /
+                np.log10(rhocEFT[0] / self.rhoBPS[-1]))
+        
+        ## ode to find energy density of the transiion
+        eps0 = self.epsBPS[-1]
+        aux_rho_crust = np.hstack([self.rhoBPS, self.rhotrans[1:-1], rhocEFT])
+        aux_pres_crust = np.hstack([self.presBPS, self.prestrans[1:-1], prescEFT])
+        prho = UnivariateSpline(aux_rho_crust, aux_pres_crust, k=2, s=0)
+ 
+        aux_ode_rho_crust= np.asarray([i for i in aux_rho_crust/rho_ns if (self.ceft_density[self.index_start_cEFT]/n_ns)>i>= self._rho_end_BPS])
+ 
+        result = odeint(self.edens, eps0, aux_ode_rho_crust, args=tuple([prho]))
+        self.epstrans = result.flatten()[1::]
+                
+        ## putting everything together       
+        self._eds_crust = np.hstack([epslow[0:-1], self.epsBPS, self.epstrans, epscEFT])
+        self._pres_crust = np.hstack([preslow[0:-1], self.presBPS, self.prestrans[1:-1], prescEFT])
+        
+        ##debugging
+        if (any(np.isnan(self._pres_crust))):
+            print('Nan element found in p_crust')
+            print(list(np.isnan(self._pres_crust)).index(True))  ##returns index of nan element in _pres_crust, if any
+            print([i for i in eos_params])       
+        else:
+            aux_ind = [i for i in range(0, len(self._pres_crust), 1) if self._pres_crust[i]==0]
+            if len(aux_ind)!=0:
+                print('Zero element found in p_crust')
+                print(np.asarray(aux_ind))       ##if not, returns index of 0 element, if any
+                print([i for i in eos_params])
+        
+        self._rho_crust = np.hstack([rholow[0:-1], self.rhoBPS, self.rhotrans[1:-1], rhocEFT])  
 
-        eos_crust = UnivariateSpline(self._eds_crust, self._pres_crust, k=1, s=0) #check the quality of this spline
+        eos_crust = UnivariateSpline(self._eds_crust, self._pres_crust, k=1, s=0) 
         self._cs_crust = eos_crust.derivative(1)
-        self.rhoeds_crust = UnivariateSpline(self._rho_crust, self._eds_crust, k=1, s=0) #check the quality of this spline 
+        self.rhoeds_crust = UnivariateSpline(self._rho_crust, self._eds_crust, k=1, s=0)  
         
         #used for building the core EOS starting on these points
         self.eds_t = self._eds_crust[-1]
         self.P_t = self._pres_crust[-1]
-        self.Rho_t = self._rho_crust[-1]  #capital rho to differentiate from rho_t input by user
-
+        self.Rho_t = self._rho_crust[-1]  #capital rho to differentiate from rho_t input by user, with new table there's no difference, but there was before
+        
 
     #######################
     # Auxiliary functions #

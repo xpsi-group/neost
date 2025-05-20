@@ -16,3 +16,4 @@ dependencies:
         - gsl
         - kalepy
         - jupyter # Optional, only required for running the example notebooks in docs/source/
+        - mpi4py

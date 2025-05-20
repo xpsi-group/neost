@@ -87,6 +87,10 @@ class PolytropicEoS(BaseEoS):
 
 
     def get_eos(self):
+    
+        ##testing
+        #print(self.eos_params)
+        
         self.gammas = list(map(self.eos_params.get,
                                ['gamma1', 'gamma2', 'gamma3']))
         self.rho_ts = list(map(self.eos_params.get, ['rho_t1', 'rho_t2']))
@@ -131,6 +135,19 @@ class PolytropicEoS(BaseEoS):
         self.pressures = totalpres 
         self.energydensities = totaleps   
         self.massdensities = totalrho
+
+        #sometimes eps not strictly increasing AFTER the construction of self._eds_crust
+        #maybe first point of self._eds_core, but why?
+        #also sometimes pressures negative or not a number
+        
+        ### debugging
+        if self._eds_crust[-1] == self._eds_core[0]:
+            print('same energy density at transition')
+            print([i for i in self.eos_params])
+        
+        if all(x<y for x, y in zip(self._eds_core, self._eds_core[1:]))==False:
+            print('energy density of the core not monotonically increasing')
+            print([i for i in self.eos_params])
 
         self.eos = UnivariateSpline(self.energydensities,
                                     self.pressures, k=1, s=0)
@@ -271,12 +288,12 @@ class PolytropicEoS(BaseEoS):
         ### it could maybe speed up the sampling? we check later
         
         ### temporarily commenting it out for a check
-        #if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
-        #    if all(x<=y for x, y in zip(self.ceft_pressure_werror, self.ceft_pressure_werror[1:]))==False:   ## self._pres_crust might be overkill (includes low, BPS and cEFT)
-        #        #print('oi')
-        #        check = False
-        #    else:
-        #        check = True            
+        if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
+            if all(x<=y for x, y in zip(self.ceft_pressure_werror, self.ceft_pressure_werror[1:]))==False:   ## self._pres_crust might be overkill (includes low, BPS and cEFT)
+                #print('oi')
+                check = False
+            else:
+                check = True            
             
         return check
 

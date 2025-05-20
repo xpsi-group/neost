@@ -65,6 +65,7 @@ class Prior():
             #print(pr.get('ceft'))
             
             #pr['ceft'] = self.standard_normal.ppf(pr.get('ceft'))
+            #print(self.standard_normal.ppf(pr.get('ceft')))
             pr.update({'ceft': self.standard_normal.ppf(pr.get('ceft'))})
             
             #test = open("ceft_raw.txt", "a")
@@ -84,7 +85,7 @@ class Prior():
 
         for i in range(self.number_stars):
             if self.chirp_masses[i] is None:
-                logminedsc = np.log10(self.EOS.min_edsc)
+                logminedsc = np.log10(self.EOS.min_edsc)  
                 logmaxedsc = np.log10(self.EOS.max_edsc)
                 pr.update({'rhoc_' + str(i + 1):hypercube['rhoc_' + str(i + 1)]
                           * (logmaxedsc - logminedsc) + logminedsc})
@@ -98,8 +99,8 @@ class Prior():
         self.MRT = self.EOS.massradius
         self.max_edsc = self.EOS.max_edsc
 
-        if self.standard_normal_ceft:
+        #if self.standard_normal_ceft:
             # Transform ceft from U(0,1) to N(0,1)
-            pr['ceft'] = self.standard_normal.ppf(pr.get('ceft'))
+            #pr['ceft'] = self.standard_normal.ppf(pr.get('ceft'))
 
         return list(pr.values())

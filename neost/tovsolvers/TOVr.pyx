@@ -148,6 +148,10 @@ def solveTOVr(double rhocent, eos_eps, eos_pres, double atol,
     cdef int i
     cdef double Pmin = 1e4 * G * pow(c,-4)
 
+    #debugging
+    #cdef int aux_num = len(eos_pres)
+    #printf("len eos_pres=%d\n", aux_num)
+
     eos_pres, indices = np.unique(np.log10(eos_pres).round(decimals=3),
                                   return_index=True)
     eos_pres = 10**eos_pres * G * pow(c,-4) #scaled to geometrized
