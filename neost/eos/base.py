@@ -273,16 +273,19 @@ class BaseEoS():
         self.eds_t = self._eds_crust[-1]
         self.P_t = self._pres_crust[-1]
 
-    #Crust for Goettling chiral EFT EOS 
+    #Crust for Goettling chiral EFT EOS
     def get_eos_crust_GP(self):
-        current_path = os.path.dirname(__file__)
+        #current_path = os.path.dirname(__file__)
         #print(self.rho_t)
-    
+        path = '/work/home/mm12wyxy/neost-multicore/secretneost/neost'
+
         if self.crust == 'ceft-Goettling-N2LO':  #bc if this function is called, it's one of these two anyways
-            path_filename=current_path+'/'+self.filename
+            #path_filename=current_path+'/'+self.filename
+            path_filename=path+'/'+self.filename
             self.ceft_eos = self.get_G_N2LO(path_filename)
         else:
-            path_filename=current_path+'/'+self.filename
+            #path_filename=current_path+'/'+self.filename
+            path_filename=path+'/'+self.filename
             self.ceft_eos = self.get_G_N3LO(path_filename)        #self.cEFT_eos is the unfiltered txt file as array
 
         #### eos below ending BPS point

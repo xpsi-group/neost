@@ -63,7 +63,7 @@ class SpeedofSoundEoS(BaseEoS):
 
     """
 
-    def __init__(self, filename_n2lo, filename_n3lo, crust, rho_t, adm_type = 'None', dm_halo = False, two_fluid_tidal = False):
+    def __init__(self, crust, rho_t, filename_n2lo='Goettling_N2LO_e.txt', filename_n3lo='Goettling_N3LO_e.txt', adm_type = 'None', dm_halo = False, two_fluid_tidal = False):
 
         super(SpeedofSoundEoS, self).__init__(filename_n2lo, filename_n3lo, crust, rho_t)
 

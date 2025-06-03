@@ -90,12 +90,13 @@ class Prior():
                 pr.update({'rhoc_' + str(i + 1):hypercube['rhoc_' + str(i + 1)]
                           * (logmaxedsc - logminedsc) + logminedsc})
             else:
-                logminedsc, logmaxedsc = self.EOS.get_minmax_edsc_chirp(
-                    self.chirp_masses[i])
-                logminedsc = np.log10(logminedsc)
-                logmaxedsc = np.log10(logmaxedsc)
-                pr.update({'rhoc_' + str(i + 1):hypercube['rhoc_' + str(i + 1)]
-                          * (logmaxedsc - logminedsc) + logminedsc})
+                try:
+                    logminedsc, logmaxedsc = self.EOS.get_minmax_edsc_chirp(self.chirp_masses[i])
+                    logminedsc = np.log10(logminedsc)
+                    logmaxedsc = np.log10(logmaxedsc)
+                    pr.update({'rhoc_' + str(i + 1):hypercube['rhoc_' + str(i + 1)] * (logmaxedsc - logminedsc) + logminedsc})
+               except:
+                    print(list(pr.values()))
         self.MRT = self.EOS.massradius
         self.max_edsc = self.EOS.max_edsc
 
