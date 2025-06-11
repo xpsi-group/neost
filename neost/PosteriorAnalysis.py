@@ -104,7 +104,7 @@ def compute_table_data(root_name, EOS, variable_params, static_params,dm = False
 
     """
     ewposterior = np.loadtxt(root_name + 'post_equal_weights.dat')
-    num_samples = num_samples
+    num_samples = len(ewposterior)
     print("Total number of samples is %d" %(num_samples))
     try:
         Data_array = np.loadtxt(root_name + 'table_data.txt')
