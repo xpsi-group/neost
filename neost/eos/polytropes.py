@@ -62,7 +62,7 @@ class PolytropicEoS(BaseEoS):
 
     """
 
-    def __init__(self, crust, rho_t, filename_n2lo='Goettling_N2LO_e.txt', filename_n3lo='Goettling_N3LO_e.txt', adm_type = 'None', dm_halo = False, two_fluid_tidal = False):
+    def __init__(self, crust, rho_t, filename_n2lo='new_Goettling_N2LO_e.txt', filename_n3lo='new_Goettling_N3LO_e.txt', adm_type = 'None', dm_halo = False, two_fluid_tidal = False):
 
         super(PolytropicEoS, self).__init__(filename_n2lo, filename_n3lo, crust, rho_t)
 
@@ -135,10 +135,6 @@ class PolytropicEoS(BaseEoS):
         self.pressures = totalpres 
         self.energydensities = totaleps   
         self.massdensities = totalrho
-
-        #sometimes eps not strictly increasing AFTER the construction of self._eds_crust
-        #maybe first point of self._eds_core, but why?
-        #also sometimes pressures negative or not a number
         
         ### debugging
         if self._eds_crust[-1] == self._eds_core[0]:
@@ -283,11 +279,8 @@ class PolytropicEoS(BaseEoS):
             check = True
         else:
             check = False
-            
-        ### we could build another check_constraints function in base.py, just for the crust with normal distribution of cEFT, but we won't now
-        ### it could maybe speed up the sampling? we check later
-        
-        ### temporarily commenting it out for a check
+                    
+        ### probably unnecessary now?
         if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
             if all(x<=y for x, y in zip(self.ceft_pressure_werror, self.ceft_pressure_werror[1:]))==False:   ## self._pres_crust might be overkill (includes low, BPS and cEFT)
                 #print('oi')

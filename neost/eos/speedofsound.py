@@ -63,7 +63,7 @@ class SpeedofSoundEoS(BaseEoS):
 
     """
 
-    def __init__(self, crust, rho_t, filename_n2lo='Goettling_N2LO_e.txt', filename_n3lo='Goettling_N3LO_e.txt', adm_type = 'None', dm_halo = False, two_fluid_tidal = False):
+    def __init__(self, crust, rho_t, filename_n2lo='new_Goettling_N2LO_e.txt', filename_n3lo='new_Goettling_N3LO_e.txt', adm_type = 'None', dm_halo = False, two_fluid_tidal = False):
 
         super(SpeedofSoundEoS, self).__init__(filename_n2lo, filename_n3lo, crust, rho_t)
 
@@ -291,16 +291,13 @@ class SpeedofSoundEoS(BaseEoS):
             check = False
         if rising.size != 0 and falling.size != 0 and rising[0] < falling[0]:
             check = False
-            
-        ### we could build another check_constraints function in base.py, just for the crust with normal distribution of cEFT, but we won't now
-        ### it could maybe speed up the sampling? we check later
-        
-        ### temporarily commenting it out for a check
-        #if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
-        #    if all(x<=y for x, y in zip(self.ceft_pressure_werror, self.ceft_pressure_werror[1:]))==False:   ## self._pres_crust might be overkill (includes low, BPS and cEFT)
+                
+        ### probably unnecessary now
+        if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
+            if all(x<=y for x, y in zip(self.ceft_pressure_werror, self.ceft_pressure_werror[1:]))==False:   ## self._pres_crust might be overkill (includes low, BPS and cEFT)
                 #print('oi')
-        #        check = False
-        #    else:
-        #        check = True     
+                check = False
+            else:
+                check = True     
 
         return check

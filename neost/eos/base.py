@@ -50,7 +50,7 @@ class BaseEoS():
         Plot the mass-radius curve of the equation of state.
 
     """
-    def __init__(self, filename_n2lo="Goettling_N2LO_e.txt", filename_n3lo="Goettling_N3LO_e.txt", crust='ceft-Hebeler', rho_t=2e14):  
+    def __init__(self, filename_n2lo="new_Goettling_N2LO_e.txt", filename_n3lo="new_Goettling_N3LO_e.txt", crust='ceft-Hebeler', rho_t=2e14):  
         if crust not in ['ceft-Hebeler', 'ceft-Drischler', 'ceft-Lynn',
                          'ceft-Tews', 'ceft-Keller-N2LO', 'ceft-Keller-N3LO', 'ceft-old', 'ceft-Goettling-N2LO', 
                          'ceft-Goettling-N3LO', 'BPS', None]:
@@ -117,19 +117,19 @@ class BaseEoS():
                     self._rho_end_BPS = 0.5
 
                 if crust == 'ceft-Goettling-N2LO':
-                    self.min_norm = 0.0
+                    self.min_norm = 0.02357223574914916
                     self.max_norm = 1.0
-                    self.min_index = 0.0
+                    self.min_index = 0.0        #check how this is related to norm
                     self.max_index = 1.0
                     self._rho_start_ceft = 0.6  #temp some random number, it won't actually be used
                     self._rho_end_BPS = 0.5
                     self.filename = filename_n2lo
 
-                if crust == 'ceft-Goettling-N3LO':
-                    self.min_norm = 0.0
+                if crust == 'ceft-Goettling-N3LO':          ### now filtering out before it goes to multinest sampling
+                    self.min_norm = 0.01130384423855279
                     self.max_norm = 1.0
-                    self.min_index = 0.0
-                    self.max_index = 1.0
+                    #self.min_index = 0.0
+                    #self.max_index = 1.0
                     self._rho_start_ceft = 0.6  #temp some random number, it won't actually be used
                     self._rho_end_BPS = 0.5
                     self.filename = filename_n3lo
@@ -275,9 +275,10 @@ class BaseEoS():
 
     #Crust for Goettling chiral EFT EOS
     def get_eos_crust_GP(self):
-        #current_path = os.path.dirname(__file__)
+        path = os.path.dirname(__file__)  ##current path
+        #print(path)
         #print(self.rho_t)
-        path = '/work/home/mm12wyxy/neost-multicore/secretneost/neost'
+        #path = '/work/home/mm12wyxy/neost-multicore/secretneost/neost'
 
         if self.crust == 'ceft-Goettling-N2LO':  #bc if this function is called, it's one of these two anyways
             #path_filename=current_path+'/'+self.filename

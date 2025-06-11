@@ -24,12 +24,13 @@ class Prior():
         self.standard_normal_ceft = standard_normal_ceft # Transform ceft parameter to N(0,1)?
         self.standard_normal = norm() # Only used if standard_normal_ceft is True
 
-        if standard_normal_ceft:
-            # The transform only works correctly if ceft is from U(0,1)
-            tmp = variable_params.get('ceft')
-            ceft_min = tmp[0]
-            ceft_max = tmp[1]
-            assert(ceft_min == 0 and ceft_max == 1)
+        ## due to filtering out unphysical eos values, the min value runs above 0 now
+        #if standard_normal_ceft:
+        #    # The transform only works correctly if ceft is from U(0,1)
+        #    tmp = variable_params.get('ceft')
+        #    ceft_min = tmp[0]
+        #    ceft_max = tmp[1]
+        #    assert(ceft_min == 0 and ceft_max == 1)
 
     def inverse_sample(self, hypercube):
         hypercube = {e:hypercube[i] for i, e in
@@ -95,7 +96,7 @@ class Prior():
                     logminedsc = np.log10(logminedsc)
                     logmaxedsc = np.log10(logmaxedsc)
                     pr.update({'rhoc_' + str(i + 1):hypercube['rhoc_' + str(i + 1)] * (logmaxedsc - logminedsc) + logminedsc})
-               except:
+                except:
                     print(list(pr.values()))
         self.MRT = self.EOS.massradius
         self.max_edsc = self.EOS.max_edsc
