@@ -76,7 +76,7 @@ def get_quantiles(array, quantiles=[0.025, 0.5, 0.975]):
         plus = high - median
         return np.round(median,2),np.round(plus,2),np.round(minus,2)
 
-def compute_table_data(root_name, EOS, variable_params, static_params,dm = False):
+def compute_table_data(path, EOS, variable_params, static_params, dm=False, sampler='multinest', identifier=''):
     """
     Function to compute the table data in Raaijmakers et al. 2021 & Rutherford et al. 2024.
     In particular: M_TOV, R_TOV, eps_cent_TOV, rho_cent_TOV, P_cent_TOV, R_1.4, eps_cent_1.4, rho_cent_1.4, P_cent_1.4,
@@ -86,8 +86,8 @@ def compute_table_data(root_name, EOS, variable_params, static_params,dm = False
     Parameters
     ----------
 
-    root_name: str
-        Name of the inference run to refer back to. Used to get the Multinest outputs.
+    path: str
+        The path to where the sampler output is stored.
 
     EOS: obj
         equation of state object initialized in the inference script, i.e., the parameters that are sampled during inferencing.
@@ -101,179 +101,213 @@ def compute_table_data(root_name, EOS, variable_params, static_params,dm = False
     dm: bool
         If True ADM is included when computing the table data.
 
+    sampler: str
+        The sampler used, either 'multinest' or 'ultranest'.
+
+    identifier: str
+        The name given to the sampling. So the sampler output would be called something like <path>/<identifier>post_equal_weights.dat.
+        Only used with Multinest, ignored for Ultranest.
 
     """
-    ewposterior = np.loadtxt(root_name + 'post_equal_weights.dat')
-    num_samples = len(ewposterior)
-    print("Total number of samples is %d" %(num_samples))
+    # Set up some MPI things
+    comm = MPI.COMM_WORLD
+    mpi_rank = comm.Get_rank() # The rank of the current MPI process
+
+    # File name for the table data
+    fname = f'{path}/{identifier}table_data.txt'
+
     try:
-        Data_array = np.loadtxt(root_name + 'table_data.txt')
-        print('M_TOV: ', get_quantiles(Data_array[:,0]))
-        print('R_TOV: ', get_quantiles(Data_array[:,1]))
-        print('eps_cent TOV: ', get_quantiles(Data_array[:,2]))
-        print('rho_cent TOV: ', get_quantiles(Data_array[:,3]))
-        print('P_cent TOV: ', get_quantiles(Data_array[:,4]))
-        print('R_1.4: ', get_quantiles(Data_array[:,5]))
-        print('eps_cent 1.4: ', get_quantiles(Data_array[:,6]))
-        print('rho_cent 1.4: ', get_quantiles(Data_array[:,7]))
-        print('P_cent 1.4: ', get_quantiles(Data_array[:,8]))
-        print('R_2.0: ', get_quantiles(Data_array[:,9]))
-        print('eps_cent 2.0: ', get_quantiles(Data_array[:,10]))
-        print('rho_cent 2.0: ', get_quantiles(Data_array[:,11]))
-        print('P_cent 2.0: ', get_quantiles(Data_array[:,12]))
-        print('Delta R = R_2.0 - R_1.4: ', get_quantiles(Data_array[:,9] - Data_array[:,5]))
+        # If the table data already exists, just read it and print it and return
+        data_array = np.loadtxt(fname)
+        if mpi_rank == 0:
+            print(f'Reading and printing data from {fname}')
+            print_table_data(data_array)
+            return
+        else:
+            return
     except OSError:
-        Data_array = np.zeros((num_samples,13)) #contains Mtov, Rtov, eps_cent TOV, rho_cent TOV, P_cent TOV,R 1.4, eps_cent 1.4, rho_cent 1.4,
-                                                                #P_cent 1.4, R 2.0, eps_cent 2.0, rho_cent 2.0, P_cent 2.0
-                                                                #NOTE: ALL VALUES ARE THEIR ADMIXED VERSIONS WHEN dm == True!!
+        pass
 
+    # File does not exist, do the calculations
+    # More MPI stuff
+    num_processes = comm.Get_size() # Number of MPI processes
+    samples = None # This is essentially a rearranged 'equal_weighted_samples'
+    num_samples = None
 
+    if mpi_rank == 0:
+        equal_weighted_samples = load_equal_weighted_samples(path, sampler, identifier)
+        num_samples = len(equal_weighted_samples)
+        print(f'Total number of samples is {num_samples}')
+        samples = recast_equal_weighted_samples_for_mpi(equal_weighted_samples, num_processes)
+        print_samples_per_core(samples)
 
-        for i in range(0, num_samples, 1):
-            pr = ewposterior[i][0:len(variable_params)]
-            par = {e:pr[j] for j, e in enumerate(list(variable_params.keys()))}
-            par.update(static_params)
-            EOS.update(par, max_edsc=True)
+    # Spread the samples across MPI processes
+    samples = comm.scatter(samples, root=0)
 
-            edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0)
-            eps = np.logspace(14.4, np.log10(EOS.max_edsc), 40)
-            M = np.zeros(len(eps))
-            R = np.zeros(len(eps))
+    # Compute table data in each process
+    data_array = _compute_table_data_thread(samples, EOS, variable_params, static_params, dm, mpi_rank)
 
-            if dm == False:
-                max_rhoc = edsrho(EOS.max_edsc) / rho_ns #division by rho_ns gives max_rhoc in terms of n_c/n_0 as mass density and number density only differ by a factor the mass of baryon, which is canceled out in this fraction
-                for j, e in enumerate(eps):
-                    star = Star(e)
-                    star.solve_structure(EOS.energydensities, EOS.pressures)
-                    M[j] = star.Mrot
-                    R[j] = star.Req
+    # Gather the results from the different processes
+    data_array = comm.gather(data_array, root=0)
 
-                M, indices = np.unique(M, return_index=True)
-                MR = UnivariateSpline(M, R[indices], k=1, s=0, ext=1)
-                epsM = UnivariateSpline(M, eps[indices], k=1, s=0,ext = 1)
+    if mpi_rank == 0:
+        # Return the array to the expected shape (num_samples, 13)
+        data_array = np.concatenate(data_array, axis=0)
+        assert(data_array.shape == (num_samples, 13))
 
-                R_14 = MR(1.4)
-                if R_14 == 0:
-                    R_14 = np.nan # set to be nan so they don't impact the quantiles b/c we are using np.nanquantiles
-                    eps_14 = np.nan
-                    rho_14 = np.nan
-                    pres_14 = np.nan
-                else:
-                    eps_14 = epsM(1.4)
-                    rho_14 = edsrho(eps_14) / rho_ns + edsrhodm()
-                    pres_14 = EOS.eos(eps_14)
+        # Save and print
+        np.savetxt(fname, data_array)
+        print_table_data(data_array)
 
-                R_2 = MR(2.0)
-                if R_2 == 0:
-                    R_2 = np.nan # see above for reasoning
-                    eps_2 = np.nan
-                    rho_2 = np.nan
-                    pres_2 = np.nan # see above for reasoning
-                else:
-                    eps_2 = epsM(2.0)
-                    rho_2 = edsrho(eps_2) / rho_ns
-                    pres_2 = EOS.eos(eps_2)
+def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm, thread_number):
+    '''
+    Here the calculations of table data is done.
+    Reading/writing of files and parallelization is done by compute_table_data(),
+    this function just calculates and returns. Not meant to be called manually.
+    '''
+    num_samples = len(samples)
+    print(f'MPI-process {thread_number} is computing table data for {num_samples} samples ...')
 
-                row = [EOS.max_M, EOS.Radius_max_M, np.log10(EOS.max_edsc), max_rhoc, np.log10(EOS.eos(EOS.max_edsc)),R_14, np.log10(eps_14), rho_14, np.log10(pres_14),R_2, np.log10(eps_2), rho_2, np.log10(pres_2)]
+    # Contains Mtov, Rtov, eps_cent TOV, rho_cent TOV, P_cent TOV,R 1.4, eps_cent 1.4, rho_cent 1.4, P_cent 1.4, R 2.0, eps_cent 2.0, rho_cent 2.0, P_cent 2.0.
+    # NOTE: ALL VALUES ARE THEIR ADMIXED VERSIONS WHEN dm == True!!
+    data_array = np.zeros((num_samples,13))
 
+    for i in range(0, num_samples):
+        pr = samples[i][0:len(variable_params)]
+        par = {e:pr[j] for j, e in enumerate(list(variable_params.keys()))}
+        par.update(static_params)
+        EOS.update(par, max_edsc=True)
+
+        edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0)
+        eps = np.logspace(14.4, np.log10(EOS.max_edsc), 40)
+        M = np.zeros(len(eps))
+        R = np.zeros(len(eps))
+
+        if not dm:
+            max_rhoc = edsrho(EOS.max_edsc) / rho_ns #division by rho_ns gives max_rhoc in terms of n_c/n_0 as mass density and number density only differ by a factor the mass of baryon, which is canceled out in this fraction
+            for j, e in enumerate(eps):
+                star = Star(e)
+                star.solve_structure(EOS.energydensities, EOS.pressures)
+                M[j] = star.Mrot
+                R[j] = star.Req
+
+            M, indices = np.unique(M, return_index=True)
+            MR = UnivariateSpline(M, R[indices], k=1, s=0, ext=1)
+            epsM = UnivariateSpline(M, eps[indices], k=1, s=0,ext = 1)
+
+            R_14 = MR(1.4)
+            if R_14 == 0:
+                R_14 = np.nan # set to be nan so they don't impact the quantiles b/c we are using np.nanquantiles
+                eps_14 = np.nan
+                rho_14 = np.nan
+                pres_14 = np.nan
             else:
-                edsrho_dm = UnivariateSpline(EOS.energydensities_dm, EOS.massdensities_dm, k=1, s=0, ext = 1)
+                eps_14 = epsM(1.4)
+                rho_14 = edsrho(eps_14) / rho_ns + edsrhodm()
+                pres_14 = EOS.eos(eps_14)
 
-                epsdm_max = EOS.find_epsdm_cent(EOS.adm_fraction, EOS.max_edsc)
-                max_rhocdm = edsrho_dm(epsdm_max) / rho_ns
-                max_rhocb = edsrho(EOS.max_edsc) / rho_ns
-                max_rhoc = max_rhocb + max_rhocdm
+            R_2 = MR(2.0)
+            if R_2 == 0:
+                R_2 = np.nan # see above for reasoning
+                eps_2 = np.nan
+                rho_2 = np.nan
+                pres_2 = np.nan # see above for reasoning
+            else:
+                eps_2 = epsM(2.0)
+                rho_2 = edsrho(eps_2) / rho_ns
+                pres_2 = EOS.eos(eps_2)
 
-                epsdm = np.zeros(len(eps))
-                Rdm = np.zeros(len(eps))
-                Mdm = np.zeros(len(eps))
+            # Construct a row of data_array
+            row = [EOS.max_M, EOS.Radius_max_M, np.log10(EOS.max_edsc), max_rhoc, np.log10(EOS.eos(EOS.max_edsc)),R_14, np.log10(eps_14), rho_14, np.log10(pres_14),R_2, np.log10(eps_2), rho_2, np.log10(pres_2)]
 
+        else:
+            edsrho_dm = UnivariateSpline(EOS.energydensities_dm, EOS.massdensities_dm, k=1, s=0, ext = 1)
+            epsdm_max = EOS.find_epsdm_cent(EOS.adm_fraction, EOS.max_edsc)
+            max_rhocdm = edsrho_dm(epsdm_max) / rho_ns
+            max_rhocb = edsrho(EOS.max_edsc) / rho_ns
+            max_rhoc = max_rhocb + max_rhocdm
 
-                for j, e in enumerate(eps):
-                    epsdm_cent = EOS.find_epsdm_cent(EOS.adm_fraction,eps)
-                    epsdm[i] = epsdm_cent
-                    star = Star(e,epsdm_cent)
-                    star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo) #EOS.two_fluid_tidal not needed in this section since only MR
-                                                                                                                                    #so default value is used (False).
-                    M[j] = star.Mrot
-                    R[j] = star.Req
-                    Rdm[j] = star.Rdm
-                    Mdm[j] = star.Mdm
+            epsdm = np.zeros(len(eps))
+            Rdm = np.zeros(len(eps))
+            Mdm = np.zeros(len(eps))
 
-                M, indices = np.unique(M, return_index=True)
-                index_max_M = np.argmax(M[indices])
-                Radius_max_M = R[index_max_M]
+            for j, e in enumerate(eps):
+                epsdm_cent = EOS.find_epsdm_cent(EOS.adm_fraction,eps)
+                epsdm[i] = epsdm_cent
+                star = Star(e,epsdm_cent)
+                star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo) # EOS.two_fluid_tidal not needed in this section since only MR, so default value is used (False).
+                M[j] = star.Mrot
+                R[j] = star.Req
+                Rdm[j] = star.Rdm
+                Mdm[j] = star.Mdm
 
+            M, indices = np.unique(M, return_index=True)
+            index_max_M = np.argmax(M[indices])
+            Radius_max_M = R[index_max_M]
 
-                MR = UnivariateSpline(M, R[indices], k=1, s=0, ext=1)
-                epsdm_Mdm = UnivariateSpline(Mdm[indicies], epsdm[indices], k=1, s=0, ext=1)
+            MR = UnivariateSpline(M, R[indices], k=1, s=0, ext=1)
+            epsdm_Mdm = UnivariateSpline(Mdm[indicies], epsdm[indices], k=1, s=0, ext=1)
+            eps_total = eps + epsdm
+            epsM = UnivariateSpline(M, eps_total[indices], k=1, s=0,ext = 1)
+            eos_dm = UnivariateSpline(EOS.energydensities_dm, EOS.pressures_dm, k=1, s=0,ext = 1)
 
-                eps_total = eps + epsdm
-                epsM = UnivariateSpline(M, eps_total[indices], k=1, s=0,ext = 1)
+            R_14 = MR(1.4)
+            if R_14 == 0:
+                R_14 = np.nan # set to be nan so they don't impact the quantiles b/c we are using np.nanquantiles
+                eps_14 = np.nan
+                rho_14 = np.nan
+                pres_14 = np.nan
+            else:
+                eps_14 = epsM(1.4)
+                M_chi = EOS.adm_fraction/100*1.4 #F_chi = M_chi/M_total*100
+                epsdm_14 = epsdm_Mdm(M_chi)
+                epsb_14 = eps_14 - epsdm_14
+                rho_14 = edsrho(epsb_14) / rho_ns + edsrho_dm(epsdm_14) / rho_ns
+                pres_14 = EOS.eos(epsb_14) + eos_dm(epsdm_14)
 
-                eos_dm = UnivariateSpline(EOS.energydensities_dm, EOS.pressures_dm, k=1, s=0,ext = 1)
+            R_2 = MR(2.0)
+            if R_2 == 0:
+                R_2 = np.nan # see above for reasoning
+                eps_2 = np.nan
+                rho_2 = np.nan
+                pres_2 = np.nan # see above for reasoning
+            else:
+                M_chi = EOS.adm_fraction/100*2.0 #F_chi = M_chi/M_total*100 ---> M_chi = F_chi/100*M_total
+                epsdm_2 = epsdm_Mdm(M_chi)
+                epsb_2 = eps_2 - epsdm_2
+                rho_2 = edsrho(epsb_2) / rho_ns + edsrho_dm(epsdm_2) / rho_ns
+                pres_2 = EOS.eos(epsb_2) + eos_dm(epsdm_2)
 
-                R_14 = MR(1.4)
-                if R_14 == 0:
-                    R_14 = np.nan # set to be nan so they don't impact the quantiles b/c we are using np.nanquantiles
-                    eps_14 = np.nan
-                    rho_14 = np.nan
-                    pres_14 = np.nan
-                else:
-                    eps_14 = epsM(1.4)
-                    M_chi = EOS.adm_fraction/100*1.4 #F_chi = M_chi/M_total*100
-                    epsdm_14 = epsdm_Mdm(M_chi)
-                    epsb_14 = eps_14 - epsdm_14
+            # Construct a row of data_array
+            row = [max(M), Radius_max_M, np.log10(EOS.max_edsc + epsdm_max), max_rhoc, np.log10(EOS.eos(EOS.max_edsc) + eos_dm(epsdm_max)),R_14, np.log10(eps_14), rho_14, np.log10(pres_14),R_2, np.log10(eps_2), rho_2, np.log10(pres_2)]
 
-                    rho_14 = edsrho(epsb_14) / rho_ns + edsrho_dm(epsdm_14) / rho_ns
+        for k in range(len(row)):
+            # Some of the values in row may be arrays of shape (1,),
+            # which causes the line "data_array[i] = row" to fail for np > 1.23.5.
+            # Some values are ndarrays with shape () which is fine, so check for that.
+            # If the value is an array and doesn't have the shape (),
+            # then check that its shape is indeed (1,) and extract the value.
+            if hasattr(row[k], "shape") and row[k].shape != ():
+                assert(row[k].shape == (1,))
+                row[k] = row[k][0]
+        data_array[i,:] = row
+    return data_array
 
-                    pres_14 = EOS.eos(epsb_14) + eos_dm(epsdm_14)
-
-                R_2 = MR(2.0)
-                if R_2 == 0:
-                    R_2 = np.nan # see above for reasoning
-                    eps_2 = np.nan
-                    rho_2 = np.nan
-                    pres_2 = np.nan # see above for reasoning
-                else:
-                    M_chi = EOS.adm_fraction/100*2.0 #F_chi = M_chi/M_total*100 ---> M_chi = F_chi/100*M_total
-                    epsdm_2 = epsdm_Mdm(M_chi)
-                    epsb_2 = eps_2 - epsdm_2
-
-                    rho_2 = edsrho(epsb_2) / rho_ns + edsrho_dm(epsdm_2) / rho_ns
-
-                    pres_2 = EOS.eos(epsb_2) + eos_dm(epsdm_2)
-
-
-                row = [max(M), Radius_max_M, np.log10(EOS.max_edsc + epsdm_max), max_rhoc, np.log10(EOS.eos(EOS.max_edsc) + eos_dm(epsdm_max)),R_14, np.log10(eps_14), rho_14, np.log10(pres_14),R_2, np.log10(eps_2), rho_2, np.log10(pres_2)]
-
-
-            for k in range(len(row)):
-                # Some of the values in row may be arrays of shape (1,),
-                # which causes the line "Data_array[i] = row" to fail for np > 1.23.5.
-                # Some values are ndarrays with shape () which is fine, so check for that.
-                # If the value is an array and doesn't have the shape (),
-                # then check that its shape is indeed (1,) and extract the value.
-                if hasattr(row[k], "shape") and row[k].shape != ():
-                    assert(row[k].shape == (1,))
-                    row[k] = row[k][0]
-            Data_array[i,:] = row
-        # save everything
-        np.savetxt(root_name + 'table_data.txt', Data_array)
-        print('M_TOV: ', get_quantiles(Data_array[:,0]))
-        print('R_TOV: ', get_quantiles(Data_array[:,1]))
-        print('eps_cent TOV: ', get_quantiles(Data_array[:,2]))
-        print('rho_cent TOV: ', get_quantiles(Data_array[:,3]))
-        print('P_cent TOV: ', get_quantiles(Data_array[:,4]))
-        print('R_1.4: ', get_quantiles(Data_array[:,5]))
-        print('eps_cent 1.4: ', get_quantiles(Data_array[:,6]))
-        print('rho_cent 1.4: ', get_quantiles(Data_array[:,7]))
-        print('P_cent 1.4: ', get_quantiles(Data_array[:,8]))
-        print('R_2.0: ', get_quantiles(Data_array[:,9]))
-        print('eps_cent 2.0: ', get_quantiles(Data_array[:,10]))
-        print('rho_cent 2.0: ', get_quantiles(Data_array[:,11]))
-        print('P_cent 2.0: ', get_quantiles(Data_array[:,12]))
-        print('Delta R = R_2.0 - R_1.4: ', get_quantiles(Data_array[:,9] - Data_array[:,5]))
+def print_table_data(data_array):
+    print('M_TOV: ', get_quantiles(data_array[:,0]))
+    print('R_TOV: ', get_quantiles(data_array[:,1]))
+    print('eps_cent TOV: ', get_quantiles(data_array[:,2]))
+    print('rho_cent TOV: ', get_quantiles(data_array[:,3]))
+    print('P_cent TOV: ', get_quantiles(data_array[:,4]))
+    print('R_1.4: ', get_quantiles(data_array[:,5]))
+    print('eps_cent 1.4: ', get_quantiles(data_array[:,6]))
+    print('rho_cent 1.4: ', get_quantiles(data_array[:,7]))
+    print('P_cent 1.4: ', get_quantiles(data_array[:,8]))
+    print('R_2.0: ', get_quantiles(data_array[:,9]))
+    print('eps_cent 2.0: ', get_quantiles(data_array[:,10]))
+    print('rho_cent 2.0: ', get_quantiles(data_array[:,11]))
+    print('P_cent 2.0: ', get_quantiles(data_array[:,12]))
+    print('Delta R = R_2.0 - R_1.4: ', get_quantiles(data_array[:,9] - data_array[:,5]))
 
 def load_equal_weighted_samples(path, sampler, identifier):
     # For Multinest, 'path' is the directory containing all the output files.
