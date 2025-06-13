@@ -341,6 +341,7 @@ def print_samples_per_core(samples):
     print()
 
 def recast_equal_weighted_samples_for_mpi(equal_weighted_samples, num_processes):
+    num_samples = len(equal_weighted_samples)
     samples = [[] for i in range(num_processes)]
     samples_per_core = int(np.ceil(num_samples / num_processes))
     for current_core in range(num_processes):
