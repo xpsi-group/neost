@@ -306,6 +306,17 @@ def print_samples_per_core(samples):
         print(len(a), end=' ')
     print()
 
+def recast_equal_weighted_samples_for_mpi(equal_weighted_samples, num_processes):
+    samples = [[] for i in range(num_processes)]
+    samples_per_core = int(np.ceil(num_samples / num_processes))
+    for current_core in range(num_processes):
+        for i in range(samples_per_core):
+            idx = current_core*samples_per_core + i
+            if idx >= num_samples:
+                break
+            samples[current_core].append(equal_weighted_samples[idx])
+    return samples
+
 def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_masses, dm=False, sampler='multinest', identifier=''):
     """
     Function to compute the posterior auxiliary data used to generate standard NEoST plots, such as, the pressures, (if dm = True)
@@ -345,8 +356,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
     comm = MPI.COMM_WORLD
     mpi_rank = comm.Get_rank() # The rank of the current MPI process
     num_processes = comm.Get_size() # Number of MPI processes
-    samples = [[] for i in range(num_processes)] # This is essentially a rearranged 'equal_weighted_samples'
-    num_samples = None
+    samples = None # This is essentially a rearranged 'equal_weighted_samples'
 
     # Get number of stars and set 'eos_is_fixed' that avoids unneeded calculations
     num_stars = len(np.array([v for k,v in variable_params.items() if 'rhoc' in k]))
@@ -359,18 +369,12 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
         print(f"Total number of samples is {num_samples}, and the number of stars is {num_stars}")
 
         # Recast equal_weighted_samples in a form suitable for MPI scatter
-        samples_per_core = int(np.ceil(num_samples / num_processes))
-        for current_core in range(num_processes):
-            for i in range(samples_per_core):
-                idx = current_core*samples_per_core + i
-                if idx >= num_samples:
-                    break
-                samples[current_core].append(equal_weighted_samples[idx])
+        samples = recast_equal_weighted_samples_for_mpi(equal_weighted_samples, num_processes)
         print_samples_per_core(samples)
 
     # Scatter samples to the different processes and compute
     samples = comm.scatter(samples, root=0)
-    results, num_grid_points = _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params, chirp_masses, dm, eos_is_fixed, mpi_rank)
+    results = _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params, chirp_masses, dm, eos_is_fixed, mpi_rank)
 
     # Gather
     results = comm.gather(results, root=0)
@@ -435,7 +439,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
     this function just calculates and returns. Not meant to be called manually.
     '''
     num_samples = len(samples)
-    print(f'MPI-process {thread_number} is processing {num_samples} samples ...')
+    print(f'MPI-process {thread_number} is computing auxiliary data for {num_samples} samples ...')
 
     # Grids
     # More points are added to account for larger energy density spread from ADM
@@ -624,7 +628,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
         return_values['pressures_dm'] = pressures_dm
         return_values['energydensities_b'] = energydensities_b
         return_values['energydensities_dm'] = energydensities_dm
-    return return_values, num_grid_points
+    return return_values
 
 def cornerplot(root_name, variable_params, dm = False): #Add ADM functionality
     ewposterior = np.loadtxt(root_name + 'post_equal_weights.dat')
