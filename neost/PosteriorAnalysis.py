@@ -104,7 +104,8 @@ def compute_table_data(root_name, EOS, variable_params, static_params,dm = False
 
     """
     ewposterior = np.loadtxt(root_name + 'post_equal_weights.dat')
-    num_samples = num_samples
+    #equal_weighted_samples = load_equal_weighted_samples(path, sampler, identifier)
+    num_samples = len(ewposterior)
     print("Total number of samples is %d" %(num_samples))
     try:
         Data_array = np.loadtxt(root_name + 'table_data.txt')
@@ -160,7 +161,7 @@ def compute_table_data(root_name, EOS, variable_params, static_params,dm = False
                     pres_14 = np.nan
                 else:
                     eps_14 = epsM(1.4)
-                    rho_14 = edsrho(eps_14) / rho_ns + edsrhodm()
+                    rho_14 = edsrho(eps_14) / rho_ns
                     pres_14 = EOS.eos(eps_14)
 
                 R_2 = MR(2.0)
