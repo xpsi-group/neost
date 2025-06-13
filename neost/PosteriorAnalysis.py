@@ -329,10 +329,6 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
     path: str
         The path to where the sampler output is stored.
 
-    identifier: str
-        The name given to the sampling. So the sampler output would be called something like <path>/<identifier>post_equal_weights.dat.
-        Only used with Multinest, ignored for Ultranest.
-
     EOS: obj
         equation of state object initialized in the inference script, i.e., the parameters that are sampled during inferencing.
 
@@ -350,6 +346,10 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
 
     sampler: str
         The sampler used, either 'multinest' or 'ultranest'.
+
+    identifier: str
+        The name given to the sampling. So the sampler output would be called something like <path>/<identifier>post_equal_weights.dat.
+        Only used with Multinest, ignored for Ultranest.
 
     """
     # Set up some MPI things
