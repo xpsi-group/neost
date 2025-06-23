@@ -6,7 +6,10 @@ Publications
 NEoST has been applied in the following studies. If you have used NEoST for a project and would like to link it here, please contact the NEoST team and/or submit a pull-request on GitHub.  In particular, NEoST has been used extensively with masses and radii inferred from NICER data of rotation-powered millisecond pulsars by the `X-PSI team <https://xpsi-group.github.io/xpsi/index.html>`.
 
 
-***Rutherford et al. 2024** `(Physical Review D, submitted) <https://ui.adsabs.harvard.edu/abs/2024arXiv241000140R/abstract>`_ *Probing fermionic asymmetric dark matter cores using global neutron star properties*
+***Rutherford et al. 2025** `(Physical Review D, 111, 123034) <https://doi.org/10.1103/PhysRevD.111.123034>`_ *Probing fermionic asymmetric dark matter cores using global neutron star properties*. See also the associated `Zenodo repository`__.
+
+.. _Zenodo25: https://doi.org/10.5281/zenodo.15237251
+__ Zenodo25_
 
 **Rutherford et al. 2024** `(ApJ Letters, 971, L19) <https://iopscience.iop.org/article/10.3847/2041-8213/ad5f02>`_ *Constraining the dense matter equation of state with new NICER mass-radius measurements and new chiral effective field theory inputs*. See also the associated `Zenodo repository`__.
 
