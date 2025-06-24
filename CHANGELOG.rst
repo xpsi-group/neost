@@ -37,6 +37,16 @@ and this project adheres to
 ~~~~~~~~~~~~~~~~~~~~~
 Summary
 ^^^^^^^
+Changes to update publication list. 
+
+Added
+^^^^^
+* Updated the Rutherford, Prescod-Weinstein, and Watts 2024 Fermionic ADM paper to include publication information 
+
+[v2.1.0 - 2024-12-18]
+~~~~~~~~~~~~~~~~~~~~~
+Summary
+^^^^^^^
 Changes from JOSS review process. 
 
 Added
