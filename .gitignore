@@ -1,10 +1,7 @@
 NEoST.egg-info/
 build/
 dist/
-examples/chains/*
-examples/chains_example/*.png
-examples/chains_example/*.txt
-examples/chains_example/*.npy
+examples/chains
 *.c
 .DS_Store
 .DS_Store?
