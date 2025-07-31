@@ -492,7 +492,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
     if dm:
         # We can always specify these even if they're not used I think
         energydensities_b = np.logspace(14.2, 16, num_grid_points)
-        energydensities_dm = np.logspace(12, 18, num_grid_points)
+        energydensities_dm = np.logspace(10, 18, num_grid_points)
         energydensities = energydensities_b + energydensities_dm # Overwrite energydensities, length is the same
 
         pressures_dm = np.zeros((num_grid_points, num_samples))
