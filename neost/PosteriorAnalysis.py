@@ -682,7 +682,8 @@ def cornerplot(path, variable_params, dm=False, sampler='multinest', identifier=
 
     figure.savefig(f'{path}/{identifier}corner.png')
 
-def mass_radius_posterior_plot(root_name):
+def mass_radius_posterior_plot(path, identifier=''):
+    root_name = f'{path}/{identifier}'
     scatter = np.load(root_name + 'scattered.npy')
     figure, ax = plt.subplots(1,1, figsize=(9,6))
     M_max = 0.
