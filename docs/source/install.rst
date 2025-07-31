@@ -136,6 +136,12 @@ In case you want to edit NEoST, you can do a so-called editable install:
 
 .. code-block:: bash
 
+	make editable
+
+or, equivalently,
+
+.. code-block:: bash
+
 	pip install -e .
 
 This will immediately activate your edits without having to reinstall NEoST each time.
