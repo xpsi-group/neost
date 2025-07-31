@@ -24,7 +24,7 @@ You need pip in both cases. It is likely already installed. If not, follow the o
 Using pip
 ---------
 
-Two of NEoST's dependencies, GSL (GNU Scientific Library) and MultiNest, are not written in Python and are as such not available in the Python package index (PyPI). They need to be installed separately.
+Three of NEoST's dependencies (GSL (GNU Scientific Library), OpenMPI, and MultiNest) are not written in Python and are as such not available in the Python package index (PyPI). They need to be installed separately.
 
 GSL is widely available and can almost always be installed with your operating system's package manager, or loaded with something like ``module load gsl`` on a computing cluster.  Alternatively you can compile it yourself using the official instructions, see `Downloading GSL <https://www.gnu.org/software/gsl/#downloading>`_.
 
@@ -36,6 +36,12 @@ However you choose to obtain GSL, make sure it works by executing
 
 which should print the installed GSL version.
 
+OpenMPI is also widely available and you should be able to install it using your package manager or loading it with a module system. Make sure it works by executing
+
+.. code-block:: bash
+
+	mpiexec
+
 MultiNest, on the other hand, must likely be compiled manually. Follow these steps (which assume that you have ``git``, a ``C++`` compiler, ``cmake``, and ``make`` installed):
 
 .. code-block:: bash
@@ -44,6 +50,8 @@ MultiNest, on the other hand, must likely be compiled manually. Follow these ste
 	cd MultiNest/build
 	cmake ..
 	make
+
+This will likely fail due to a known issue. Apply the fix mentioned in the pull requests section on the MultiNest Github page. Additionally, if cmake fails with a version warning and gives you hints, try following these hints.
 
 You then need to add ``<path/to>/MultiNest/lib`` to an environment variable called ``LD_LIBRARY_PATH`` using
 
@@ -136,9 +144,27 @@ In case you want to edit NEoST, you can do a so-called editable install:
 
 .. code-block:: bash
 
+	make editable
+
+or, equivalently,
+
+.. code-block:: bash
+
 	pip install -e .
 
 This will immediately activate your edits without having to reinstall NEoST each time.
+
+To test that the installation works, use
+
+.. code-block:: bash
+
+	make test
+
+or equivalently
+
+.. code-block:: bash
+
+	pytest
 
 NEoST can optionally be installed without cythonizing the TOV solvers, at the expense of much slower performance. More specificaly, Cython offers a speed up of at least 15x (if dark matter is turned on) and 20x (if dark matter is turned off). If you wish to do this, rename or delete the ``setup.py`` file before running ``make install``. We only recommend using the Python TOV solvers if the cythonized solvers fail to compile or run.  Note that the unit tests in the ``tests/`` directory fail if the Python solvers are used; this is expected.
 
