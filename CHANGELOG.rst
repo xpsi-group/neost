@@ -33,6 +33,33 @@ and this project adheres to
 .. Attribution
 .. ^^^^^^^^^^^
 
+[v2.2.0 - 2025-07-31]
+~~~~~~~~~~~~~~~~~~~~~
+Summary
+^^^^^^^
+Support for multicore processing via MPI.
+
+Added
+^^^^^
+* MPI support in PosteriorAnalysis.py, both for compute_auxiliary_data() and compute_table_data().
+* Sampling the cEFT parameter from a standard normal distribution. Requires more work to actually be useful, this is a preparatory step
+* Editable install with "make editable"
+* Ultranest support for PosteriorAnalysis.py. Although sampling with Ultranest yields incorrect results, but at least the code runs.
+
+Changed
+^^^^^^^
+* Removed duplicate (and thus error-prone) version specification in neost/__init__.py. This file now reads version and author from pyproject.toml. The version and author information is available via neost.__version__ and neost.__author__.
+
+Fixed
+^^^^^
+* A Numpy ragged-arrays issue
+* Removed hard-coded limits for the cEFT parameter and replaced with the correct limits, read from the specification of the crust.
+
+
+Attribution
+^^^^^^^^^^^
+* NEoST core team
+
 [v2.1.0 - 2024-12-18]
 ~~~~~~~~~~~~~~~~~~~~~
 Summary
