@@ -49,37 +49,33 @@ Added
 Changed
 ^^^^^^^
 * Removed duplicate (and thus error-prone) version specification in neost/__init__.py. This file now reads version and author from pyproject.toml. The version and author information is available via neost.__version__ and neost.__author__.
+* Updated examples so that they work with the new PosteriorAnalysis.
 
 Fixed
 ^^^^^
 * A Numpy ragged-arrays issue
 * Removed hard-coded limits for the cEFT parameter and replaced with the correct limits, read from the specification of the crust.
 
+Removed
+^^^^^^^
+* PosteriorAnalysis.compute_prior_auxiliary_data()
 
 Attribution
 ^^^^^^^^^^^
 * NEoST core team
 
-[v2.1.0 - 2024-12-18]
-~~~~~~~~~~~~~~~~~~~~~
-Summary
-^^^^^^^
-Changes to update publication list. 
-
-Added
-^^^^^
-* Updated the Rutherford, Prescod-Weinstein, and Watts 2024 Fermionic ADM paper to include publication information 
 
 [v2.1.0 - 2024-12-18]
 ~~~~~~~~~~~~~~~~~~~~~
 Summary
 ^^^^^^^
-Changes from JOSS review process. 
+Changes from JOSS review process and to the publication list.
 
 Added
 ^^^^^
 * Notes for those attempting to compile and run on Mac M-series chips
 * Details of Cython vs Python speed-up
+* Updated the Rutherford, Prescod-Weinstein, and Watts 2024 Fermionic ADM paper to include publication information
 
 Changed
 ^^^^^^^
@@ -103,15 +99,15 @@ Summary
 Included the functionality of NEoST to allow for the possibility of fermionic or bosonic asymmetric dark matter (ADM) using the Nelson et al. 2018 ADM model.
 
 Added
-^^^^^ 
+^^^^^
 * Two-fluid TOV solver in both python and cython that allows for an additional ADM component in the GR stellar structure equations. (TOVdm.pyx and TOVdm_python.py)
 * Included the two-fluid tidal-deformability equations.
 * Prior and posterior examples which include the possibility of ADM
 * A simple tutorial showing how to compute the ADM admixed neutron star mass-radius and mass-tidal relations in NEoST.
-* ADM functionality in base.py with "fchi_calc" and "find_epsdm_cent" functions. 
+* ADM functionality in base.py with "fchi_calc" and "find_epsdm_cent" functions.
 * Calling functions in Star.py to access ADM mass and radius
 * ADM EOS in polytropes.py, speedofsound.py, and tablualted.py
-* ADM functionality in Likelihood.py with hard-cut offs included to eliminate non-physical parts of the ADM EOS parameter space. 
+* ADM functionality in Likelihood.py with hard-cut offs included to eliminate non-physical parts of the ADM EOS parameter space.
 * ADM functionality in PosteriorAnalysis.py
 * ADM sampling in Prior.py such that 'mchi' (ADM particle mass) and 'gchi_over_mphi' (effective ADM self-repulsion strength) are sampled log-uniformly.
 
