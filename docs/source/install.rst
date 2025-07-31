@@ -119,6 +119,7 @@ If this works you may proceed to the Installing NEoST instructions as normal. Ho
 
 Installing NEoST
 ================
+
 With the prerequisites out of the way, NEoST can now be installed. First navigate to the NEoST base directory, if you haven't done so already, and install NEoST with
 
 .. code-block:: bash
@@ -131,9 +132,15 @@ or, equivalently,
 
 	python -m pip install .
 
-NEoST can optionally be installed without cythonizing the TOV solvers, at the expense of much slower performance. More specificaly, Cython offers a speed up of at least 15x (if dark matter is turned on) and 20x (if dark matter is turned off). If you wish to do this, rename or delete the ``setup.py`` file before running ``make install``.  We only recommend using the Python TOV solvers if the cythonized solvers fail to compile or run.  Note that the unit tests in the ``tests/`` directory fail if the Python solvers are used; this is expected.
+In case you want to edit NEoST, you can do a so-called editable install:
 
+.. code-block:: bash
 
+	pip install -e .
+
+This will immediately activate your edits without having to reinstall NEoST each time.
+
+NEoST can optionally be installed without cythonizing the TOV solvers, at the expense of much slower performance. More specificaly, Cython offers a speed up of at least 15x (if dark matter is turned on) and 20x (if dark matter is turned off). If you wish to do this, rename or delete the ``setup.py`` file before running ``make install``. We only recommend using the Python TOV solvers if the cythonized solvers fail to compile or run.  Note that the unit tests in the ``tests/`` directory fail if the Python solvers are used; this is expected.
 
 
 Building the documentation

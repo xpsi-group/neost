@@ -149,8 +149,7 @@ class BaseEoS():
 
                 if (self.ceft_param < self.min_norm or
                         self.ceft_param > self.max_norm):
-                    raise TypeError('"ceft" variable should be either "None" \
-                                    or a float in the range [1.7, 2.76]')
+                    raise TypeError(f'"ceft" variable should be either "None" or a float in the range [{self.min_norm}, {self.max_norm}]')
                 self.get_eos_crust()
 
             else:
@@ -325,7 +324,17 @@ class BaseEoS():
         acausal = 1.
 
         if len(eds[cs > acausal]) != 0:
-            maximum = eds[np.where(eds == min(eds[cs > acausal]))[0] - 1]
+            # NEoST v1.0
+            #maximum = eds[np.where(eds == min(eds[cs > acausal]))[0] - 1] # NEoST v1.0
+
+            # Updated version to get rid of the numpy ragged arrays issue
+            tmp = np.where(eds == min(eds[cs > acausal]))[0] # The issue is that this is a tuple (of length 1), not a scalar
+            try:
+                assert(len(tmp) == 1)
+            except (AssertionError, ValueError):
+                raise ValueError('Inconsistency in BaseEoS.find_max_edsc(), possibly caused by this attempt to fix a numpy issue. You can try reverting to the earlier version (see right above where this message originates).')
+            idx = tmp[0] - 1
+            maximum = eds[idx] # End of updated version
 
             if np.log10(maximum) < min_edsc0: # g/cm^3
                 maximum = min_edsc0 + 0.01
