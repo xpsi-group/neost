@@ -26,6 +26,7 @@ rho_ns = global_imports._rhons
 
 # Define name for run
 run_name = "prior-hebeler-pp-bosonic-adm-"
+directory = 'chains'
 
 # We're exploring a polytropic (P) EoS parametrization with a chiral effective field theory (CEFT) parametrization based on Hebeler's work
 # Transition between CS parametrisation and CEFT parametrization occurs at 1.1*saturation density
@@ -72,32 +73,14 @@ print("Bounds of prior are")
 print(variable_params)
 print("number of parameters is %d" %len(variable_params))
 
-
-
-# No prior & likelihood test, there is no likelihood after all
-# print("Testing prior and likelihood")
-# cube = np.random.rand(50, len(variable_params))
-# for i in range(len(cube)):
-#     par = prior.inverse_sample(cube[i])
-#     print(likelihood.call(par))
-# print("Testing done")
-
 # Then we start the sampling, note the greatly increased number of livepoints, this is required because each livepoint terminates after 1 iteration
 start = time.time()
 result = solve(LogLikelihood=likelihood.loglike_prior, Prior=prior.inverse_sample, n_live_points=15000, evidence_tolerance=0.1,
-               n_dims=len(variable_params), sampling_efficiency=0.8, outputfiles_basename='chains/' + run_name, verbose=True, resume = True)
+               n_dims=len(variable_params), sampling_efficiency=0.8, outputfiles_basename=f'{directory}/{run_name}', verbose=True, resume=False)
 end = time.time()
 print(end - start)
 
 # Compute auxiliary data for posterior analysis
-PosteriorAnalysis.cornerplot('chains/' + run_name, variable_params, dm = True)
-
-#PosteriorAnalysis.compute_prior_auxiliary_data('chains/' + run_name, polytropes_pp,
-#                                         variable_params, static_params,dm = True)
-
-
-# Make some analysis plots
-#PosteriorAnalysis.cornerplot('chains/' + run_name, variable_params, dm = True)
-#PosteriorAnalysis.mass_radius_posterior_plot('chains/' + run_name, dm = True)
-#PosteriorAnalysis.mass_radius_prior_predictive_plot('chains/' + run_name,variable_params, label_name='+ J0740 dataset', dm = True)
-#PosteriorAnalysis.eos_posterior_plot('chains/' + run_name,variable_params)
+PosteriorAnalysis.compute_auxiliary_data(directory, polytropes_pp, variable_params, static_params, chirp_mass, dm=True, identifier=run_name)
+PosteriorAnalysis.cornerplot(directory, variable_params, dm=True, identifier=run_name)
+PosteriorAnalysis.eos_posterior_plot(directory, variable_params, identifier=run_name)

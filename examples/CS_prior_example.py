@@ -75,12 +75,11 @@ end = time.time()
 print(end - start)
 
 # Compute auxiliary data for posterior analysis
-PosteriorAnalysis.compute_auxiliary_data(directory, speedofsound_cs,
-                                         variable_params, static_params, chirp_mass, identifier=run_name)
+PosteriorAnalysis.compute_auxiliary_data(directory, speedofsound_cs, variable_params, static_params, chirp_mass, identifier=run_name)
 
 
 # Make some analysis plots
 PosteriorAnalysis.cornerplot(directory, variable_params, identifier=run_name)
 PosteriorAnalysis.mass_radius_posterior_plot(directory, identifier=run_name)
-PosteriorAnalysis.mass_radius_prior_predictive_plot(directory, variable_params, identifier=run_name label_name='+ J0740 dataset')
+PosteriorAnalysis.mass_radius_prior_predictive_plot(directory, variable_params, identifier=run_name, label_name='+ J0740 dataset')
 PosteriorAnalysis.eos_posterior_plot(directory, variable_params, identifier=run_name)
