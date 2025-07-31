@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.stats import norm
 
 from neost import global_imports
 
@@ -15,7 +16,7 @@ rho_ns = global_imports._rhons
 
 class Prior():
 
-    def __init__(self, EOS, variable_params, static_params, chirp_masses):
+    def __init__(self, EOS, variable_params, static_params, chirp_masses, standard_normal_ceft=False):
 
         self.variable_params = variable_params
         self.EOS = EOS
@@ -25,6 +26,14 @@ class Prior():
         self.prior_names = self.EOS.param_names.copy()
         for i in range(self.number_stars):
             self.prior_names.append('rhoc_' + str(i + 1))
+        self.standard_normal_ceft = standard_normal_ceft # Transform ceft parameter to N(0,1)?
+        self.standard_normal = norm() # Only used if standard_normal_ceft is True
+        if standard_normal_ceft:
+            # The transform only works correctly if ceft is from U(0,1)
+            tmp = variable_params.get('ceft')
+            ceft_min = tmp[0]
+            ceft_max = tmp[1]
+            assert(ceft_min == 0 and ceft_max == 1)
 
     def inverse_sample(self, hypercube):
         hypercube = {e:hypercube[i] for i, e in
@@ -71,5 +80,9 @@ class Prior():
                           * (logmaxedsc - logminedsc) + logminedsc})
         self.MRT = self.EOS.massradius
         self.max_edsc = self.EOS.max_edsc
+
+        if self.standard_normal_ceft:
+            # Transform ceft from U(0,1) to N(0,1)
+            pr['ceft'] = self.standard_normal.ppf(pr.get('ceft'))
 
         return list(pr.values())

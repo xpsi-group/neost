@@ -149,8 +149,7 @@ class BaseEoS():
 
                 if (self.ceft_param < self.min_norm or
                         self.ceft_param > self.max_norm):
-                    raise TypeError('"ceft" variable should be either "None" \
-                                    or a float in the range [1.7, 2.76]')
+                    raise TypeError(f'"ceft" variable should be either "None" or a float in the range [{self.min_norm}, {self.max_norm}]')
                 self.get_eos_crust()
 
             else:
