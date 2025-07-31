@@ -17,4 +17,5 @@ dependencies:
         - kalepy
         - mpi4py
         - jupyter # Optional, only required for running the example notebooks in docs/source/
+        - openmpi
         - mpi4py
