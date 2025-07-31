@@ -23,6 +23,7 @@ rho_ns = global_imports._rhons
 
 # Define name for run, extra - at the end is for nicer formatting of output
 run_name = "CS-example-run-"
+directory = 'chains'
 
 # We're exploring a speed of sound (CS) EoS parametrization with a chiral effective field theory (cEFT) parametrization based on Hebeler's work
 # Transition between CS parametrisation and cEFT parametrization occurs at 1.1*saturation density
@@ -34,7 +35,7 @@ mass_radius_j0740 = np.load('j0740.npy').T
 J0740_LL = gaussian_kde(mass_radius_j0740)
 # And next up is the gravitational wave event
 GW170817 = np.load('GW170817.npy')
-GW170817_LL = kalepy.KDE(GW170817[:,0:4].T, reflect=[[None, None], [None, 1.], [0., None], [0., None]], weights=GW170817[:,4], bandwidth=0.1, kernel='gaussian')
+GW170817_LL = kalepy.KDE(GW170817[:,0:4].T, reflect=[[None, None], [None, 1.], [0., None], [0., None]], weights=GW170817[:,4], bandwidth=0.1, kernel='gaussian', diagonal=True)
 
 # Pass the likelihoods to the solver
 likelihood_functions = [J0740_LL, lambda points: GW170817_LL.density(np.array([points]).T, probability=True)[1][0]]
@@ -71,17 +72,16 @@ print("Testing done")
 # Then we start the sampling with MultiNest
 start = time.time()
 result = solve(LogLikelihood=likelihood.call, Prior=prior.inverse_sample, n_live_points=5000, evidence_tolerance=0.1,
-               n_dims=len(variable_params), sampling_efficiency=0.8, outputfiles_basename='chains/' + run_name, verbose=True, resume=False)
+               n_dims=len(variable_params), sampling_efficiency=0.8, outputfiles_basename=f'{directory}/{run_name}', verbose=True, resume=False)
 end = time.time()
 print(end - start)
 
 # Compute auxiliary data for posterior analysis
-PosteriorAnalysis.compute_auxiliary_data('chains/' + run_name, speedofsound_cs, 
-                                         variable_params, static_params, chirp_mass)
+PosteriorAnalysis.compute_auxiliary_data(directory, speedofsound_cs, variable_params, static_params, chirp_mass, identifier=run_name)
 
 
 # Make some analysis plots
-PosteriorAnalysis.cornerplot('chains/' + run_name, variable_params)
-PosteriorAnalysis.mass_radius_posterior_plot('chains/' + run_name)
-PosteriorAnalysis.mass_radius_prior_predictive_plot('chains/' + run_name,variable_params, label_name='+ J0740 dataset')
-PosteriorAnalysis.eos_posterior_plot('chains/' + run_name,variable_params)
+PosteriorAnalysis.cornerplot(directory, variable_params, identifier=run_name)
+PosteriorAnalysis.mass_radius_posterior_plot(directory, identifier=run_name)
+PosteriorAnalysis.mass_radius_prior_predictive_plot(directory, variable_params, identifier=run_name, label_name='+ J0740 dataset')
+PosteriorAnalysis.eos_posterior_plot(directory, variable_params, identifier=run_name)
