@@ -665,22 +665,22 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
         return_values['energydensities_dm'] = energydensities_dm
     return return_values
 
-def cornerplot(root_name, variable_params, dm = False): #Add ADM functionality
-    ewposterior = np.loadtxt(root_name + 'post_equal_weights.dat')
+def cornerplot(path, variable_params, dm=False, sampler='multinest', identifier=''): #Add ADM functionality
+    equal_weighted_samples = load_equal_weighted_samples(path, sampler, identifier)
     if dm == False:
-        figure = corner.corner(ewposterior[:,0:-1], labels = list(variable_params.keys()), show_titles=True,
+        figure = corner.corner(equal_weighted_samples[:,0:-1], labels = list(variable_params.keys()), show_titles=True,
                         color=colors[4], quantiles =[0.16, 0.5, 0.84], smooth=.8)
     else:
         idx_mchi = list(variable_params.keys()).index('mchi')
         idx_gchi_over_mphi = list(variable_params.keys()).index('gchi_over_mphi')
 
-        ewposterior[:,idx_mchi] = np.log10(ewposterior[:,idx_mchi])
-        ewposterior[:,idx_gchi_over_mphi] = np.log10(ewposterior[:,idx_gchi_over_mphi])
+        equal_weighted_samples[:,idx_mchi] = np.log10(equal_weighted_samples[:,idx_mchi])
+        equal_weighted_samples[:,idx_gchi_over_mphi] = np.log10(equal_weighted_samples[:,idx_gchi_over_mphi])
 
-        figure = corner.corner(ewposterior[:,0:-1], labels = list(variable_params.keys()), show_titles=True,
+        figure = corner.corner(equal_weighted_samples[:,0:-1], labels = list(variable_params.keys()), show_titles=True,
                         color=colors[4], quantiles =[0.16, 0.5, 0.84], smooth=.8)
 
-    figure.savefig(root_name + 'corner.png')
+    figure.savefig(f'{path}/{identifier}corner.png')
 
 def mass_radius_posterior_plot(root_name):
     scatter = np.load(root_name + 'scattered.npy')
@@ -700,21 +700,20 @@ def mass_radius_posterior_plot(root_name):
     plt.show()
     figure.savefig(root_name + 'MRposterior.png')
 
-def mass_radius_prior_predictive_plot(root_name,variable_params, label_name='updated prior'):
+def mass_radius_prior_predictive_plot(path, variable_params, identifier='', label_name='updated prior'):
     fig, ax = plt.subplots(1,1, figsize=(9, 6))
 
     num_stars = len(np.array([v for k,v in variable_params.items() if 'rhoc' in k]))
 
     if len(list(variable_params.keys())) == num_stars:
-        flag = True
-
+        eos_is_fixed = True
     else:
-        flag = False
+        eos_is_fixed = False
 
-    if flag == True:
+    if eos_is_fixed:
         raise Exception("Cannot perform mass_radius_prior_predictive_plot function because EoS is fixed, i.e., tabulated or all EoS params are static params!")
     else:
-        MR_prpr= np.loadtxt(root_name + 'MR_prpr.txt')
+        MR_prpr = np.loadtxt(f'{path}/{identifier}MR_prpr.txt')
 
         inbins = np.histogramdd(MR_prpr[:,[1,0]], bins=50, density=True)
         levels = [0.05, 0.32, 1]
@@ -735,9 +734,9 @@ def mass_radius_prior_predictive_plot(root_name,variable_params, label_name='upd
         ax.set_ylim(1., 3.)
         ax.set_xlim(9.05, 15)
         plt.tight_layout()
-        fig.savefig(root_name + 'MRpriorpredictive.png')
+        fig.savefig(f'{path}/{identifier}MRpriorpredictive.png')
 
-def eos_posterior_plot(root_name,variable_params, prior_contours=None, dm = False):
+def eos_posterior_plot(path, variable_params, prior_contours=None, dm=False, identifier=''):
     """
     Function to plot the p-eps posteriors.
 
@@ -759,27 +758,27 @@ def eos_posterior_plot(root_name,variable_params, prior_contours=None, dm = Fals
 
 
     """
+    root_name = f'{path}/{identifier}'
     fig, ax = plt.subplots(1,1, figsize=(9, 6))
     my_fontsize=20
 
     num_stars = len(np.array([v for k,v in variable_params.items() if 'rhoc' in k]))
 
     if len(list(variable_params.keys())) == num_stars:
-        flag = True
+        eos_is_fixed = True
 
     else:
-        flag = False
+        eos_is_fixed = False
 
-    if flag == True:
+    if eos_is_fixed:
         raise Exception("Cannot perform mass_radius_prior_predictive_plot function because EoS is fixed, i.e., tabulated or all EoS params are static params!")
     else:
-        if dm == True:
-            minpres_pp = np.log10(np.load(root_name + 'minpres.npy'))
-            maxpres_pp = np.log10(np.load(root_name + 'maxpres.npy'))
-
-        else:
+        if dm:
             minpres_pp = np.log10(np.load(root_name + 'minpres_baryon.npy'))
             maxpres_pp = np.log10(np.load(root_name + 'maxpres_baryon.npy'))
+        else:
+            minpres_pp = np.log10(np.load(root_name + 'minpres.npy'))
+            maxpres_pp = np.log10(np.load(root_name + 'maxpres.npy'))
 
         scatter = np.load(root_name + 'scattered.npy')
         central_density_post = np.log10(scatter[:,0][:,[0,1]])
