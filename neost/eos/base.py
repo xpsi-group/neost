@@ -196,6 +196,7 @@ class BaseEoS():
             self.find_max_edsc()
         else:
             self.max_edsc = 0.0
+        #print(self.max_edsc)
 
 
     # Compute the crust EoS
@@ -212,6 +213,12 @@ class BaseEoS():
             prescEFT = self.ceft_band_func(rhocEFT, self.ceft_param,
                                            self.min_norm, self.max_norm,
                                            self.min_index, self.max_index)
+                                           
+            #print(rhocEFT)
+            #print(self.ceft_param)                         
+            #print(prescEFT/ dyncm2_to_MeVfm3)                               
+                                           
+                                           
             prestrans = prescrust[-1] * (rhotrans / rhocrust[-1])**(
                 np.log10(prescEFT[0] / prescrust[-1]) /
                 np.log10(rhocEFT[0] / rhocrust[-1]))
@@ -923,8 +930,13 @@ class BaseEoS():
 
     def Mass_Radius(self,epscent,epscent_dm):
         star = Star(epscent, epscent_dm) 
-        star.solve_structure(self.energydensities, self.pressures, self.energydensities_dm, self.pressures_dm)
-        return star.Mgrav,star.Req, star.Mdm,star.Rdm
+        if epscent_dm ==0:
+            star.solve_structure(self.energydensities, self.pressures)
+            res = star.Mb/Msun, star.Rns/1e+5, star.tidal 
+        else:
+            star.solve_structure(self.energydensities, self.pressures, self.energydensities_dm, self.pressures_dm)
+            res = star.Mgrav,star.Req, star.Mdm,star.Rdm #? 
+        return res
 
 
     def get_minmax_edsc_chirp(self, chirp):
@@ -1007,15 +1019,15 @@ class BaseEoS():
         ax.set_xscale('log')
         ax.set_yscale('log')
         
-        #ax.set_ylim(miny, maxy)
-        ax.set_xlim(self.epsBPS[-2], 1e+17) #a bit random choice
+        ax.set_ylim(miny, maxy)
+        #ax.set_xlim(1e+5, 1e+30) #a bit random choice
 
         ax.tick_params(axis='both', which='major', labelsize=14)
         ax.set_xlabel(r'$\varepsilon$ [g/cm$^3$]', fontsize=15)
         ax.set_ylabel(r'Pressure [dyn/cm$^2$]', fontsize=15)
         ax.legend(prop={'size': 12})
         plt.tight_layout()
-        fig.savefig(f'./repro/prior/pp/g-n3lo-attempt2/15/testEOS_cgs_'+str(self.ceft_param)+'.png')   ## for multiple eos plotting
+        fig.savefig(f'./fig/test.png')
         plt.show()
 
     def plot_massradius(self):

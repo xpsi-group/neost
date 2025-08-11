@@ -85,11 +85,7 @@ class PolytropicEoS(BaseEoS):
             
             self.param_names +=['mchi','gchi_over_mphi', 'adm_fraction']
 
-
     def get_eos(self):
-    
-        ##testing
-        #print(self.eos_params)
         
         self.gammas = list(map(self.eos_params.get,
                                ['gamma1', 'gamma2', 'gamma3']))
@@ -137,13 +133,13 @@ class PolytropicEoS(BaseEoS):
         self.massdensities = totalrho
         
         ### debugging
-        if self._eds_crust[-1] == self._eds_core[0]:
-            print('same energy density at transition')
-            print([i for i in self.eos_params])
+        #if self._eds_crust[-1] == self._eds_core[0]:
+        #    print('same energy density at transition')
+        #    print([i for i in self.eos_params])
         
-        if all(x<y for x, y in zip(self._eds_core, self._eds_core[1:]))==False:
-            print('energy density of the core not monotonically increasing')
-            print([i for i in self.eos_params])
+        #if all(x<y for x, y in zip(self._eds_core, self._eds_core[1:]))==False:
+        #    print('energy density of the core not monotonically increasing')
+        #    print([i for i in self.eos_params])
 
         self.eos = UnivariateSpline(self.energydensities,
                                     self.pressures, k=1, s=0)

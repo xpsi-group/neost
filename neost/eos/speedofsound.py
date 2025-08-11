@@ -82,10 +82,10 @@ class SpeedofSoundEoS(BaseEoS):
         
         if self.adm_type in ['Bosonic','Fermionic']:
             self.param_names +=['mchi','gchi_over_mphi', 'adm_fraction']
-
+        
 
     def get_eos(self):
-
+        
         self._eds_core = np.logspace(np.log10(self.eds_t), 16.65, 400)
         cs_t = self.CofE(self.eds_t, self._eds_crust, self._pres_crust)
         sol = optimize.minimize(self.match_func, [0.],
@@ -117,13 +117,13 @@ class SpeedofSoundEoS(BaseEoS):
         self.massdensities = totalrho 
 
         ### debugging
-        if self._eds_crust[-1] == self._eds_core[0]:
-            print('same energy density at transition')
-            print([i for i in self.eos_params])
+        #if self._eds_crust[-1] == self._eds_core[0]:
+        #    print('same energy density at transition')
+        #    print([i for i in self.eos_params])
         
-        if all(x<y for x, y in zip(self._eds_core, self._eds_core[1:]))==False:
-            print('energy density of the core not monotonically increasing')
-            print([i for i in self.eos_params])
+        #if all(x<y for x, y in zip(self._eds_core, self._eds_core[1:]))==False:
+        #    print('energy density of the core not monotonically increasing')
+        #    print([i for i in self.eos_params])
 
         self.eos = UnivariateSpline(self.energydensities,
                                     self.pressures, k=1, s=0)
