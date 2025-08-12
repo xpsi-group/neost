@@ -760,8 +760,13 @@ class BaseEoS():
 
     def Mass_Radius(self,epscent,epscent_dm):
         star = Star(epscent, epscent_dm) 
-        star.solve_structure(self.energydensities, self.pressures, self.energydensities_dm, self.pressures_dm)
-        return star.Mgrav,star.Req, star.Mdm,star.Rdm
+        if epscent_dm ==0:
+            star.solve_structure(self.energydensities, self.pressures)
+            res = star.Mb/Msun, star.Rns/1e+5, star.tidal 
+        else:
+            star.solve_structure(self.energydensities, self.pressures, self.energydensities_dm, self.pressures_dm)
+            res = star.Mgrav,star.Req, star.Mdm,star.Rdm #? 
+        return res
 
 
     def get_minmax_edsc_chirp(self, chirp):
