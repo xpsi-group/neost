@@ -437,15 +437,15 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
         mass_radius = mass_radius[mass_radius[:,1] != 0]
 
         # Save everything
-        savedata = {'pressures_mpi.npy':pressures, 'radii_mpi.npy':radii, 'scattered_mpi.npy':scattered, 'MR_prpr_mpi.txt':mass_radius}
+        savedata = {'pressures.npy':pressures, 'radii.npy':radii, 'scattered.npy':scattered, 'MR_prpr.txt':mass_radius}
 
         if dm:
             savedata['pressures_baryon.npy'] = pressures_b
             savedata['pressures_dm.npy'] = pressures_dm
         if not eos_is_fixed:
             minradii, maxradii = calc_bands(masses, radii)
-            savedata['minradii_mpi.npy'] = minradii
-            savedata['maxradii_mpi.npy'] = maxradii
+            savedata['minradii.npy'] = minradii
+            savedata['maxradii.npy'] = maxradii
             if dm:
                 minpres, maxpres = calc_bands(energydensities_b, pressures)
                 minpres_rho, maxpres_rho = calc_bands(energydensities_b, pressures_rho)
@@ -462,10 +462,10 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
             else:
                 minpres, maxpres = calc_bands(energydensities, pressures)
                 minpres_rho, maxpres_rho = calc_bands(energydensities, pressures_rho)
-                savedata['minpres_rho_mpi.npy'] = minpres_rho
-                savedata['maxpres_rho_mpi.npy'] = maxpres_rho
-                savedata['minpres_mpi.npy'] = minpres
-                savedata['maxpres_mpi.npy'] = maxpres
+                savedata['minpres_rho.npy'] = minpres_rho
+                savedata['maxpres_rho.npy'] = maxpres_rho
+                savedata['minpres.npy'] = minpres
+                savedata['maxpres.npy'] = maxpres
         save_auxiliary_data(path, identifier, savedata)
 
 def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params, chirp_masses, dm, eos_is_fixed, thread_number):
