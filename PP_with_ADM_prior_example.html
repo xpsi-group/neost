@@ -1,0 +1,1359 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Piecewise Polytropic Prior with ADM Example &mdash; NEoST 2.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=20623aea"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ADM M-R and M-Tidal Example" href="ADM_MR_Tidal_tutorial.html" />
+    <link rel="prev" title="Piecewise Polytropic with ADM Example" href="PP_with_ADM_example.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NEoST
+              <img src="_static/neostlogo_small.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applications.html">Publications</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Team and acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="citation.html">Citation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">Future</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Start_here.html">Start here</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_example.html">Piecewise Polytropic Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_prior_example.html">Piecewise Polytropic Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PP_with_ADM_example.html">Piecewise Polytropic with ADM Example</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Piecewise Polytropic Prior with ADM Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ADM_MR_Tidal_tutorial.html">ADM M-R and M-Tidal Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CS_example.html">Speed of Sound Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CS_prior_example.html">Speed of Sound Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tabulated_example.html">Tabulated Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tabulated_prior_example.html">Tabulated Prior Example</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">neost</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NEoST</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Piecewise Polytropic Prior with ADM Example</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/PP_with_ADM_prior_example.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Piecewise-Polytropic-Prior-with-ADM-Example">
+<h1>Piecewise Polytropic Prior with ADM Example<a class="headerlink" href="#Piecewise-Polytropic-Prior-with-ADM-Example" title="Link to this heading"></a></h1>
+<p>The main purpose of this code is to demonstrate how one can fix the prior-likelihood to a constant value and use multinest to sample the prior space log-uniformly with asymmetric dark matter(ADM) present. Within this script, one can use the <code class="docutils literal notranslate"><span class="pre">PosteriorAnalysis.py</span></code>script to generate the prior axuiliary data and the prior 95% confidence intervals.</p>
+<p>The following block of code will properly import NEoST and its prerequisites, furthermore it also defines a name for the inference run, this name is what will be prefixed to all of NEoST’s output files.</p>
+<p>The machinary used within this script and the explanation of them is identical to those found in the Piecewise Polytropic, Speed of Sound, and Tabulated Examples.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">neost</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neost.eos</span><span class="w"> </span><span class="kn">import</span> <span class="n">polytropes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neost.Prior</span><span class="w"> </span><span class="kn">import</span> <span class="n">Prior</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neost.Star</span><span class="w"> </span><span class="kn">import</span> <span class="n">Star</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neost.Likelihood</span><span class="w"> </span><span class="kn">import</span> <span class="n">Likelihood</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neost</span><span class="w"> </span><span class="kn">import</span> <span class="n">PosteriorAnalysis</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">multivariate_normal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">gaussian_kde</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymultinest.solve</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">neost.global_imports</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">global_imports</span>
+
+<span class="c1"># Some physical constants</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_c</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_G</span>
+<span class="n">Msun</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_M_s</span>
+<span class="n">pi</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_pi</span>
+<span class="n">rho_ns</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_rhons</span>
+</pre></div>
+</div>
+</div>
+<p>Below, we define the piecewise polytripic equation of state model, import the J0740 likelihood function, set the ADM particle type to be a boson, and set whether we want to calculate ADM halos as well as the two-fluid tidal deformability. Note, both dm_halo and two_fluid_tidal are set to be False by default, so a user doesn’t need to define them before-hand if they don’t want to consider them in their inference. We wanted to highlight these parameters so that one knew where to define them in the
+event that either parameter were to be considered.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define name for run</span>
+<span class="n">run_name</span> <span class="o">=</span> <span class="s2">&quot;prior-hebeler-pp-bosonic-adm-&quot;</span>
+<span class="n">directory</span> <span class="o">=</span> <span class="s1">&#39;../../examples/chains&#39;</span>
+
+<span class="c1"># We&#39;re exploring a polytropic (P) EoS parametrization with a chiral effective field theory (CEFT) parametrization based on Hebeler&#39;s work</span>
+<span class="c1"># Transition between CS parametrisation and CEFT parametrization occurs at 1.1*saturation density</span>
+<span class="n">polytropes_pp</span> <span class="o">=</span> <span class="n">polytropes</span><span class="o">.</span><span class="n">PolytropicEoS</span><span class="p">(</span><span class="n">crust</span> <span class="o">=</span> <span class="s1">&#39;ceft-Hebeler&#39;</span><span class="p">,</span> <span class="n">rho_t</span> <span class="o">=</span> <span class="mf">1.1</span><span class="o">*</span><span class="n">rho_ns</span><span class="p">,</span> <span class="n">adm_type</span> <span class="o">=</span> <span class="s1">&#39;Bosonic&#39;</span><span class="p">,</span><span class="n">dm_halo</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span><span class="n">two_fluid_tidal</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Below, we define the piecewise polytripic equation of state model, import the J0740 likelihood function, and set the variable paramaeters with their respective prior space intervals depending on the their <code class="docutils literal notranslate"><span class="pre">adm_type</span></code> string parameter value. This is because the ADM priors are dependent on if one specifies that it is a boson or fermion.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create the likelihoods for the individual measurements</span>
+<span class="n">mass_radius_j0740</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;../../examples/j0740.npy&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">J0740_LL</span> <span class="o">=</span> <span class="n">gaussian_kde</span><span class="p">(</span><span class="n">mass_radius_j0740</span><span class="p">)</span>
+
+<span class="c1"># Pass the likelihoods to the solver</span>
+<span class="n">likelihood_functions</span> <span class="o">=</span> <span class="p">[</span><span class="n">J0740_LL</span><span class="o">.</span><span class="n">pdf</span><span class="p">]</span>
+<span class="n">likelihood_params</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;Mass&#39;</span><span class="p">,</span> <span class="s1">&#39;Radius&#39;</span><span class="p">]]</span>
+
+<span class="c1"># Define whether event is GW or not and define number of stars/events</span>
+<span class="n">chirp_mass</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+<span class="n">number_stars</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">chirp_mass</span><span class="p">)</span>
+
+<span class="c1"># Define variable parameters, same prior as previous papers of Raaijmakers et al</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">polytropes_pp</span><span class="o">.</span><span class="n">adm_type</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">polytropes_pp</span><span class="o">.</span><span class="n">adm_type</span> <span class="o">==</span> <span class="s1">&#39;Bosonic&#39;</span><span class="p">:</span>
+    <span class="n">variable_params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ceft&#39;</span><span class="p">:[</span><span class="n">polytropes_pp</span><span class="o">.</span><span class="n">min_norm</span><span class="p">,</span> <span class="n">polytropes_pp</span><span class="o">.</span><span class="n">max_norm</span><span class="p">],</span><span class="s1">&#39;gamma1&#39;</span><span class="p">:[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">4.5</span><span class="p">],</span><span class="s1">&#39;gamma2&#39;</span><span class="p">:[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">8.</span><span class="p">],</span><span class="s1">&#39;gamma3&#39;</span><span class="p">:[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">8.</span><span class="p">],</span><span class="s1">&#39;rho_t1&#39;</span><span class="p">:[</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">8.3</span><span class="p">],</span><span class="s1">&#39;rho_t2&#39;</span><span class="p">:[</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">8.3</span><span class="p">],</span>
+                    <span class="s1">&#39;mchi&#39;</span><span class="p">:[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span><span class="s1">&#39;gchi_over_mphi&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="s1">&#39;adm_fraction&#39;</span><span class="p">:[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">]}</span>
+<span class="k">elif</span> <span class="n">polytropes_pp</span><span class="o">.</span><span class="n">adm_type</span> <span class="o">==</span> <span class="s1">&#39;Fermionic&#39;</span><span class="p">:</span>
+    <span class="n">variable_params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ceft&#39;</span><span class="p">:[</span><span class="n">polytropes_pp</span><span class="o">.</span><span class="n">min_norm</span><span class="p">,</span> <span class="n">polytropes_pp</span><span class="o">.</span><span class="n">max_norm</span><span class="p">],</span><span class="s1">&#39;gamma1&#39;</span><span class="p">:[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">4.5</span><span class="p">],</span><span class="s1">&#39;gamma2&#39;</span><span class="p">:[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">8.</span><span class="p">],</span><span class="s1">&#39;gamma3&#39;</span><span class="p">:[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">8.</span><span class="p">],</span><span class="s1">&#39;rho_t1&#39;</span><span class="p">:[</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">8.3</span><span class="p">],</span><span class="s1">&#39;rho_t2&#39;</span><span class="p">:[</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">8.3</span><span class="p">],</span>
+                    <span class="s1">&#39;mchi&#39;</span><span class="p">:[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span><span class="s1">&#39;gchi_over_mphi&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="s1">&#39;adm_fraction&#39;</span><span class="p">:[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">]}</span>
+
+<span class="k">if</span> <span class="n">polytropes_pp</span><span class="o">.</span><span class="n">adm_type</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+    <span class="n">variable_params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ceft&#39;</span><span class="p">:[</span><span class="n">polytropes_pp</span><span class="o">.</span><span class="n">min_norm</span><span class="p">,</span> <span class="n">polytropes_pp</span><span class="o">.</span><span class="n">max_norm</span><span class="p">],</span><span class="s1">&#39;gamma1&#39;</span><span class="p">:[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">4.5</span><span class="p">],</span><span class="s1">&#39;gamma2&#39;</span><span class="p">:[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">8.</span><span class="p">],</span><span class="s1">&#39;gamma3&#39;</span><span class="p">:[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">8.</span><span class="p">],</span><span class="s1">&#39;rho_t1&#39;</span><span class="p">:[</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">8.3</span><span class="p">],</span><span class="s1">&#39;rho_t2&#39;</span><span class="p">:[</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">8.3</span><span class="p">]}</span>
+
+<span class="c1">#Note if the user wants to have a seperate adm_fraction per source, include it below via</span>
+<span class="c1">#&#39;adm_fraction_&#39; + str(i+1):[0., 5.]. And eliminate the adm_fraction above, as that is to assume all Neutron stars have the same amount of adm_fraction</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number_stars</span><span class="p">):</span>
+    <span class="n">variable_params</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;rhoc_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">):[</span><span class="mf">14.6</span><span class="p">,</span> <span class="mi">16</span><span class="p">]})</span>
+
+<span class="c1"># Define static parameters, empty dict because all params are variable</span>
+<span class="n">static_params</span><span class="o">=</span><span class="p">{}</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Bosonic
+</pre></div></div>
+</div>
+<p>Finally, the prior object must be created using the following function call:<code class="docutils literal notranslate"><span class="pre">neost.Prior.Prior(EOS,</span> <span class="pre">variable_params,</span> <span class="pre">static_params,</span> <span class="pre">chirp_masses)</span></code> where the <code class="docutils literal notranslate"><span class="pre">EOS</span></code> argument is the equation of state object that was created in the previous step. When this prior is called it will then uniformly sample sets of parameters from the defined parameter ranges.</p>
+<p>The likelihood is defined by providing both the previously defined prior object and the likelihood functions defined in the previous codeblock. This is done with the following code: <code class="docutils literal notranslate"><span class="pre">likelihood</span> <span class="pre">=</span> <span class="pre">Likelihood(prior,</span> <span class="pre">likelihood_functions,</span> <span class="pre">likelihood_params,</span> <span class="pre">chirp_mass)</span></code></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define prior</span>
+<span class="n">prior</span> <span class="o">=</span> <span class="n">Prior</span><span class="p">(</span><span class="n">polytropes_pp</span><span class="p">,</span> <span class="n">variable_params</span><span class="p">,</span> <span class="n">static_params</span><span class="p">,</span> <span class="n">chirp_mass</span><span class="p">)</span>
+<span class="n">likelihood</span> <span class="o">=</span> <span class="n">Likelihood</span><span class="p">(</span><span class="n">prior</span><span class="p">,</span> <span class="n">likelihood_functions</span><span class="p">,</span> <span class="n">likelihood_params</span><span class="p">,</span> <span class="n">chirp_mass</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Bounds of prior are&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">variable_params</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;number of parameters is </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span><span class="k">len</span>(variable_params))
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Bounds of prior are
+{&#39;ceft&#39;: [1.676, 2.814], &#39;gamma1&#39;: [1.0, 4.5], &#39;gamma2&#39;: [0.0, 8.0], &#39;gamma3&#39;: [0.5, 8.0], &#39;rho_t1&#39;: [1.5, 8.3], &#39;rho_t2&#39;: [1.5, 8.3], &#39;mchi&#39;: [-2, 8], &#39;gchi_over_mphi&#39;: [-3, 3], &#39;adm_fraction&#39;: [0.0, 5.0], &#39;rhoc_1&#39;: [14.6, 16]}
+number of parameters is 10
+</pre></div></div>
+</div>
+<p><strong>When finished with testing your likelihood and prior you can proceed to the actual inference process. This is done in the code block below. Warning: depending on the performance of your platform, this might be a very slow process. To make it slightly faster, we have decreased the number of live points and set a maximum number of iterations for this example. For a proper analysis, we would remove the max_iter argument and set, for example, n_live_points=30000.</strong></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Then we start the sampling, note the greatly increased number of livepoints, this is required because each livepoint terminates after 1 iteration</span>
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">LogLikelihood</span><span class="o">=</span><span class="n">likelihood</span><span class="o">.</span><span class="n">loglike_prior</span><span class="p">,</span> <span class="n">Prior</span><span class="o">=</span><span class="n">prior</span><span class="o">.</span><span class="n">inverse_sample</span><span class="p">,</span> <span class="n">n_live_points</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">evidence_tolerance</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+               <span class="n">n_dims</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">variable_params</span><span class="p">),</span> <span class="n">sampling_efficiency</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">outputfiles_basename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">directory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">resume</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ MultiNest Warning: no resume file found, starting from scratch
+ *****************************************************
+ MultiNest v3.10
+ Copyright Farhan Feroz &amp; Mike Hobson
+ Release Jul 2015
+
+ no. of live points =  100
+ dimensionality =   10
+ *****************************************************
+ Starting MultiNest
+ generating live points
+ live points generated, starting sampling
+Acceptance Rate:                        1.000000
+Replacements:                                100
+Total Samples:                               100
+Nested Sampling ln(Z):            **************
+Importance Nested Sampling ln(Z):       1.000000 +/-       NaN
+  analysing data from chains/prior-hebeler-pp-bosonic-adm-.txt
+ ln(ev)=   1.0000000000000004      +/-                       NaN
+ Total Likelihood Evaluations:          100
+ Sampling finished. Exiting MultiNest
+171.8531928062439
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">PosteriorAnalysis</span><span class="o">.</span><span class="n">compute_auxiliary_data</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">polytropes_pp</span><span class="p">,</span> <span class="n">variable_params</span><span class="p">,</span> <span class="n">static_params</span><span class="p">,</span> <span class="n">chirp_mass</span><span class="p">,</span> <span class="n">dm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">identifier</span><span class="o">=</span><span class="n">run_name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Total number of samples is 100
+sample too small for 158489319246111.09
+sample too small for 161149482672069.81
+sample too small for 163854295601770.94
+sample too small for 166604507454653.59
+sample too small for 169400880228786.88
+sample too small for 172244188711991.75
+sample too small for 175135220696513.44
+sample too small for 178074777197292.56
+sample too small for 181063672673904.38
+sample too small for 184102735256215.94
+sample too small for 187192806973837.81
+sample too small for 190334743989422.88
+sample too small for 193529416835885.38
+sample too small for 196777710657594.00
+sample too small for 200080525455620.66
+sample too small for 203438776337101.28
+sample too small for 206853393768786.91
+sample too small for 210325323834841.94
+sample too small for 213855528498978.03
+sample too small for 217444985870982.44
+sample too small for 221094690477725.50
+sample too small for 224805653538707.56
+sample too small for 228578903246240.12
+sample too small for 232415485050323.94
+sample too small for 236316461948314.50
+sample too small for 240282914779439.91
+sample too small for 244315942524271.44
+sample too small for 248416662609214.91
+sample too small for 252586211216118.78
+sample too small for 256825743597068.78
+sample too small for 261136434394476.22
+sample too small for 265519477966532.78
+sample too small for 269976088718134.34
+sample too small for 274507501437348.19
+sample too small for 279114971637538.78
+sample too small for 283799775905229.06
+sample too small for 288563212253807.50
+sample too small for 293406600483160.25
+sample too small for 298331282545351.25
+sample too small for 303338622916433.00
+sample too small for 308430008974505.12
+sample too small for 313606851384106.38
+sample too small for 318870584487071.00
+sample too small for 324222666699937.12
+sample too small for 329664580918034.50
+sample too small for 335197834926340.12
+sample too small for 340823961817244.06
+sample too small for 346544520415318.88
+sample too small for 352361095709227.00
+sample too small for 358275299290863.19
+sample too small for 364288769801882.25
+sample too small for 370403173387712.62
+sample too small for 376620204159199.25
+sample too small for 382941584661980.38
+sample too small for 389369066353756.75
+sample too small for 395904430089563.38
+sample too small for 402549486615195.12
+sample too small for 409306077068898.44
+sample too small for 416176073491499.88
+sample too small for 423161379345087.25
+sample too small for 430263930040405.94
+sample too small for 437485693473091.25
+sample too small for 444828670568917.69
+sample too small for 452294895838189.44
+sample too small for 459886437939447.44
+sample too small for 467605400252619.06
+sample too small for 475453921461806.69
+sample too small for 483434176147846.56
+sample too small for 491548375390825.19
+sample too small for 499798767382689.38
+sample too small for 508187638050157.44
+sample too small for 516717311688075.00
+sample too small for 525390151603412.50
+sample too small for 534208560770051.75
+sample too small for 543174982494583.38
+sample too small for 552291901093266.56
+sample too small for 561561842580365.12
+sample too small for 570987375368013.38
+sample too small for 580571110977852.88
+sample too small for 590315704764598.00
+sample too small for 600223856651763.00
+sample too small for 610298311879711.12
+sample too small for 620541861766285.62
+sample too small for 630957344480191.75
+sample too small for 641547645827375.00
+sample too small for 652315700050573.25
+sample too small for 663264490642314.00
+sample too small for 674397051171541.62
+sample too small for 685716466124136.12
+sample too small for 697225871757512.00
+sample too small for 708928456969588.00
+sample too small for 720827464182325.88
+sample too small for 732926190240116.50
+sample too small for 745227987323214.75
+sample too small for 757736263876536.50
+sample too small for 770454485554026.25
+sample too small for 783386176178894.38
+sample too small for 796534918719940.50
+sample too small for 809904356284294.25
+sample too small for 823498193126801.00
+sample too small for 837320195676368.88
+sample too small for 851374193579508.62
+sample too small for 865664080761423.00
+sample too small for 880193816504884.75
+sample too small for 894967426547245.88
+sample too small for 909989004195821.88
+sample too small for 925262711462034.00
+sample too small for 940792780214566.12
+sample too small for 956583513351898.50
+sample too small for 972639285994484.88
+sample too small for 988964546696976.25
+sample too small for 1005563818680770.00
+sample too small for 1022441701087269.25
+sample too small for 1039602870252138.00
+sample too small for 1057052081000983.62
+sample too small for 1074794167966763.12
+sample too small for 1092834046929326.75
+sample too small for 1111176716177401.12
+sample too small for 1129827257893477.00
+sample too small for 1148790839561914.75
+sample too small for 1168072715400712.25
+sample too small for 1187678227817256.50
+sample too small for 1207612808888557.75
+sample too small for 1227881981866299.00
+sample too small for 1248491362707176.00
+sample too small for 1269446661628876.25
+sample too small for 1290753684692220.00
+sample too small for 1312418335409830.50
+sample too small for 1334446616381834.00
+sample too small for 1356844630958961.00
+sample too small for 1379618584933617.25
+sample too small for 1402774788259302.75
+sample too small for 1426319656798928.25
+sample too small for 1450259714102415.25
+sample too small for 1474601593214192.00
+sample too small for 1499352038510991.75
+sample too small for 1524517907570534.00
+sample too small for 1550106173071509.00
+sample too small for 1576123924725514.50
+sample too small for 1602578371241381.00
+sample too small for 1629476842322507.00
+sample too small for 1656826790697652.25
+sample too small for 1684635794185883.50
+sample too small for 1712911557796137.50
+sample too small for 1741661915862068.25
+sample too small for 1770894834212654.00
+sample too small for 1800618412379309.25
+sample too small for 1830840885839997.75
+sample too small for 1861570628301056.25
+sample too small for 1892816154017244.25
+sample too small for 1924586120150808.00
+sample too small for 1956889329170095.75
+sample too small for 1989734731288478.50
+sample too small for 2023131426944128.00
+sample too small for 2057088669321497.50
+sample too small for 2091615866915073.50
+sample too small for 2126722586136211.25
+sample too small for 2162418553963638.00
+sample too small for 2198713660638530.25
+sample too small for 2235617962404774.00
+sample too small for 2273141684295273.00
+sample too small for 2311295222964932.50
+sample too small for 2350089149571285.50
+sample too small for 2389534212703411.00
+sample too small for 2429641341360074.00
+sample too small for 2470421647977752.00
+sample too small for 2511886431509582.00
+sample too small for 2554047180555932.50
+sample too small for 2596915576547573.00
+sample too small for 2640503496982179.50
+sample too small for 2684823018715254.00
+sample too small for 2729886421306226.50
+sample too small for 2775706190420784.00
+sample too small for 2822295021290192.00
+sample too small for 2869665822228791.00
+sample too small for 2917831718210468.00
+sample too small for 2966806054505223.00
+sample too small for 3016602400376658.50
+sample too small for 3067234552841647.00
+sample too small for 3118716540493029.00
+sample too small for 3171062627386551.50
+sample too small for 3224287316992917.00
+sample too small for 3278405356216293.00
+sample too small for 3333431739480196.00
+sample too small for 3389381712882033.50
+sample too small for 3446270778417239.50
+sample too small for 3504114698274449.50
+sample too small for 3562929499202686.50
+sample too small for 3622731476951929.00
+sample too small for 3683537200788070.00
+sample too small for 3745363518083803.50
+sample too small for 3808227558986476.00
+sample too small for 3872146741164378.50
+sample too small for 3937138774632549.00
+sample too small for 4003221666659726.00
+sample too small for 4070413726757587.00
+sample too small for 4138733571753728.50
+sample too small for 4208200130949874.50
+sample too small for 4278832651366497.50
+sample too small for 4350650703075617.50
+sample too small for 4423674184623113.00
+sample too small for 4497923328541882.00
+sample too small for 4573418706957720.00
+sample too small for 4650181237289195.00
+sample too small for 4728232188043195.00
+sample too small for 4807593184707845.00
+sample too small for 4888286215744144.00
+sample too small for 4970333638678335.00
+sample too small for 5053758186296543.00
+sample too small for 5138582972943202.00
+sample too small for 5224831500925400.00
+sample too small for 5312527667024618.00
+sample too small for 5401695769117757.00
+sample too small for 5492360512909416.00
+sample too small for 5584547018776941.00
+sample too small for 5678280828730561.00
+sample too small for 5773587913490359.00
+sample too small for 5870494679681806.00
+sample too small for 5969027977152311.00
+sample too small for 6069215106410453.00
+sample too small for 6171083826190077.00
+sample too small for 6274662361141473.00
+sample too small for 6379979409651404.00
+sample too small for 6487064151794599.00
+sample too small for 6595946257418732.00
+sample too small for 6706655894364853.00
+sample too small for 6819223736826058.00
+sample too small for 6933680973846335.00
+sample too small for 7050059317962037.00
+sample too small for 7168391013988566.00
+sample too small for 7288708847954223.00
+sample too small for 7411046156184290.00
+sample too small for 7535436834537571.00
+sample too small for 7661915347797707.00
+sample too small for 7790516739222407.00
+sample too small for 7921276640252819.00
+sample too small for 8054231280385856.00
+sample too small for 8189417497212394.00
+sample too small for 8326872746623629.00
+sample too small for 8466635113189027.00
+sample too small for 8608743320708482.00
+sample too small for 8753236742941269.00
+sample too small for 8900155414515423.00
+sample too small for 9049540042020052.00
+sample too small for 9201432015283832.00
+sample too small for 9355873418842982.00
+sample too small for 9512907043601368.00
+sample too small for 9672576398686620.00
+sample too small for 9834925723505298.00
+sample too small for 10000000000000000.00
+sample too small for 158489319246111.09
+sample too small for 161149482672069.81
+sample too small for 163854295601770.94
+sample too small for 166604507454653.59
+sample too small for 169400880228786.88
+sample too small for 172244188711991.75
+sample too small for 175135220696513.44
+sample too small for 178074777197292.56
+sample too small for 181063672673904.38
+sample too small for 184102735256215.94
+sample too small for 187192806973837.81
+sample too small for 190334743989422.88
+sample too small for 193529416835885.38
+sample too small for 196777710657594.00
+sample too small for 200080525455620.66
+sample too small for 203438776337101.28
+sample too small for 206853393768786.91
+sample too small for 210325323834841.94
+sample too small for 213855528498978.03
+sample too small for 217444985870982.44
+sample too small for 221094690477725.50
+sample too small for 224805653538707.56
+sample too small for 228578903246240.12
+sample too small for 232415485050323.94
+sample too small for 236316461948314.50
+sample too small for 240282914779439.91
+sample too small for 244315942524271.44
+sample too small for 248416662609214.91
+sample too small for 252586211216118.78
+sample too small for 256825743597068.78
+sample too small for 261136434394476.22
+sample too small for 265519477966532.78
+sample too small for 269976088718134.34
+sample too small for 274507501437348.19
+sample too small for 279114971637538.78
+sample too small for 283799775905229.06
+sample too small for 288563212253807.50
+sample too small for 293406600483160.25
+sample too small for 298331282545351.25
+sample too small for 303338622916433.00
+sample too small for 308430008974505.12
+sample too small for 313606851384106.38
+sample too small for 318870584487071.00
+sample too small for 324222666699937.12
+sample too small for 329664580918034.50
+sample too small for 335197834926340.12
+sample too small for 340823961817244.06
+sample too small for 346544520415318.88
+sample too small for 352361095709227.00
+sample too small for 358275299290863.19
+sample too small for 364288769801882.25
+sample too small for 370403173387712.62
+sample too small for 376620204159199.25
+sample too small for 382941584661980.38
+sample too small for 389369066353756.75
+sample too small for 395904430089563.38
+sample too small for 402549486615195.12
+sample too small for 409306077068898.44
+sample too small for 416176073491499.88
+sample too small for 423161379345087.25
+sample too small for 430263930040405.94
+sample too small for 437485693473091.25
+sample too small for 444828670568917.69
+sample too small for 452294895838189.44
+sample too small for 459886437939447.44
+sample too small for 467605400252619.06
+sample too small for 475453921461806.69
+sample too small for 483434176147846.56
+sample too small for 491548375390825.19
+sample too small for 499798767382689.38
+sample too small for 508187638050157.44
+sample too small for 516717311688075.00
+sample too small for 525390151603412.50
+sample too small for 534208560770051.75
+sample too small for 543174982494583.38
+sample too small for 552291901093266.56
+sample too small for 561561842580365.12
+sample too small for 570987375368013.38
+sample too small for 580571110977852.88
+sample too small for 590315704764598.00
+sample too small for 600223856651763.00
+sample too small for 610298311879711.12
+sample too small for 620541861766285.62
+sample too small for 630957344480191.75
+sample too small for 641547645827375.00
+sample too small for 652315700050573.25
+sample too small for 663264490642314.00
+sample too small for 674397051171541.62
+sample too small for 685716466124136.12
+sample too small for 697225871757512.00
+sample too small for 708928456969588.00
+sample too small for 720827464182325.88
+sample too small for 732926190240116.50
+sample too small for 745227987323214.75
+sample too small for 757736263876536.50
+sample too small for 770454485554026.25
+sample too small for 783386176178894.38
+sample too small for 796534918719940.50
+sample too small for 809904356284294.25
+sample too small for 823498193126801.00
+sample too small for 837320195676368.88
+sample too small for 851374193579508.62
+sample too small for 865664080761423.00
+sample too small for 880193816504884.75
+sample too small for 894967426547245.88
+sample too small for 909989004195821.88
+sample too small for 925262711462034.00
+sample too small for 940792780214566.12
+sample too small for 956583513351898.50
+sample too small for 972639285994484.88
+sample too small for 988964546696976.25
+sample too small for 1005563818680770.00
+sample too small for 1022441701087269.25
+sample too small for 1039602870252138.00
+sample too small for 1057052081000983.62
+sample too small for 1074794167966763.12
+sample too small for 1092834046929326.75
+sample too small for 1111176716177401.12
+sample too small for 1129827257893477.00
+sample too small for 1148790839561914.75
+sample too small for 1168072715400712.25
+sample too small for 1187678227817256.50
+sample too small for 1207612808888557.75
+sample too small for 1227881981866299.00
+sample too small for 1248491362707176.00
+sample too small for 1269446661628876.25
+sample too small for 1290753684692220.00
+sample too small for 1312418335409830.50
+sample too small for 1334446616381834.00
+sample too small for 1356844630958961.00
+sample too small for 1379618584933617.25
+sample too small for 1402774788259302.75
+sample too small for 1426319656798928.25
+sample too small for 1450259714102415.25
+sample too small for 1474601593214192.00
+sample too small for 1499352038510991.75
+sample too small for 1524517907570534.00
+sample too small for 1550106173071509.00
+sample too small for 1576123924725514.50
+sample too small for 1602578371241381.00
+sample too small for 1629476842322507.00
+sample too small for 1656826790697652.25
+sample too small for 1684635794185883.50
+sample too small for 1712911557796137.50
+sample too small for 1741661915862068.25
+sample too small for 1770894834212654.00
+sample too small for 1800618412379309.25
+sample too small for 1830840885839997.75
+sample too small for 1861570628301056.25
+sample too small for 1892816154017244.25
+sample too small for 1924586120150808.00
+sample too small for 1956889329170095.75
+sample too small for 1989734731288478.50
+sample too small for 2023131426944128.00
+sample too small for 2057088669321497.50
+sample too small for 2091615866915073.50
+sample too small for 2126722586136211.25
+sample too small for 2162418553963638.00
+sample too small for 2198713660638530.25
+sample too small for 2235617962404774.00
+sample too small for 2273141684295273.00
+sample too small for 2311295222964932.50
+sample too small for 2350089149571285.50
+sample too small for 2389534212703411.00
+sample too small for 2429641341360074.00
+sample too small for 2470421647977752.00
+sample too small for 2511886431509582.00
+sample too small for 2554047180555932.50
+sample too small for 2596915576547573.00
+sample too small for 2640503496982179.50
+sample too small for 2684823018715254.00
+sample too small for 2729886421306226.50
+sample too small for 2775706190420784.00
+sample too small for 2822295021290192.00
+sample too small for 2869665822228791.00
+sample too small for 2917831718210468.00
+sample too small for 2966806054505223.00
+sample too small for 3016602400376658.50
+sample too small for 3067234552841647.00
+sample too small for 3118716540493029.00
+sample too small for 3171062627386551.50
+sample too small for 3224287316992917.00
+sample too small for 3278405356216293.00
+sample too small for 3333431739480196.00
+sample too small for 3389381712882033.50
+sample too small for 3446270778417239.50
+sample too small for 3504114698274449.50
+sample too small for 3562929499202686.50
+sample too small for 3622731476951929.00
+sample too small for 3683537200788070.00
+sample too small for 3745363518083803.50
+sample too small for 3808227558986476.00
+sample too small for 3872146741164378.50
+sample too small for 3937138774632549.00
+sample too small for 4003221666659726.00
+sample too small for 4070413726757587.00
+sample too small for 4138733571753728.50
+sample too small for 4208200130949874.50
+sample too small for 4278832651366497.50
+sample too small for 4350650703075617.50
+sample too small for 4423674184623113.00
+sample too small for 4497923328541882.00
+sample too small for 4573418706957720.00
+sample too small for 4650181237289195.00
+sample too small for 4728232188043195.00
+sample too small for 4807593184707845.00
+sample too small for 4888286215744144.00
+sample too small for 4970333638678335.00
+sample too small for 5053758186296543.00
+sample too small for 5138582972943202.00
+sample too small for 5224831500925400.00
+sample too small for 5312527667024618.00
+sample too small for 5401695769117757.00
+sample too small for 5492360512909416.00
+sample too small for 5584547018776941.00
+sample too small for 5678280828730561.00
+sample too small for 5773587913490359.00
+sample too small for 5870494679681806.00
+sample too small for 5969027977152311.00
+sample too small for 6069215106410453.00
+sample too small for 6171083826190077.00
+sample too small for 6274662361141473.00
+sample too small for 6379979409651404.00
+sample too small for 6487064151794599.00
+sample too small for 6595946257418732.00
+sample too small for 6706655894364853.00
+sample too small for 6819223736826058.00
+sample too small for 6933680973846335.00
+sample too small for 7050059317962037.00
+sample too small for 7168391013988566.00
+sample too small for 7288708847954223.00
+sample too small for 7411046156184290.00
+sample too small for 7535436834537571.00
+sample too small for 7661915347797707.00
+sample too small for 7790516739222407.00
+sample too small for 7921276640252819.00
+sample too small for 8054231280385856.00
+sample too small for 8189417497212394.00
+sample too small for 8326872746623629.00
+sample too small for 8466635113189027.00
+sample too small for 8608743320708482.00
+sample too small for 8753236742941269.00
+sample too small for 8900155414515423.00
+sample too small for 9049540042020052.00
+sample too small for 9201432015283832.00
+sample too small for 9355873418842982.00
+sample too small for 9512907043601368.00
+sample too small for 9672576398686620.00
+sample too small for 9834925723505298.00
+sample too small for 10000000000000000.00
+sample too small for 158489319246111.09
+sample too small for 161149482672069.81
+sample too small for 163854295601770.94
+sample too small for 166604507454653.59
+sample too small for 169400880228786.88
+sample too small for 172244188711991.75
+sample too small for 175135220696513.44
+sample too small for 178074777197292.56
+sample too small for 181063672673904.38
+sample too small for 184102735256215.94
+sample too small for 187192806973837.81
+sample too small for 190334743989422.88
+sample too small for 193529416835885.38
+sample too small for 196777710657594.00
+sample too small for 200080525455620.66
+sample too small for 203438776337101.28
+sample too small for 206853393768786.91
+sample too small for 210325323834841.94
+sample too small for 213855528498978.03
+sample too small for 217444985870982.44
+sample too small for 221094690477725.50
+sample too small for 224805653538707.56
+sample too small for 228578903246240.12
+sample too small for 232415485050323.94
+sample too small for 236316461948314.50
+sample too small for 240282914779439.91
+sample too small for 244315942524271.44
+sample too small for 248416662609214.91
+sample too small for 252586211216118.78
+sample too small for 256825743597068.78
+sample too small for 261136434394476.22
+sample too small for 265519477966532.78
+sample too small for 269976088718134.34
+sample too small for 274507501437348.19
+sample too small for 279114971637538.78
+sample too small for 283799775905229.06
+sample too small for 288563212253807.50
+sample too small for 293406600483160.25
+sample too small for 298331282545351.25
+sample too small for 303338622916433.00
+sample too small for 308430008974505.12
+sample too small for 313606851384106.38
+sample too small for 318870584487071.00
+sample too small for 324222666699937.12
+sample too small for 329664580918034.50
+sample too small for 335197834926340.12
+sample too small for 340823961817244.06
+sample too small for 346544520415318.88
+sample too small for 352361095709227.00
+sample too small for 358275299290863.19
+sample too small for 364288769801882.25
+sample too small for 370403173387712.62
+sample too small for 376620204159199.25
+sample too small for 382941584661980.38
+sample too small for 389369066353756.75
+sample too small for 395904430089563.38
+sample too small for 402549486615195.12
+sample too small for 409306077068898.44
+sample too small for 416176073491499.88
+sample too small for 423161379345087.25
+sample too small for 430263930040405.94
+sample too small for 437485693473091.25
+sample too small for 444828670568917.69
+sample too small for 452294895838189.44
+sample too small for 459886437939447.44
+sample too small for 467605400252619.06
+sample too small for 475453921461806.69
+sample too small for 483434176147846.56
+sample too small for 491548375390825.19
+sample too small for 499798767382689.38
+sample too small for 508187638050157.44
+sample too small for 516717311688075.00
+sample too small for 525390151603412.50
+sample too small for 534208560770051.75
+sample too small for 543174982494583.38
+sample too small for 552291901093266.56
+sample too small for 561561842580365.12
+sample too small for 570987375368013.38
+sample too small for 580571110977852.88
+sample too small for 590315704764598.00
+sample too small for 600223856651763.00
+sample too small for 610298311879711.12
+sample too small for 620541861766285.62
+sample too small for 630957344480191.75
+sample too small for 641547645827375.00
+sample too small for 652315700050573.25
+sample too small for 663264490642314.00
+sample too small for 674397051171541.62
+sample too small for 685716466124136.12
+sample too small for 697225871757512.00
+sample too small for 708928456969588.00
+sample too small for 720827464182325.88
+sample too small for 732926190240116.50
+sample too small for 745227987323214.75
+sample too small for 757736263876536.50
+sample too small for 770454485554026.25
+sample too small for 783386176178894.38
+sample too small for 796534918719940.50
+sample too small for 809904356284294.25
+sample too small for 823498193126801.00
+sample too small for 837320195676368.88
+sample too small for 851374193579508.62
+sample too small for 865664080761423.00
+sample too small for 880193816504884.75
+sample too small for 894967426547245.88
+sample too small for 909989004195821.88
+sample too small for 925262711462034.00
+sample too small for 940792780214566.12
+sample too small for 956583513351898.50
+sample too small for 972639285994484.88
+sample too small for 988964546696976.25
+sample too small for 1005563818680770.00
+sample too small for 1022441701087269.25
+sample too small for 1039602870252138.00
+sample too small for 1057052081000983.62
+sample too small for 1074794167966763.12
+sample too small for 1092834046929326.75
+sample too small for 1111176716177401.12
+sample too small for 1129827257893477.00
+sample too small for 1148790839561914.75
+sample too small for 1168072715400712.25
+sample too small for 1187678227817256.50
+sample too small for 1207612808888557.75
+sample too small for 1227881981866299.00
+sample too small for 1248491362707176.00
+sample too small for 1269446661628876.25
+sample too small for 1290753684692220.00
+sample too small for 1312418335409830.50
+sample too small for 1334446616381834.00
+sample too small for 1356844630958961.00
+sample too small for 1379618584933617.25
+sample too small for 1402774788259302.75
+sample too small for 1426319656798928.25
+sample too small for 1450259714102415.25
+sample too small for 1474601593214192.00
+sample too small for 1499352038510991.75
+sample too small for 1524517907570534.00
+sample too small for 1550106173071509.00
+sample too small for 1576123924725514.50
+sample too small for 1602578371241381.00
+sample too small for 1629476842322507.00
+sample too small for 1656826790697652.25
+sample too small for 1684635794185883.50
+sample too small for 1712911557796137.50
+sample too small for 1741661915862068.25
+sample too small for 1770894834212654.00
+sample too small for 1800618412379309.25
+sample too small for 1830840885839997.75
+sample too small for 1861570628301056.25
+sample too small for 1892816154017244.25
+sample too small for 1924586120150808.00
+sample too small for 1956889329170095.75
+sample too small for 1989734731288478.50
+sample too small for 2023131426944128.00
+sample too small for 2057088669321497.50
+sample too small for 2091615866915073.50
+sample too small for 2126722586136211.25
+sample too small for 2162418553963638.00
+sample too small for 2198713660638530.25
+sample too small for 2235617962404774.00
+sample too small for 2273141684295273.00
+sample too small for 2311295222964932.50
+sample too small for 2350089149571285.50
+sample too small for 2389534212703411.00
+sample too small for 2429641341360074.00
+sample too small for 2470421647977752.00
+sample too small for 2511886431509582.00
+sample too small for 2554047180555932.50
+sample too small for 2596915576547573.00
+sample too small for 2640503496982179.50
+sample too small for 2684823018715254.00
+sample too small for 2729886421306226.50
+sample too small for 2775706190420784.00
+sample too small for 2822295021290192.00
+sample too small for 2869665822228791.00
+sample too small for 2917831718210468.00
+sample too small for 2966806054505223.00
+sample too small for 3016602400376658.50
+sample too small for 3067234552841647.00
+sample too small for 3118716540493029.00
+sample too small for 3171062627386551.50
+sample too small for 3224287316992917.00
+sample too small for 3278405356216293.00
+sample too small for 3333431739480196.00
+sample too small for 3389381712882033.50
+sample too small for 3446270778417239.50
+sample too small for 3504114698274449.50
+sample too small for 3562929499202686.50
+sample too small for 3622731476951929.00
+sample too small for 3683537200788070.00
+sample too small for 3745363518083803.50
+sample too small for 3808227558986476.00
+sample too small for 3872146741164378.50
+sample too small for 3937138774632549.00
+sample too small for 4003221666659726.00
+sample too small for 4070413726757587.00
+sample too small for 4138733571753728.50
+sample too small for 4208200130949874.50
+sample too small for 4278832651366497.50
+sample too small for 4350650703075617.50
+sample too small for 4423674184623113.00
+sample too small for 4497923328541882.00
+sample too small for 4573418706957720.00
+sample too small for 4650181237289195.00
+sample too small for 4728232188043195.00
+sample too small for 4807593184707845.00
+sample too small for 4888286215744144.00
+sample too small for 4970333638678335.00
+sample too small for 5053758186296543.00
+sample too small for 5138582972943202.00
+sample too small for 5224831500925400.00
+sample too small for 5312527667024618.00
+sample too small for 5401695769117757.00
+sample too small for 5492360512909416.00
+sample too small for 5584547018776941.00
+sample too small for 5678280828730561.00
+sample too small for 5773587913490359.00
+sample too small for 5870494679681806.00
+sample too small for 5969027977152311.00
+sample too small for 6069215106410453.00
+sample too small for 6171083826190077.00
+sample too small for 6274662361141473.00
+sample too small for 6379979409651404.00
+sample too small for 6487064151794599.00
+sample too small for 6595946257418732.00
+sample too small for 6706655894364853.00
+sample too small for 6819223736826058.00
+sample too small for 6933680973846335.00
+sample too small for 7050059317962037.00
+sample too small for 7168391013988566.00
+sample too small for 7288708847954223.00
+sample too small for 7411046156184290.00
+sample too small for 7535436834537571.00
+sample too small for 7661915347797707.00
+sample too small for 7790516739222407.00
+sample too small for 7921276640252819.00
+sample too small for 8054231280385856.00
+sample too small for 8189417497212394.00
+sample too small for 8326872746623629.00
+sample too small for 8466635113189027.00
+sample too small for 8608743320708482.00
+sample too small for 8753236742941269.00
+sample too small for 8900155414515423.00
+sample too small for 9049540042020052.00
+sample too small for 9201432015283832.00
+sample too small for 9355873418842982.00
+sample too small for 9512907043601368.00
+sample too small for 9672576398686620.00
+sample too small for 9834925723505298.00
+sample too small for 10000000000000000.00
+sample too small for 100000000000.00
+sample too small for 106687232563.43
+sample too small for 113821655920.43
+sample too small for 121433174759.38
+sample too small for 129553693564.69
+sample too small for 138217250347.88
+sample too small for 147460159321.42
+sample too small for 157321163113.65
+sample too small for 167841595162.55
+sample too small for 179065552969.24
+sample too small for 191040082937.28
+sample too small for 203815377572.67
+sample too small for 217444985870.98
+sample too small for 231986037773.69
+sample too small for 247499483634.30
+sample too small for 264050349698.22
+sample too small for 281708010667.09
+sample too small for 300546480490.21
+sample too small for 320644722601.79
+sample too small for 342086980904.53
+sample too small for 364963132886.84
+sample too small for 389369066353.76
+sample too small for 415407081350.89
+sample too small for 443186318965.77
+sample too small for 472823218804.32
+sample too small for 504442007059.66
+sample too small for 538175217219.37
+sample too small for 574164245593.57
+sample too small for 612559943992.47
+sample too small for 653523252037.66
+sample too small for 697225871757.51
+sample too small for 743850987294.34
+sample too small for 793594032740.08
+sample too small for 846663511318.90
+sample too small for 903281869350.50
+sample too small for 963686428657.26
+sample too small for 1028130381323.78
+sample too small for 1096883850978.18
+sample too small for 1170235025043.79
+sample too small for 1248491362707.18
+sample too small for 1331980883665.74
+sample too small for 1421053543056.89
+sample too small for 1516082698331.96
+sample too small for 1617466674223.33
+sample too small for 1725630432364.62
+sample too small for 1841027352562.16
+sample too small for 1964141133184.34
+sample too small for 2095487818634.36
+sample too small for 2235617962404.77
+sample too small for 2385118934780.59
+sample too small for 2544617384863.76
+sample too small for 2714781867239.07
+sample too small for 2896325644291.16
+sample too small for 3090009675919.15
+sample too small for 3296645809180.35
+sample too small for 3517100181232.79
+sample too small for 3752296849840.64
+sample too small for 4003221666659.73
+sample too small for 4270926409538.85
+sample too small for 4556533191157.65
+sample too small for 4861239162480.23
+sample too small for 5186321530739.80
+sample too small for 5533142912987.60
+sample too small for 5903157047646.00
+sample too small for 6297914888006.56
+sample too small for 6719071103214.42
+sample too small for 7168391013988.57
+sample too small for 7647757992149.98
+sample too small for 8159181354973.33
+sample too small for 8704804787452.35
+sample too small for 9286915327781.85
+sample too small for 9907952953719.42
+sample too small for 10570520810009.84
+sample too small for 11277396119740.88
+sample too small for 12031541825367.20
+sample too small for 12836119008195.76
+sample too small for 13694500138392.41
+sample too small for 14610283211045.91
+sample too small for 15587306827544.21
+sample too small for 16629666285477.52
+sample too small for 17741730744509.58
+sample too small for 18928161540172.44
+sample too small for 20193931722345.43
+sample too small for 21544346900318.87
+sample too small for 22985067481815.24
+sample too small for 24522132399185.38
+sample too small for 26161984422231.04
+sample too small for 27911497163753.88
+sample too small for 29778003891029.18
+sample too small for 31769328263969.44
+sample too small for 33893817128820.34
+sample too small for 36160375504848.12
+sample too small for 38578503910666.77
+sample too small for 41158338186664.87
+sample too small for 43910691980450.03
+sample too small for 46847102073393.80
+sample too small for 49979876738268.94
+sample too small for 53322147330672.48
+sample too small for 56887923330489.15
+sample too small for 60692151064104.53
+sample too small for 64750776353509.00
+sample too small for 69080811354894.38
+sample too small for 73700405866900.30
+sample too small for 78628923407411.50
+sample too small for 83887022377786.11
+sample too small for 89496742654724.59
+sample too small for 95481597972740.20
+sample too small for 101866674484456.31
+sample too small for 108678735911863.77
+sample too small for 115946335729285.67
+sample too small for 123699936848277.47
+sample too small for 131972039306137.42
+sample too small for 140797316493239.66
+sample too small for 150212760490210.72
+sample too small for 160257837124138.75
+sample too small for 170974651393751.56
+sample too small for 182408123956964.88
+sample too small for 194606179420556.22
+sample too small for 207619947221214.06
+sample too small for 221503975939966.56
+sample too small for 236316461948314.50
+sample too small for 252119493344467.12
+sample too small for 268979310202152.25
+sample too small for 286966582222879.12
+sample too small for 306156704955448.69
+sample too small for 326630115824351.44
+sample too small for 348472631291725.56
+sample too small for 371775806566106.06
+sample too small for 396637319365748.06
+sample too small for 423161379345088.94
+sample too small for 451459164900510.06
+sample too small for 481649289186324.69
+sample too small for 513858297294320.19
+sample too small for 548221196680871.31
+sample too small for 584882023064938.38
+sample too small for 623994444168980.75
+sample too small for 665722403833440.75
+sample too small for 710240809204637.50
+sample too small for 757736263876536.50
+sample too small for 808407850059403.75
+sample too small for 862467963053894.38
+sample too small for 920143201528383.12
+sample too small for 981675317331173.50
+sample too small for 1047322228818895.38
+sample too small for 1117359101948510.25
+sample too small for 1192079503664451.50
+sample too small for 1271796632415471.75
+sample too small for 1356844630958961.00
+sample too small for 1447579986955596.00
+sample too small for 1544383027224981.75
+sample too small for 1647659511925645.25
+sample too small for 1757842335341583.25
+sample too small for 1875393340404298.50
+sample too small for 2000805254556206.50
+sample too small for 2134603755069701.25
+sample too small for 2277349672478905.50
+sample too small for 2429641341360074.00
+sample too small for 2592117108314054.50
+sample too small for 2765458007663464.00
+sample too small for 2950390616079909.00
+sample too small for 3147690098106765.00
+sample too small for 3358183455343213.00
+sample too small for 3582752992908632.00
+sample too small for 3822340017717669.50
+sample too small for 4077948784067489.50
+sample too small for 4350650703075617.50
+sample too small for 4641588833612792.00
+sample too small for 4951982673554642.00
+sample too small for 5283133271435983.00
+sample too small for 5636428679932838.00
+sample too small for 6013349774031772.00
+sample too small for 6415476458273777.00
+sample too small for 6844494289090598.00
+sample too small for 7302201539992749.00
+sample too small for 7790516739222407.00
+sample too small for 8311486711467094.00
+sample too small for 8867295157341490.00
+sample too small for 9460271806598612.00
+sample too small for 10092902183438476.00
+sample too small for 10767838024844434.00
+sample too small for 11487908395619146.00
+sample too small for 12256131546708012.00
+sample too small for 13075727566516196.00
+sample too small for 13950131878249674.00
+sample too small for 14883009639853312.00
+sample too small for 15878271106907896.00
+sample too small for 16940088022878756.00
+sample too small for 18072911105418280.00
+sample too small for 19281488702019588.00
+sample too small for 20570886693214972.00
+sample too small for 21946509726749780.00
+sample too small for 23414123871733348.00
+sample too small for 24979880787725560.00
+sample too small for 26650343510068372.00
+sample too small for 28432513959539412.00
+sample too small for 30333862291643300.00
+sample too small for 32362358208556120.00
+sample too small for 34526504364972304.00
+sample too small for 36835372007880848.00
+sample too small for 39298638999652160.00
+sample too small for 41926630383821400.00
+sample too small for 44730361663597296.00
+sample too small for 47721584974505040.00
+sample too small for 50912838344705120.00
+sample too small for 54317498249458336.00
+sample too small for 57949835680036216.00
+sample too small for 61825075962085840.00
+sample too small for 65959462574187320.00
+sample too small for 70370325234111880.00
+sample too small for 75076152538158464.00
+sample too small for 80096669458060016.00
+sample too small for 85452920020282384.00
+sample too small for 91167355514279856.00
+sample too small for 97263928599448880.00
+sample too small for 103768193705221808.00
+sample too small for 110707414145159728.00
+sample too small for 118110676394006288.00
+sample too small for 126009012006712816.00
+sample too small for 134435527690482288.00
+sample too small for 143425544075018160.00
+sample too small for 153016743762678304.00
+sample too small for 163249329279076576.00
+sample too small for 174166191586206816.00
+sample too small for 185813089864445728.00
+sample too small for 198238843316974976.00
+sample too small for 211495535800633248.00
+sample too small for 225638734140894144.00
+sample too small for 240727721046073568.00
+sample too small for 256825743597069824.00
+sample too small for 274000278354162368.00
+sample too small for 292323314192148736.00
+sample too small for 311871654049304192.00
+sample too small for 332727236854994624.00
+sample too small for 354977480985363136.00
+sample too small for 378715650686657216.00
+sample too small for 404041247002178240.00
+sample too small for 431060424841397056.00
+sample too small for 459886437939447360.00
+sample too small for 490640113572132928.00
+sample too small for 523450359016174848.00
+sample too small for 558454701877691840.00
+sample too small for 595799866553663360.00
+sample too small for 635642389242707968.00
+sample too small for 678149274083111552.00
+sample too small for 723498693168256384.00
+sample too small for 771880733373789056.00
+sample too small for 823498193126804352.00
+sample too small for 878567432456831488.00
+sample too small for 937319279891776640.00
+sample too small for 1000000000000000000.00
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">PosteriorAnalysis</span><span class="o">.</span><span class="n">cornerplot</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">variable_params</span><span class="p">,</span> <span class="n">dm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">identifier</span><span class="o">=</span><span class="n">run_name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/PP_with_ADM_prior_example_11_0.png" src="_images/PP_with_ADM_prior_example_11_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">PosteriorAnalysis</span><span class="o">.</span><span class="n">mass_radius_prior_predictive_plot</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">variable_params</span><span class="p">,</span> <span class="n">identifier</span><span class="o">=</span><span class="n">run_name</span><span class="p">,</span> <span class="n">label_name</span><span class="o">=</span><span class="s1">&#39;+ J0740 dataset&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/PP_with_ADM_prior_example_12_0.png" src="_images/PP_with_ADM_prior_example_12_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="PP_with_ADM_example.html" class="btn btn-neutral float-left" title="Piecewise Polytropic with ADM Example" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ADM_MR_Tidal_tutorial.html" class="btn btn-neutral float-right" title="ADM M-R and M-Tidal Example" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2025 the NEoST Core Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
