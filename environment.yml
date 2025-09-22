@@ -15,4 +15,6 @@ dependencies:
         - corner
         - gsl
         - kalepy
+        - mpi4py
         - jupyter # Optional, only required for running the example notebooks in docs/source/
+        - mpi4py

@@ -1,7 +1,10 @@
 """ NEoST: Open-source code for equation of state inference via nested sampling. """
 from __future__ import print_function
-__version__ = "2.1.0"
-__author__ = "The NEoST core team"
+from importlib.metadata import metadata
+
+meta = metadata(__package__ or __name__)
+__version__ = meta.get('Version')
+__author__ = meta.get('Author-email')
 
 try:
     __NEOST_SETUP__
@@ -14,10 +17,8 @@ if not __NEOST_SETUP__:
 
     if global_imports._verbose:
         print("/=============================================\\")
-        print("|  NEoST: Equation of State Nested Sampling   |")
+        print("|  NEoST: Nested Equation of State Sampling   |")
         print("|---------------------------------------------|")
         print("|    See the documentation and user guide!    |")
         print("\\=============================================/\n")
-
-        print('Imported NEoST version: %s' % __version__)
-
+        print(f'Imported NEoST version: {__version__}')
