@@ -422,6 +422,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
         radii = np.concatenate([result.get('radii') for result in results], axis=1)
         pressures = np.concatenate([result.get('pressures') for result in results], axis=1)
         pressures_rho = np.concatenate([result.get('pressures_rho') for result in results], axis=1)
+        cs = np.concatenate([result.get('cs') for result in results], axis=1)
         scattered = np.concatenate([result.get('scattered') for result in results])
 
         # Dark matter
@@ -437,7 +438,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
         mass_radius = mass_radius[mass_radius[:,1] != 0]
 
         # Save everything
-        savedata = {'pressures.npy':pressures, 'radii.npy':radii, 'scattered.npy':scattered, 'MR_prpr.txt':mass_radius}
+        savedata = {'pressures.npy':pressures, 'cs.npy':cs, 'radii.npy':radii, 'scattered.npy':scattered, 'MR_prpr.txt':mass_radius}
 
         if dm:
             savedata['pressures_baryon.npy'] = pressures_b
@@ -488,6 +489,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
     radii = np.zeros((num_grid_points, num_samples))
     pressures = np.zeros((num_grid_points, num_samples))
     pressures_rho = np.zeros((num_grid_points, num_samples))
+    cs = np.full((num_grid_points, num_samples), -1.0)
     scattered = []
 
     if dm:
@@ -524,6 +526,8 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             pressures_rho[:,i][indices] = rhopres(energydensities[indices])
             indices = energydensities<EOS.max_edsc
             pressures[:,i][indices] = EOS.eos(energydensities[indices])
+            dpde = EOS.eos.derivative(1)
+            cs[:,i][indices] = dpde(energydensities[indices])/c**2
 
             for j, e in enumerate(rhocs):
                 star = Star(e)
@@ -658,7 +662,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             if MR != 0:
                 radii[:,i] = MR(masses)
 
-    return_values = {'pressures':pressures, 'pressures_rho':pressures_rho, 'masses':masses, 'radii':radii, 'scattered':scattered, 'mass_radius':mass_radius, 'energydensities':energydensities}
+    return_values = {'pressures':pressures, 'pressures_rho':pressures_rho, 'cs':cs, 'masses':masses, 'radii':radii, 'scattered':scattered, 'mass_radius':mass_radius, 'energydensities':energydensities}
     if dm:
         return_values['pressures_b'] = pressures_b
         return_values['pressures_dm'] = pressures_dm
