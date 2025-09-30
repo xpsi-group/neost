@@ -120,6 +120,7 @@ def compute_table_data(path, EOS, variable_params, static_params, dm=False, samp
     try:
         # If the table data already exists, just read it and print it and return
         data_array = np.loadtxt(fname)
+        print(data_array)
         if mpi_rank == 0:
             print(f'Reading and printing data from {fname}')
             print_table_data(data_array)
@@ -353,9 +354,9 @@ def recast_equal_weighted_samples_for_mpi(equal_weighted_samples, num_processes)
             samples[current_core].append(equal_weighted_samples[idx])
     return samples
 
-def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_masses, dm=False, sampler='multinest', identifier=''):
+def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_masses, dm=False, sampler='multinest', identifier=''): #modified to also deal with m-r-t saving
     """
-    Function to compute the posterior auxiliary data used to generate standard NEoST plots, such as, the pressures, (if dm = True)
+    Function to compute the posterior (and prior!) auxiliary data used to generate standard NEoST plots, such as, the pressures, (if dm = True)
     the baryonic pressure, mass-radius posteriors, and p-eps posteriors.
 
 
@@ -424,6 +425,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
         pressures_rho = np.concatenate([result.get('pressures_rho') for result in results], axis=1)
         cs = np.concatenate([result.get('cs') for result in results], axis=1)
         scattered = np.concatenate([result.get('scattered') for result in results])
+        mrt = np.concatenate([result.get('mrt') for result in results])
 
         # Dark matter
         energydensities_b = None
@@ -438,7 +440,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
         mass_radius = mass_radius[mass_radius[:,1] != 0]
 
         # Save everything
-        savedata = {'pressures.npy':pressures, 'cs.npy':cs, 'radii.npy':radii, 'scattered.npy':scattered, 'MR_prpr.txt':mass_radius}
+        savedata = {'pressures.npy':pressures, 'cs.npy':cs, 'radii.npy':radii, 'scattered.npy':scattered, 'mrt.npy':mrt, 'MR_prpr.txt':mass_radius}
 
         if dm:
             savedata['pressures_baryon.npy'] = pressures_b
@@ -469,7 +471,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
                 savedata['maxpres.npy'] = maxpres
         save_auxiliary_data(path, identifier, savedata)
 
-def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params, chirp_masses, dm, eos_is_fixed, thread_number):
+def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params, chirp_masses, dm, eos_is_fixed, thread_number):  #non-DM case modified to save M/R/Tidal full curve for each EOS
     '''
     Here the calculations of auxiliary data is done.
     Reading/writing of files and parallelization is done by compute_auxiliary_data(),
@@ -489,8 +491,9 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
     radii = np.zeros((num_grid_points, num_samples))
     pressures = np.zeros((num_grid_points, num_samples))
     pressures_rho = np.zeros((num_grid_points, num_samples))
-    cs = np.full((num_grid_points, num_samples), -1.0)
     scattered = []
+    cs = np.full((num_grid_points, num_samples), -1.0)
+    mrt = []
 
     if dm:
         # We can always specify these even if they're not used I think
@@ -517,6 +520,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
 
         rhocpar = np.array([10**v for k,v in par.items() if 'rhoc' in k])
         scattered_elements = []
+        mrt_elements = []
 
         if not dm:
             rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0)
@@ -534,6 +538,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
                 star.solve_structure(EOS.energydensities, EOS.pressures)
                 M[j] = star.Mrot
                 R[j] = star.Req
+                mrt_elements.append([e, EOS.eos(e), star.Mrot, star.Req, star.tidal])   #saves relevant parameters
 
             M, indices = np.unique(M, return_index=True)
             MR = UnivariateSpline(M, R[indices], k=1, s=0, ext=1)
@@ -552,6 +557,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
                     scattered_elements.append([rhoc, EOS.eos(rhoc), star.Mrot, star.Req, star.tidal])
 
             scattered.append(scattered_elements)
+            mrt.append(mrt_elements)
             radii[:,i] = MR(masses)
             rhoc = np.random.rand() *(np.log10(EOS.max_edsc) - 14.6) + 14.6
             star = Star(10**rhoc)
@@ -662,7 +668,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             if MR != 0:
                 radii[:,i] = MR(masses)
 
-    return_values = {'pressures':pressures, 'pressures_rho':pressures_rho, 'cs':cs, 'masses':masses, 'radii':radii, 'scattered':scattered, 'mass_radius':mass_radius, 'energydensities':energydensities}
+    return_values = {'pressures':pressures, 'pressures_rho':pressures_rho,  'cs':cs, 'masses':masses, 'radii':radii, 'scattered':scattered, 'mrt':mrt, 'mass_radius':mass_radius, 'energydensities':energydensities}
     if dm:
         return_values['pressures_b'] = pressures_b
         return_values['pressures_dm'] = pressures_dm
