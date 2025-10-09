@@ -63,7 +63,7 @@ class SpeedofSoundEoS(BaseEoS):
 
     """
 
-    def __init__(self, crust, rho_t, filename_n2lo='new_Goettling_N2LO_e.txt', filename_n3lo='new_Goettling_N3LO_e.txt', adm_type = 'None', dm_halo = False, two_fluid_tidal = False):
+    def __init__(self, crust, rho_t, filename_n2lo='newest_Goettling_N2LO_e.txt', filename_n3lo='newest_Goettling_N3LO_e.txt', adm_type = 'None', dm_halo = False, two_fluid_tidal = False):
 
         super(SpeedofSoundEoS, self).__init__(filename_n2lo, filename_n3lo, crust, rho_t)
 
@@ -96,13 +96,17 @@ class SpeedofSoundEoS(BaseEoS):
                            self.norm, negative=0.0), self._eds_core,
                            initial=0.0) * c**2. + self.P_t)
 
-        if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
-            result = solve_ivp(lambda eps, rho: self.rhodens(rho, eps),
-                           t_span=(self._eds_core[0], self._eds_core[-1]),
-                           y0=[self.Rho_t], t_eval=self._eds_core,
-                           method='LSODA')                                                        #Rho_t coming from base.py instead of rho_t input by user, to avoid artificial phase transition
-        else:
-            result = solve_ivp(lambda eps, rho: self.rhodens(rho, eps),
+        #if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
+        #    result = solve_ivp(lambda eps, rho: self.rhodens(rho, eps),
+        #                   t_span=(self._eds_core[0], self._eds_core[-1]),
+        #                   y0=[self.Rho_t], t_eval=self._eds_core,
+        #                   method='LSODA')                                                        #Rho_t coming from base.py instead of rho_t input by user, to avoid artificial phase transition
+        #else:
+        #    result = solve_ivp(lambda eps, rho: self.rhodens(rho, eps),
+        #                   t_span=(self._eds_core[0], self._eds_core[-1]),
+        #                   y0=[self.rho_t], t_eval=self._eds_core,
+        #                   method='LSODA')
+        result = solve_ivp(lambda eps, rho: self.rhodens(rho, eps),
                            t_span=(self._eds_core[0], self._eds_core[-1]),
                            y0=[self.rho_t], t_eval=self._eds_core,
                            method='LSODA')
@@ -154,10 +158,11 @@ class SpeedofSoundEoS(BaseEoS):
                 cscrust)**2.
 
     def Cs_model_total(self, x, norm):
-        if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
-            xt = self.Rho_t / rho_ns
-        else:
-            xt = self.rho_t / rho_ns
+        #if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
+        #    xt = self.Rho_t / rho_ns
+        #else:
+        #    xt = self.rho_t / rho_ns
+        xt = self.rho_t / rho_ns
         beta = 1e-10
         dmin = .5 * (1. - np.tanh(pi / beta * (x - xt)))
         dplus = .5 * (1. + np.tanh(pi / beta * (x - xt)))
@@ -295,7 +300,8 @@ class SpeedofSoundEoS(BaseEoS):
         ### probably unnecessary now
         if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
             if all(x<=y for x, y in zip(self.ceft_pressure_werror, self.ceft_pressure_werror[1:]))==False:   ## self._pres_crust might be overkill (includes low, BPS and cEFT)
-                #print('oi')
+                print('Unphysical EOS')
+                print(self.ceft_param)
                 check = False
             else:
                 check = True     

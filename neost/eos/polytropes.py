@@ -62,7 +62,7 @@ class PolytropicEoS(BaseEoS):
 
     """
 
-    def __init__(self, crust, rho_t, filename_n2lo='new_Goettling_N2LO_e.txt', filename_n3lo='new_Goettling_N3LO_e.txt', adm_type = 'None', dm_halo = False, two_fluid_tidal = False):
+    def __init__(self, crust, rho_t, filename_n2lo='newest_Goettling_N2LO_e.txt', filename_n3lo='newest_Goettling_N3LO_e.txt', adm_type = 'None', dm_halo = False, two_fluid_tidal = False):
 
         super(PolytropicEoS, self).__init__(filename_n2lo, filename_n3lo, crust, rho_t)
 
@@ -93,11 +93,12 @@ class PolytropicEoS(BaseEoS):
         
         self._rho_core = np.zeros(297)
 
-        if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
-            self._rho_core[0:99] = np.linspace(self.Rho_t / rho_ns, self.rho_ts[0], 100)[1::]   #Rho_t coming from base.py instead of rho_t input by user, to avoid artificial phase transition
-        else:
-            self._rho_core[0:99] = np.linspace(self.rho_t / rho_ns, self.rho_ts[0], 100)[1::]
-                        
+        #if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
+        #    self._rho_core[0:99] = np.linspace(self.Rho_t / rho_ns, self.rho_ts[0], 100)[1::]   #Rho_t coming from base.py instead of rho_t input by user, to avoid artificial phase transition
+        #else:
+        #    self._rho_core[0:99] = np.linspace(self.rho_t / rho_ns, self.rho_ts[0], 100)[1::]
+        self._rho_core[0:99] = np.linspace(self.rho_t / rho_ns, self.rho_ts[0], 100)[1::] 
+
         self._rho_core[99:198] = np.linspace(self.rho_ts[0],
                                              self.rho_ts[1], 100)[1::]
         self._rho_core[198::] = np.logspace(np.log10(self.rho_ts[1]),
@@ -151,11 +152,12 @@ class PolytropicEoS(BaseEoS):
         P_ts, k = (np.zeros(len(self.gammas)) for i in range(2))
         P_ts[0] = P_t
         
-        if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
-            k[0] = P_t / ((self.Rho_t / rho_ns)**self.gammas[0])
-        else:
-            k[0] = P_t / ((self.rho_t / rho_ns)**self.gammas[0])    
-            
+        #if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
+        #    k[0] = P_t / ((self.Rho_t / rho_ns)**self.gammas[0])
+        #else:
+        #    k[0] = P_t / ((self.rho_t / rho_ns)**self.gammas[0])    
+        k[0] = P_t / ((self.rho_t / rho_ns)**self.gammas[0])
+
         P_ts[1] = k[0] * self.rho_ts[0]**self.gammas[0]
         k[1] = P_ts[1] / (self.rho_ts[0]**self.gammas[1])
         P_ts[2] = k[1] * self.rho_ts[1]**self.gammas[1]
@@ -279,7 +281,8 @@ class PolytropicEoS(BaseEoS):
         ### probably unnecessary now?
         if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
             if all(x<=y for x, y in zip(self.ceft_pressure_werror, self.ceft_pressure_werror[1:]))==False:   ## self._pres_crust might be overkill (includes low, BPS and cEFT)
-                #print('oi')
+                print('unphysical EOS')
+                print(self.ceft_param)
                 check = False
             else:
                 check = True            

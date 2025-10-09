@@ -165,6 +165,7 @@ class Likelihood():
         return var
 
     def loglike_prior(self,pr):
+        #print('Loglike prior')
         pr_dict = self.prior.pr
         constraints = self.prior.EOS.check_constraints()
         
