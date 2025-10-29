@@ -556,6 +556,12 @@ class BaseEoS():
     # Finds maximum central density with pQCD
     def get_maximum_pqcd(self, X):
     
+        #debugging to make sure all eos have increasing pressure
+        if all(x<=y for x, y in zip(self.pressures, self.pressures[1:]))==False:   ## if for some reason it's not, before any checks or extensions, print warning
+            print('unphysical EOS')
+            print(eos_params.values())
+
+
         # First check where the EOS would break down due to mass or causality then check if it breaks down due to pqcd before and if yes where
         min_edsc0 = 14.3
         if self.rho_t is not None:
