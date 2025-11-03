@@ -119,7 +119,7 @@ class pQCD:
         dn_dmu2 = 2.*dp_das(a_s,self.X)*das_dmu(mu,self.X)*dpFD(mu) + p_as * d2pFD(mu)
         return self.number_density(mu)/(mu*GeV3_to_fm3*(dn_dmu1+dn_dmu2))
 
-    def constraints(self, e0, p0, n0, muQCD = 2.6, cs2=1, return_values=False):
+    def constraints(self, e0, p0, n0, muQCD = 2.6, cs2=1.0, return_values=False):
         mu0 = (e0 + p0) / n0
         pQCD = self.pressure(muQCD)
         nQCD = self.number_density(muQCD)

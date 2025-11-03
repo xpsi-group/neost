@@ -56,7 +56,9 @@ class BaseEoS():
         Builds pQCD extensions to make EOS compatible with pQCD
     """
 
-    def __init__(self, filename_n2lo="newest_Goettling_N2LO_e.txt", filename_n3lo="newest_Goettling_N3LO_e.txt", crust='ceft-Hebeler', rho_t=2e14, pqcd_ext=False):  
+    def __init__(self, crust='ceft-Hebeler', rho_t=2e14, filename_n2lo="newest_Goettling_N2LO_e.txt", filename_n3lo="newest_Goettling_N3LO_e.txt", pqcd_ext=False):  
+        #print(crust)
+        #print(pqcd_ext)
         if crust not in ['ceft-Hebeler', 'ceft-Drischler', 'ceft-Lynn',
                          'ceft-Tews', 'ceft-Keller-N2LO', 'ceft-Keller-N3LO', 'ceft-old', 'ceft-Goettling-N2LO', 
                          'ceft-Goettling-N3LO', 'BPS', None]:
@@ -559,6 +561,7 @@ class BaseEoS():
         #debugging to make sure all eos have increasing pressure
         if all(x<=y for x, y in zip(self.pressures, self.pressures[1:]))==False:   ## if for some reason it's not, before any checks or extensions, print warning
             print('unphysical EOS')
+            print(self.ceft_params)
             print(eos_params.values())
 
 
@@ -603,7 +606,9 @@ class BaseEoS():
         eds_c = eds_c[idx]
 
         # Find out where the EOS breaks down due to pqcd  
-        eds_pqcd = np.linspace(10**15, max(eds_c), 200) # g/cm^3    starting at 10**15 because usually pQCD doesn't break before, but should be tested with gp
+        #eds_pqcd = np.linspace(10**15, max(eds_c), 200) # g/cm^3    starting at 10**15 because usually pQCD doesn't break before, but should be tested with gp
+        
+        eds_pqcd = np.linspace(1e14, max(eds_c), 400) # g/cm^3
         edsrho = UnivariateSpline(self.energydensities, self.massdensities, k=1, s=0)
         pQCD1 = pQCD(X) 
 
@@ -615,24 +620,35 @@ class BaseEoS():
             pqcd_allowed = pQCD1.constraints(e0 = e_pqcd, p0 = p_pqcd, n0 = n_pqcd, muQCD = 2.6, cs2 = 1.0)       #choose muQCD = 2.6 and sos limit 1 (default values)            
             
             #debugging:
-            print('Epsilon')
-            print(e)
-            print(pqcd_allowed)
+            #print('Epsilon')
+            #print(e)
+            #print(pqcd_allowed)
 
             if pqcd_allowed == 0 and i > 0:             # last EOS point that is allowed
                 maximum_pqcd = eds_pqcd[i - 1]
-                print('Maximum epsilon')
-                print(maximum_pqcd)
+                #print('i')
+                #print(i)
+                #print('Maximum epsilon')
+                #print(maximum_pqcd)
+                if maximum_pqcd<1e+15:
+                    print('Careful')
+                    print(self.ceft_params)
+                    print(eos_params.values())
                 break
             elif pqcd_allowed == 0 and i == 0:
                 maximum_pqcd = eds_pqcd[0]
-                print('Maximum epsilon')
-                print(maximum_pqcd)
+                #print('i=0')
+                #print('Maximum epsilon')
+                #print(maximum_pqcd)
+                if maximum_pqcd<1e+15:
+                    print('Careful')
+                    print(self.ceft_params)
+                    print(eos_params.values())
                 break            
             else:
                 maximum_pqcd = -1
-                print('Maximum epsilon')
-                print(maximum_pqcd)
+                #print('Maximum epsilon')
+                #print(maximum_pqcd)
 
         #this block we only need to calculate for break, because if there is an extension we re run finding the max edsc
         '''
@@ -660,6 +676,10 @@ class BaseEoS():
             self.centraleds = eds_c
             self.massradius = Ms
 
+        #else:
+        #    print(max(eds_c))
+        #    print(maximum_pqcd)
+
         return maximum_pqcd    
 
     def n_mu_extension(self, p, mu, n_pqcd, mu_pqcd):
@@ -683,6 +703,7 @@ class BaseEoS():
         # last allowed EOS point
         edsrho = UnivariateSpline(self.energydensities, self.massdensities, k=1, s=0)
         max_rhoc = edsrho(self.maximum_pqcd)
+        #print(self.maximum_pqcd)
         n_last = max_rhoc/rho_ns*0.16                                   # in 1/fm3 
         p_last = self.eos(self.maximum_pqcd)*dyncm2_to_MeVfm3/1000      # in GeV/fm3
         e_last = self.maximum_pqcd*gcm3_to_MeVfm3/1000                  # in GeV/fm3
@@ -692,43 +713,62 @@ class BaseEoS():
         pMin = 0.5 * (mu_pqcd * (mu_pqcd/ mu_last)  - mu_last) * n_last
         pMax = 0.5 * (mu_pqcd - mu_last * (mu_last / mu_pqcd)) * n_pqcd
         nMax = n_pqcd * (mu_last / mu_pqcd)
-        print('Pmin, Pmax, deltaP')
-        print(pMin, pMax, (p_pqcd - p_last))
+        #print(mu_last)
+        #print('Pmin, Pmax, deltaP')
+        #print(pMin, pMax, (p_pqcd - p_last))
 
         # Calculate extension(s) (calculation in GeV fm3 units, then transformed to cgs units)
         mus = np.linspace(mu_last, mu_pqcd, 100)
         mus = np.ravel(mus)
 
         # Checks whether Delta P_max or Delta P_min extension needs to be applied and calculates the extension (or none if pQCD point already exceeded)     
-        if abs(pMax - (p_pqcd - p_last)) < abs(pMin - (p_pqcd - p_last)) and mu_last < 2.6:             
+        if ((abs(pMax - (p_pqcd - p_last)) < abs(pMin - (p_pqcd - p_last))) and (mu_last < 2.6)):             
             self.ext = 1
             #print('max')
             n_extension = np.array([m*n_pqcd/mu_pqcd*rho_ns/0.16 for m in mus])
             P_extension =  odeint(self.n_mu_extension, p_last, mus, args=(n_pqcd, mu_pqcd)).flatten()*1000/dyncm2_to_MeVfm3
             eps_extension = ((-1)*P_extension*dyncm2_to_MeVfm3/1000 + mus**2*n_pqcd/mu_pqcd)/gcm3_to_MeVfm3*1000
+            #print(mus)
+            #print((eps_extension*dyncm2_to_MeVfm3/1000)+(P_extension*dyncm2_to_MeVfm3/1000)/(n_extension*0.16/rho_ns))
+            #print(p_last)
+            #print(p_pqcd)
+            #print(P_extension*dyncm2_to_MeVfm3/1000)
+            #print(self.ceft_param)
+            #print(self.eos_params.keys())
+            #print(self.eos_params.values())
 
-        elif abs(pMax - (p_pqcd - p_last)) > abs(pMin - (p_pqcd - p_last)) and mu_last < 2.6:
+        elif ((abs(pMax - (p_pqcd - p_last)) > abs(pMin - (p_pqcd - p_last))) and (mu_last < 2.6)):
             self.ext = 2
             #print('min')
             n_extension = np.array([m*n_last/mu_last*rho_ns/0.16 for m in mus])
             P_extension =  odeint(self.n_mu_extension_min, p_last, mus, args=(n_last, mu_last)).flatten()*1000/dyncm2_to_MeVfm3
             eps_extension = ((-1)*P_extension*dyncm2_to_MeVfm3/1000 + mus**2*n_last/mu_last)/gcm3_to_MeVfm3*1000
+            #print(p_last)
+            #print(p_pqcd)
+            #print(P_extension*dyncm2_to_MeVfm3/1000)
+            #print(self.ceft_param)
+            #print(self.eos_params.keys())
+            #print(self.eos_params.values())
+        
         else:
             n_extension = np.array([])
             P_extension =  np.array([])
             eps_extension = np.array([])
 
+        #print(mu_last)
         n_extension = np.squeeze(n_extension) # The calculation of totalrho fails if n_extension is multidimensional
 
         # This line could be removed if it makes problems: checks whether the extension is compatible with pQCD which is the case by definition for the exact analytical extension >
         # Is nowhere used for now, just fyi if pQCD check would be fulfilled
         try:
-            pqcd_check = [pQCD1.constraints(e0 = eps_extension[i]*gcm3_to_MeVfm3/1000, p0 = P_extension[i]*dyncm2_to_MeVfm3/1000, n0 = n_extension[i]/rho_ns*0.16, muQCD = 2.6, cs2 = 1) for i in range(len(mus))]
-
+            pqcd_check = [pQCD1.constraints(e0 = eps_extension[i]*gcm3_to_MeVfm3/1000, p0 = P_extension[i]*dyncm2_to_MeVfm3/1000, n0 = n_extension[i]/rho_ns*0.16, muQCD = 2.6, cs2 = 1.0, return_values=True) for i in range(len(mus))]
+            #print(pqcd_check)
+ 
         except IndexError:
+            print('pqcd_check empty')
             pqcd_check = [False] * len(mus) # Does this make sense? pQCD breakpoint should already have been reached, so by definition incompatible?
 
-        print(pqcd_check)
+        #print(pqcd_check)
 
         # To make sure the EOS is monotonically increasing (first extension point above last EOS point)
         indices = np.where((P_extension > p_last*1000/dyncm2_to_MeVfm3) &  (eps_extension > e_last/gcm3_to_MeVfm3*1000) & (n_extension/rho_ns > n_last/0.16))
