@@ -354,7 +354,7 @@ def recast_equal_weighted_samples_for_mpi(equal_weighted_samples, num_processes)
             samples[current_core].append(equal_weighted_samples[idx])
     return samples
 
-def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_masses, dm=False, sampler='multinest', identifier=''): #modified to also deal with m-r-t saving
+def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_masses, dm=False, sampler='multinest', identifier=''): #modified to also deal with m-r-t saving, pqcd included
     """
     Function to compute the posterior (and prior!) auxiliary data used to generate standard NEoST plots, such as, the pressures, (if dm = True)
     the baryonic pressure, mass-radius posteriors, and p-eps posteriors.
@@ -426,6 +426,9 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
         cs = np.concatenate([result.get('cs') for result in results], axis=1)
         scattered = np.concatenate([result.get('scattered') for result in results])
         mrt = np.concatenate([result.get('mrt') for result in results])
+        p_e_n_endpoints = np.concatenate([result.get('p_e_n_endpoints') for result in results])
+        max_pqcd_point = np.concatenate([result.get('max_pqcd_point') for result in results])
+
 
         # Dark matter
         energydensities_b = None
@@ -440,7 +443,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
         mass_radius = mass_radius[mass_radius[:,1] != 0]
 
         # Save everything
-        savedata = {'pressures.npy':pressures, 'cs.npy':cs, 'radii.npy':radii, 'scattered.npy':scattered, 'mrt.npy':mrt, 'MR_prpr.txt':mass_radius}
+        savedata = {'pressures.npy':pressures, 'cs.npy':cs, 'radii.npy':radii, 'scattered.npy':scattered, 'mrt.npy':mrt, 'MR_prpr.txt':mass_radius, 'p_e_n_endpoints.txt':p_e_n_endpoints, 'max_pqcd_point':max_pqcd_point}
 
         if dm:
             savedata['pressures_baryon.npy'] = pressures_b
@@ -471,7 +474,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
                 savedata['maxpres.npy'] = maxpres
         save_auxiliary_data(path, identifier, savedata)
 
-def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params, chirp_masses, dm, eos_is_fixed, thread_number):  #non-DM case modified to save M/R/Tidal full curve for each EOS
+def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params, chirp_masses, dm, eos_is_fixed, thread_number):  #non-DM case modified to save M/R/Tidal full curve for each EOS, pqcd included
     '''
     Here the calculations of auxiliary data is done.
     Reading/writing of files and parallelization is done by compute_auxiliary_data(),
@@ -491,9 +494,11 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
     radii = np.zeros((num_grid_points, num_samples))
     pressures = np.zeros((num_grid_points, num_samples))
     pressures_rho = np.zeros((num_grid_points, num_samples))
+    p_e_n_endpoints = np.zeros((num_samples, 3))                 ## for pqcd
     scattered = []
     cs = np.full((num_grid_points, num_samples), -1.0)
     mrt = []
+    max_pqcd_point = np.zeros((num_samples, 2))                  ## for pqcd
 
     if dm:
         # We can always specify these even if they're not used I think
@@ -563,6 +568,11 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             star = Star(10**rhoc)
             star.solve_structure(EOS.energydensities, EOS.pressures)
             mass_radius[i] = star.Mrot, star.Req
+            p_e_n_endpoints[i] = EOS.eos(EOS.max_edsc).item()*dyncm2_to_MeVfm3, EOS.max_edsc.item()*gcm3_to_MeVfm3,  max_rhoc.item()/rho_ns   ## for pqcd
+
+            if EOS.pqcd_ext:
+                max_pqcd_point[i] = EOS.maximum_pqcd, EOS.ext                          ## for pqcd
+
         else:
             rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0, ext = 1)
             edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0, ext = 1)
@@ -668,7 +678,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             if MR != 0:
                 radii[:,i] = MR(masses)
 
-    return_values = {'pressures':pressures, 'pressures_rho':pressures_rho,  'cs':cs, 'masses':masses, 'radii':radii, 'scattered':scattered, 'mrt':mrt, 'mass_radius':mass_radius, 'energydensities':energydensities}
+    return_values = {'pressures':pressures, 'pressures_rho':pressures_rho,  'cs':cs, 'masses':masses, 'radii':radii, 'scattered':scattered, 'mrt':mrt, 'mass_radius':mass_radius, 'energydensities':energydensities, 'p_e_n_endpoints': p_e_n_endpoints, 'max_pqcd_point': max_pqcd_point}
     if dm:
         return_values['pressures_b'] = pressures_b
         return_values['pressures_dm'] = pressures_dm
