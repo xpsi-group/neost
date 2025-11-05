@@ -517,7 +517,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
         par.update(static_params)
         EOS.update(par, max_edsc=True)
 
-        rhocs = np.logspace(14.5, np.log10(EOS.max_edsc), 30)
+        rhocs = np.logspace(14.5, np.log10(float(np.asarray(EOS.max_edsc))), 30)    ## temporary fix
         rhocsdm = np.zeros_like(rhocs)
 
         M = np.zeros(len(rhocs))
@@ -543,7 +543,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
                 star.solve_structure(EOS.energydensities, EOS.pressures)
                 M[j] = star.Mrot
                 R[j] = star.Req
-                mrt_elements.append([e, EOS.eos(e), star.Mrot, star.Req, star.tidal])   #saves relevant parameters
+                mrt_elements.append([float(np.asarray(e)), float(np.asarray(EOS.eos(e))), star.Mrot, star.Req, star.tidal])   #saves relevant parameters
 
             M, indices = np.unique(M, return_index=True)
             MR = UnivariateSpline(M, R[indices], k=1, s=0, ext=1)
@@ -571,7 +571,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             p_e_n_endpoints[i] = EOS.eos(EOS.max_edsc).item()*dyncm2_to_MeVfm3, EOS.max_edsc.item()*gcm3_to_MeVfm3,  max_rhoc.item()/rho_ns   ## for pqcd
 
             if EOS.pqcd_ext:
-                max_pqcd_point[i] = EOS.maximum_pqcd, EOS.ext                          ## for pqcd
+                max_pqcd_point[i] = float(np.asarray(EOS.maximum_pqcd)), EOS.ext                          ## for pqcd  ## very temporary fix
 
         else:
             rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0, ext = 1)
@@ -677,6 +677,16 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
                 scattered.append(scattered_elements)
             if MR != 0:
                 radii[:,i] = MR(masses)
+
+    ## debugging
+    print('MRT')
+    #print(np.shape(mrt))
+    #print(mrt[0])
+    print(mrt)
+    print('P, E, n')
+    print(p_e_n_endpoints)
+    print('Max pqcd')
+    print(max_pqcd_point)
 
     return_values = {'pressures':pressures, 'pressures_rho':pressures_rho,  'cs':cs, 'masses':masses, 'radii':radii, 'scattered':scattered, 'mrt':mrt, 'mass_radius':mass_radius, 'energydensities':energydensities, 'p_e_n_endpoints': p_e_n_endpoints, 'max_pqcd_point': max_pqcd_point}
     if dm:

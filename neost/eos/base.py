@@ -199,8 +199,8 @@ class BaseEoS():
             #self.ext = 0              ### redundant, it was already written before
 
             # set scale for pQCD check (log uniform between X=0.5 and X=2)
-            #X = self.eos_params.get('X')
-            X = 1.0     # If you want to set a fixed value of X yourself
+            X = self.eos_params.get('X')
+            #X = 1.0     # If you want to set a fixed value of X yourself
 
             # Checks where EOS breaks down due to pqcd
             self.maximum_pqcd = self.get_maximum_pqcd(X)
@@ -559,6 +559,7 @@ class BaseEoS():
     def get_maximum_pqcd(self, X):
     
         #debugging to make sure all eos have increasing pressure
+        #probably can delete this block
         if all(x<=y for x, y in zip(self.pressures, self.pressures[1:]))==False:   ## if for some reason it's not, before any checks or extensions, print warning
             print('unphysical EOS')
             print(self.ceft_params)
@@ -603,12 +604,12 @@ class BaseEoS():
         test, idx = np.unique(Ms[:,0], return_index=True)
         Ms = Ms[idx]
 
-        eds_c = eds_c[idx]
+        eds_c = np.asarray(eds_c[idx])    ## make eds_c array first, to avoid the forming of internal lists in the linspace line below
 
         # Find out where the EOS breaks down due to pqcd  
         #eds_pqcd = np.linspace(10**15, max(eds_c), 200) # g/cm^3    starting at 10**15 because usually pQCD doesn't break before, but should be tested with gp
         
-        eds_pqcd = np.linspace(1e14, max(eds_c), 400) # g/cm^3
+        eds_pqcd = np.linspace(1e14, float(max(eds_c)), 400) # g/cm^3
         edsrho = UnivariateSpline(self.energydensities, self.massdensities, k=1, s=0)
         pQCD1 = pQCD(X) 
 
