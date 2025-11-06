@@ -194,12 +194,15 @@ class BaseEoS():
             self.eos_params = {i:eos_params[i] for i in eos_params}
         
         self.get_eos()
+        #print(self.eos_params.keys())
+        #print(self.eos_params.values())
 
         if self.pqcd_ext:
             #self.ext = 0              ### redundant, it was already written before
 
             # set scale for pQCD check (log uniform between X=0.5 and X=2)
             X = self.eos_params.get('X')
+            #print(X)
             #X = 1.0     # If you want to set a fixed value of X yourself
 
             # Checks where EOS breaks down due to pqcd

@@ -71,8 +71,8 @@ class SpeedofSoundEoS(BaseEoS):
         self.eos_name = 'speedofsound'
         self.param_names = ['a1', 'a2', 'a3/a2', 'a4', 'a5']
 
-        #if self.pqcd_ext:
-        #    self.param_names.append('X')
+        if self.pqcd_ext:
+            self.param_names.append('X')
 
         self.adm_type = adm_type
         self.dm_halo = dm_halo

@@ -70,8 +70,8 @@ class PolytropicEoS(BaseEoS):
         self.param_names = ['gamma1', 'gamma2', 'gamma3','rho_t1', 'rho_t2']
         
         # uncomment two lines below when sampling X from multinest
-        #if self.pqcd_ext:
-        #    self.param_names.append('X')
+        if self.pqcd_ext:
+            self.param_names.append('X')
 
         self.adm_type = adm_type
         self.dm_halo = dm_halo
