@@ -198,7 +198,7 @@ class BaseEoS():
         #print(self.eos_params.values())
 
         if self.pqcd_ext:
-            #self.ext = 0              ### redundant, it was already written before
+            self.ext = 0              
 
             # set scale for pQCD check (log uniform between X=0.5 and X=2)
             X = self.eos_params.get('X')
