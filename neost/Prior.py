@@ -40,6 +40,9 @@ class Prior():
               self.variable_params[e][0] for i, e in
               enumerate(list(self.variable_params.keys()))}
 
+        if 'X' in self.variable_params.keys():
+            pr['X'] = np.exp(pr['X'])
+
         if 'rho_t1' and 'rho_t2' in self.variable_params.keys():
             # forced identifiability prior #
             pr['rho_t1'] = ((1. - np.sqrt(hypercube['rho_t1'])) *
