@@ -498,7 +498,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
     scattered = []
     cs = np.full((num_grid_points, num_samples), -1.0)
     mrt = []
-    max_pqcd_point = np.zeros((num_samples, 2))                  ## for pqcd
+    max_pqcd_point = np.zeros((num_samples, 3))                  ## for pqcd
 
     if dm:
         # We can always specify these even if they're not used I think
@@ -577,7 +577,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             p_e_n_endpoints[i] = EOS.eos(EOS.max_edsc).item()*dyncm2_to_MeVfm3, EOS.max_edsc.item()*gcm3_to_MeVfm3,  max_rhoc.item()/rho_ns   ## for pqcd
 
             if EOS.pqcd_ext:
-                max_pqcd_point[i] = float(np.asarray(EOS.maximum_pqcd)), EOS.ext                          ## for pqcd  ## very temporary fix
+                max_pqcd_point[i] = float(np.asarray(EOS.maximum_pqcd)), EOS.ext, EOS.X                          ## for pqcd  ## very temporary fix
 
         else:
             rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0, ext = 1)

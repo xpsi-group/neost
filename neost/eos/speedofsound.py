@@ -64,15 +64,16 @@ class SpeedofSoundEoS(BaseEoS):
 
     """
 
-    def __init__(self, crust, rho_t, filename_n2lo='newest_Goettling_N2LO_e.txt', filename_n3lo='newest_Goettling_N3LO_e.txt', adm_type = 'None', dm_halo = False, two_fluid_tidal = False, pqcd_ext=False):
+    def __init__(self, crust, rho_t, filename_n2lo='newest_Goettling_N2LO_e.txt', filename_n3lo='newest_Goettling_N3LO_e.txt', adm_type = 'None', dm_halo = False, two_fluid_tidal = False, pqcd_ext=False, x_f= False):
 
-        super(SpeedofSoundEoS, self).__init__(crust, rho_t, filename_n2lo, filename_n3lo, pqcd_ext=pqcd_ext)
+        super(SpeedofSoundEoS, self).__init__(crust, rho_t, filename_n2lo, filename_n3lo, pqcd_ext=pqcd_ext, x_f=x_f)
 
         self.eos_name = 'speedofsound'
         self.param_names = ['a1', 'a2', 'a3/a2', 'a4', 'a5']
 
         if self.pqcd_ext:
-            self.param_names.append('X')
+            if x_f == False:
+                self.param_names.append('X')
 
         self.adm_type = adm_type
         self.dm_halo = dm_halo

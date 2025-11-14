@@ -56,7 +56,7 @@ class BaseEoS():
         Builds pQCD extensions to make EOS compatible with pQCD
     """
 
-    def __init__(self, crust='ceft-Hebeler', rho_t=2e14, filename_n2lo="newest_Goettling_N2LO_e.txt", filename_n3lo="newest_Goettling_N3LO_e.txt", pqcd_ext=False):  
+    def __init__(self, crust='ceft-Hebeler', rho_t=2e14, filename_n2lo="newest_Goettling_N2LO_e.txt", filename_n3lo="newest_Goettling_N3LO_e.txt", pqcd_ext=False, x_f=False):  
         #print(crust)
         #print(pqcd_ext)
         if crust not in ['ceft-Hebeler', 'ceft-Drischler', 'ceft-Lynn',
@@ -70,6 +70,7 @@ class BaseEoS():
         self.crust = crust
         self.rho_t = rho_t
         self.pqcd_ext = pqcd_ext
+        self.x_f = x_f
         self.ext = 0   ## checks if max or min construction is built
 
         if crust is not None:
@@ -154,7 +155,7 @@ class BaseEoS():
                     %.2f and 2.0 saturation density.' % self._rho_start_ceft)
 
             if self.pqcd_ext and global_imports._verbose:
-                print('Using NEoST with pQCD constraints. Make sure the range of X is specified directly in log space, typically [0.5, 2.0].')
+                print('Using NEoST with pQCD constraints.') #previous message displayed: 'Make sure the range of X is specified directly in log space, typically [0.5, 2.0].'
 
     def update(self, eos_params, max_edsc=True):
         """
@@ -200,11 +201,17 @@ class BaseEoS():
         if self.pqcd_ext:
             self.ext = 0              
 
-            # set scale for pQCD check (log uniform between X=0.5 and X=2)
-            X = self.eos_params.get('X')
-            #print(X)
-            #X = 1.0     # If you want to set a fixed value of X yourself
-
+            #print(self.x_f)
+            if self.x_f:
+                X = 1.0    # or some other number in [0.5, 2.0] 
+                self.X = X  # so it is saved in max_pqcd_point later
+                #print(X)
+            else:
+                # set scale for pQCD check (log uniform between X=0.5 and X=2)
+                X = self.eos_params.get('X')
+                self.X = X
+                #print(X)
+            
             # Checks where EOS breaks down due to pqcd
             self.maximum_pqcd = self.get_maximum_pqcd(X)
 
@@ -328,6 +335,7 @@ class BaseEoS():
         #print(self.index_start_cEFT)
         #print(self.ceft_param)
 
+        
         #### from BPS end to cEFT end
         epscEFT = self.ceft_energy[self.index_start_cEFT:]/gcm3_to_MeVfm3  #g/cm^3
         prescEFT = self.ceft_pressure_werror[self.index_start_cEFT:]/dyncm2_to_MeVfm3  #dyn/cm^2
