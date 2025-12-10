@@ -3,10 +3,10 @@
 Publications
 ------------
 
-NEoST has been applied in the following studies. If you have used NEoST for a project and would like to link it here, please contact the NEoST team and/or submit a pull-request on GitHub.  In particular, NEoST has been used extensively with masses and radii inferred from NICER data of rotation-powered millisecond pulsars by the `X-PSI team <https://xpsi-group.github.io/xpsi/index.html>`.
+NEoST has been applied in the following studies. If you have used NEoST for a project and would like to link it here, please contact the NEoST team and/or submit a pull-request on GitHub.  In particular, NEoST has been used extensively with masses and radii inferred from NICER data of rotation-powered millisecond pulsars by the `X-PSI team <https://xpsi-group.github.io/xpsi/index.html>`_.
 
 
-**Mauviard et al. 2025** `(ApJ, 995, 60) <https://ui.adsabs.harvard.edu/abs/2025ApJ...995...60M/abstract>`_ * A NICER View of the 1.4 solar mass Edge-on Pulsar PSR J0614-3329*. See also the associated `Zenodo repository`__.
+**Mauviard et al. 2025** `(ApJ, 995, 60) <https://ui.adsabs.harvard.edu/abs/2025ApJ...995...60M/abstract>`_ *A NICER View of the 1.4 solar mass Edge-on Pulsar PSR J0614-3329*. See also the associated `Zenodo repository`__.
 
 .. _Zenodo25b: https://doi.org/10.5281/zenodo.15603405
 __ Zenodo25b_
