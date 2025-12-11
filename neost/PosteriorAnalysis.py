@@ -443,7 +443,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
         mass_radius = mass_radius[mass_radius[:,1] != 0]
 
         # Save everything
-        savedata = {'pressures.npy':pressures, 'cs.npy':cs, 'radii.npy':radii, 'scattered.npy':scattered, 'mrt.npy':mrt, 'MR_prpr.txt':mass_radius, 'p_e_n_endpoints.txt':p_e_n_endpoints, 'max_pqcd_point':max_pqcd_point}
+        savedata = {'pressures.npy':pressures, 'pressures_rho.npy':pressures_rho, 'cs.npy':cs, 'radii.npy':radii, 'scattered.npy':scattered, 'mrt.npy':mrt, 'MR_prpr.txt':mass_radius, 'p_e_n_endpoints.txt':p_e_n_endpoints, 'max_pqcd_point':max_pqcd_point}
 
         if dm:
             savedata['pressures_baryon.npy'] = pressures_b
