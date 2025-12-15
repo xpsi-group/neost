@@ -20,6 +20,7 @@ from neost.Prior import Prior
 from neost.Star import Star
 from neost.Likelihood import Likelihood
 import neost.global_imports as global_imports
+import neost.L_inf as L_inf
 
 # Constants
 c = global_imports._c
@@ -701,6 +702,21 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
         return_values['energydensities_b'] = energydensities_b
         return_values['energydensities_dm'] = energydensities_dm
     return return_values
+
+
+def local_function_L_inf(root_name):
+    pressure = np.load(root_name + 'pressures_rho.npy')
+
+    local_class_L_inf=L_inf.class_L_inf()   #change variable names later      
+    corr = local_class_L_inf.corr() 
+
+    aux = local_class_L_inf.pnm_P(corr[1], pressure, corr[0])
+    L = local_class_L_inf.function_L_inf(aux, corr[0])
+    #print(L)
+    
+    np.save(root_name + 'L.npy', L)
+    return L
+
 
 def cornerplot(root_name, variable_params, dm = False): #Add ADM functionality
     ewposterior = np.loadtxt(root_name + 'post_equal_weights.dat')
