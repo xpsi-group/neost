@@ -14,12 +14,14 @@ number_density_ns = energydensities/rhons
 number_density = number_density_ns * n_ns
 
 # Load data ( for calculating the correlation, doesnt have to be done every time)
-path = os.path.dirname(__file__)    # current path 
+#path = os.path.dirname(__file__)    # current path
+#file_path = os.path.abspath(os.path.join(path, '..', 'DANEoST/data/cEFT_band_fitting' ))
+file_path = '/work/home/mm12wyxy/neost/secretneost/DANEoST/data/cEFT_band_fitting'  # only hard-coding seems to work for travelling to paths outside of where neost is actually installed
 
-N3LO_beta = np.loadtxt(path+'/N3LO_beta_X2D.txt')                          ## add better path later
-N3LO_pnm = np.loadtxt(path+'/N3LO_PNM_X2D.txt')
-#N2LO_beta = np.loadtxt(path+'/N2LO_beta_X2D.txt')                         ## uncomment this line if working with N2LO   
-#N2LO_pnm = np.loadtxt(path+'/N2LO_PNM_X2D.txt')
+N3LO_beta = np.loadtxt(file_path+'/N3LO_beta_X2D.txt')                          ## add better path later
+N3LO_pnm = np.loadtxt(file_path+'/N3LO_PNM_X2D.txt')
+#N2LO_beta = np.loadtxt(file_path+'/N2LO_beta_X2D.txt')                         ## uncomment this line if working with N2LO   
+#N2LO_pnm = np.loadtxt(file_path+'/N2LO_PNM_X2D.txt')
 
 samples = 1000                                            # they are very correlated, so a smaller array would also work
 quantiles = np.linspace(0.05,0.95, samples)
