@@ -5,9 +5,11 @@ try:
     from neost.tovsolvers.TOVr import solveTOVr
     from neost.tovsolvers.TOVh import solveTOVh
     from neost.tovsolvers.TOVdm import solveTOVdm
+    from neost.tovsolvers.TOVde_python import solveTOVde
 except ImportError:
     from neost.tovsolvers.TOVr_python import solveTOVr
     from neost.tovsolvers.TOVdm_python import solveTOVdm
+    from neost.tovsolvers.TOVde_python import solveTOVde
     warnings.warn('C TOV solvers either not installed or broken, using Python TOV solver instead. This is much slower.')
 from . import global_imports
 
@@ -23,7 +25,7 @@ class Star():
     """
 
 
-    def __init__(self, epscent,epscent_dm = 0.0, enthalpy=False):
+    def __init__(self, epscent,epscent_dm = 0.0,  eps_plus = 0.0, alpha = 0.0, enthalpy=False, dark_energy = False):
         """
         Initialize a model star.
 
@@ -45,8 +47,13 @@ class Star():
         self.radius_dm_halo = 0
         self.Mdm_core = 0
         self.Mdm_halo = 0
+        self.dark_energy = dark_energy
 
-    def solve_structure(self, eps, pres,eps_dm = None,pres_dm = None,dm_halo = False,two_fluid_tidal = False, atol=1e-6, rtol=1e-4, hmax=1000., step=0.46):
+        if self.dark_energy is True:
+            self.eps_plus = eps_plus
+            self.alpha = alpha
+
+    def solve_structure(self, eps, pres,eps_de = None, pres_de = None, eps_dm = None, pres_dm = None, dm_halo = False,two_fluid_tidal = False, atol=1e-6, rtol=1e-4, hmax=1000., step=0.46):
         """
         Solve the relativistic structure equations to build a model star.
 
@@ -76,7 +83,10 @@ class Star():
 
         else:
             if self.epscent_dm == 0.0:
-                self.Mb, self.Rns, self.tidal, self.Gtt = solveTOVr(self.epscent, eps, pres, atol, rtol, hmax, step)
+                if self.dark_energy == False:
+                    self.Mb, self.Rns, self.tidal, self.Gtt = solveTOVr(self.epscent, eps, pres, atol, rtol, hmax, step)
+                else:
+                    self.Mb, self.Mdm_core, self.radius_dm_core, self.Rns, self.tidal, self.Gtt = solveTOVde(self.epscent, self.eps_plus, self.alpha, eps, pres, eps_de, pres_de, atol, rtol, hmax, step)
 
             else:
                 self.Mb, self.Rns, self.Mdm_core, self.Mdm_halo, self.radius_dm_core, self.radius_dm_halo, self.tidal = solveTOVdm(self.epscent, self.epscent_dm, eps, pres, eps_dm, pres_dm, dm_halo,two_fluid_tidal, atol, rtol, hmax, step)
@@ -99,12 +109,12 @@ class Star():
 
     @property
     def Mdm(self):
-        """ Get the total gravitational dark matter mass. """
+        """ Get the total gravitational dark matter or dark energy mass. """
         return (self.Mdm_core + self.Mdm_halo) / Msun
 
     @property
     def Mdmcore(self):
-        """ Get the dark matter mass within the baryonic radius. """
+        """ Get the dark matter or dark energy mass within the baryonic radius. """
         return (self.Mdm_core) / Msun
 
     @property
@@ -124,7 +134,7 @@ class Star():
 
     @property
     def Rdm_core(self):
-        """ Get the dark matter core radius. """
+        """ Get the dark matter or dark energy core radius. """
         return self.radius_dm_core  / 1e5
 
     @property
@@ -147,7 +157,7 @@ class Star():
                    lw=2.5, label='Baryonic')
         ax[1].set_yscale('log')
 
-        if self.epscent_dm!=0:
+        if self.epscent_dm!=0 or self.dark_energy is True:
             radius_grid_dm = self.dist_dm[:,0]/1e5
             mass_dist_dm = self.dist_dm[:,1]/ Msun
             pres_dist_dm = self.dist_dm[:,2]
