@@ -75,12 +75,16 @@ class PolytropicEoS(BaseEoS):
         if self.ceft is True:
             self.param_names.append('ceft')
 
-        if self.adm_type not in ['Bosonic', 'Fermionic', 'None']:
-            raise TypeError('ADM model not recognized. Choose either "Bosonic" or "Fermionic". If ADM is not needed, select "None".')
+        if self.adm_type not in ['Bosonic', 'Fermionic', 'Dark Energy', 'None']:
+            raise TypeError('ADM or Dark Energy model not recognized. Choose either "Bosonic" or "Fermionic" or "Dark Energy". If ADM or Dark Energy is not needed, select "None".')
         
         if self.adm_type in ['Bosonic','Fermionic']:
             
             self.param_names +=['mchi','gchi_over_mphi', 'adm_fraction']
+
+
+        if self.adm_type == 'Dark Energy':
+            self.param_names +=['A_param', 'alpha', 'rho_plus']
 
 
     def get_eos(self):
@@ -128,7 +132,7 @@ class PolytropicEoS(BaseEoS):
         self.eos = UnivariateSpline(self.energydensities,
                                     self.pressures, k=1, s=0)
 
-        if self.adm_type in ['Bosonic', 'Fermionic']:
+        if self.adm_type in ['Bosonic', 'Fermionic', 'Dark Energy']:
             self.add_adm_eos()
 
     def eos_core_pp(self, rho, P_t):
@@ -164,10 +168,33 @@ class PolytropicEoS(BaseEoS):
         _hbar = 1.0545718e-34  # J*s
         MeV_to_Joules = 1.60218e-13  # J
 
-        self.mchi = self.eos_params['mchi'] * MeV_to_Joules / _c**2.
-        self.gchi_over_mphi = (self.eos_params['gchi_over_mphi'] / MeV_to_Joules * _c**2.)
-        self.adm_fraction = self.eos_params['adm_fraction']
 
+        if self.adm_type == 'Dark Energy':
+            #in cgs units
+
+
+            number_dens = np.logspace(-2,2,2000)
+            self.energydensities_de = number_dens*rho_ns #g/cm^3 pre-supposes that the energydensity is divided by c^2
+
+            self.A_param = self.eos_params['A_param'] #dimensionless
+            self.alpha = self.eos_params['alpha'] #dimensionless rho_minus/rho_plus = alpha
+            self.rho_plus = self.eos_params['rho_plus']*rho_ns #energy density
+            rho_minus = self.alpha * self.rho_plus
+            self.B = self.A_param * self.rho_plus**2*c**4 - self.rho_plus*c**2 * self.eos(rho_minus)
+
+            self.B = abs(self.B)
+
+            self.pressures_de = self.A_param * self.energydensities_de*c**2  - self.B / (self.energydensities_de*c**2)
+
+
+            self.eos_de = lambda x: self.A_param * x*c**2  - self.B / (x*c**2) #x = energy density de, just now as a variable
+
+
+
+        if self.adm_type == 'Bosonic' or self.adm_type == 'Fermionic':
+            self.mchi = self.eos_params['mchi'] * MeV_to_Joules / _c**2.
+            self.gchi_over_mphi = (self.eos_params['gchi_over_mphi'] / MeV_to_Joules * _c**2.)
+            self.adm_fraction = self.eos_params['adm_fraction']
 
 
         # Bosonic Dark matter component
@@ -223,7 +250,7 @@ class PolytropicEoS(BaseEoS):
 
             
             self.energydensities_dm[0:len(z)] = (_c**5*self.mchi**4/_hbar**3*(z**3/(3*np.pi**2) + interact_term))*10 / c**2 #Factor of 10 is here to convert from SI base units to cgs base unit
-                                                                                                                     # /c**2 is here since this is base units of g/(cm s^2) not g/cm^3
+            # /c**2 is here since this is base units of g/(cm s^2) not g/cm^3
 
             self.pressures_dm[0:len(z)] = (_c**5*self.mchi**4/_hbar**3*(z**5/(15*np.pi**2) + interact_term))*10 #Factor of 10 is here to convert from SI base units to cgs base unit
 
@@ -254,6 +281,14 @@ class PolytropicEoS(BaseEoS):
             check = True
         else:
             check = False
+
+
+        if self.adm_type == 'Dark Energy':
+            cs = self.A_param*c**2 + self.B/(self.rho_plus**2*c**2)
+            cs = cs/c**2
+            #acausal = 1.  
+            if cs > 1.:
+                check = False
             
         return check
 
