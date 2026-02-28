@@ -173,7 +173,7 @@ class PolytropicEoS(BaseEoS):
             #in cgs units
 
 
-            number_dens = np.logspace(-2,2,2000)
+            number_dens = np.logspace(-2,2,4000)
             self.energydensities_de = number_dens*rho_ns #g/cm^3 pre-supposes that the energydensity is divided by c^2
 
             self.A_param = self.eos_params['A_param'] #dimensionless
@@ -182,7 +182,7 @@ class PolytropicEoS(BaseEoS):
             rho_minus = self.alpha * self.rho_plus
             self.B = self.A_param * self.rho_plus**2*c**4 - self.rho_plus*c**2 * self.eos(rho_minus)
 
-            self.B = abs(self.B)
+            self.B = self.B
 
             self.pressures_de = self.A_param * self.energydensities_de*c**2  - self.B / (self.energydensities_de*c**2)
 

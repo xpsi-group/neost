@@ -16,7 +16,7 @@ rho_ns = global_imports._rhons
 
 class Prior():
 
-    def __init__(self, EOS, variable_params, static_params, chirp_masses, standard_normal_ceft=False):
+    def __init__(self, EOS, variable_params, static_params, chirp_masses, standard_normal_ceft=False, dark_energy=False):
 
         self.variable_params = variable_params
         self.EOS = EOS
@@ -26,6 +26,8 @@ class Prior():
         self.prior_names = self.EOS.param_names.copy()
         for i in range(self.number_stars):
             self.prior_names.append('rhoc_' + str(i + 1))
+
+        self.dark_energy = dark_energy
         self.standard_normal_ceft = standard_normal_ceft # Transform ceft parameter to N(0,1)?
         self.standard_normal = norm() # Only used if standard_normal_ceft is True
         if standard_normal_ceft:
@@ -61,14 +63,26 @@ class Prior():
                 pr['gchi_over_mphi' ] = 10**pr['gchi_over_mphi']
 
         pr.update(self.static_params)
+        #if self.dark_energy is False:
         self.EOS.update({k: pr[k] for k in tuple(self.EOS.param_names)},
                         max_edsc=True)
+            
+        min_edsc = self.EOS.min_edsc
+        max_edsc = self.EOS.max_edsc    
+            
+        # else:
+        #     self.EOS.update({k: pr[k] for k in tuple(self.EOS.param_names)},
+        #                 max_edsc_de=True)
+            
+        #     min_edsc = self.EOS.min_edsc_de*rho_ns
+        #     max_edsc = self.EOS.max_edsc_de*rho_ns
         self.pr = pr
+
 
         for i in range(self.number_stars):
             if self.chirp_masses[i] is None:
-                logminedsc = np.log10(self.EOS.min_edsc)
-                logmaxedsc = np.log10(self.EOS.max_edsc)
+                logminedsc = np.log10(min_edsc)
+                logmaxedsc = np.log10(max_edsc)
                 pr.update({'rhoc_' + str(i + 1):hypercube['rhoc_' + str(i + 1)]
                           * (logmaxedsc - logminedsc) + logminedsc})
             else:
@@ -79,7 +93,12 @@ class Prior():
                 pr.update({'rhoc_' + str(i + 1):hypercube['rhoc_' + str(i + 1)]
                           * (logmaxedsc - logminedsc) + logminedsc})
         self.MRT = self.EOS.massradius
-        self.max_edsc = self.EOS.max_edsc
+
+        if self.dark_energy is False:
+            self.max_edsc = self.EOS.max_edsc
+
+        else:
+            self.max_edsc = self.EOS.max_edsc_de
 
         if self.standard_normal_ceft:
             # Transform ceft from U(0,1) to N(0,1)

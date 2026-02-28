@@ -83,7 +83,7 @@ class Star():
 
         else:
             if self.epscent_dm == 0.0:
-                if self.dark_energy == False:
+                if self.dark_energy is False:
                     self.Mb, self.Rns, self.tidal, self.Gtt = solveTOVr(self.epscent, eps, pres, atol, rtol, hmax, step)
                 else:
                     self.Mb, self.Mdm_core, self.radius_dm_core, self.Rns, self.tidal, self.Gtt = solveTOVde(self.epscent, self.eps_plus, self.alpha, eps, pres, eps_de, pres_de, atol, rtol, hmax, step)

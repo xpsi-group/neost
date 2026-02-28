@@ -188,6 +188,7 @@ def solveTOVde(epscent, rho_plus, alpha, eos_eps, eos_pres, eos_epsde, eos_presd
     eos_pres = 10**eos_pres * G * np.power(c,-4) #scaled into geometrized
     eos_eps = eos_eps[np.sort(indices)] * G * np.power(c,-2) #scaled into geometrized
 
+
     #clearing any nans since some pressure values are negative and np.unique will save a nan after taking log_10 of the array
     indx = np.isnan(np.log10(eos_presde))
     eos_presde = eos_presde[~indx]
@@ -213,8 +214,8 @@ def solveTOVde(epscent, rho_plus, alpha, eos_eps, eos_pres, eos_epsde, eos_presd
     rmax = 50 * 1e5
     dr, initial = initial_conditions(epscent, pcent, adindcent)
 
-    #print('Pcent, P0')
-    #print(epscent*np.power(c,2) / G, pcent*np.power(c,4) / G,initial[0]*np.power(c,4) / G)
+    # print('Pcent, P0')
+    # print(epscent*np.power(c,2) / G, pcent*np.power(c,4) / G,initial[0]*np.power(c,4) / G)
 
     def stop(r,y,epsgrid,presgird):
         return y[0] - p_plus

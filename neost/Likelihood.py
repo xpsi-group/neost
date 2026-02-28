@@ -29,6 +29,7 @@ class Likelihood():
         likelihoods = []
         pr_dict = self.prior.pr
 
+
         constraints = self.prior.EOS.check_constraints()
         
         if constraints is False:
@@ -40,12 +41,11 @@ class Likelihood():
                 if pr_dict['rhoc_' + str(i + 1)] < np.log10(self.prior.EOS.rho_plus):
                     return -1e101
                 
-                if(self.prior.EOS.reach_fraction == False):
-                    return -1e101
-
                 star = Star(10**(pr_dict['rhoc_' + str(i + 1)]), 0.0, self.prior.EOS.rho_plus, self.prior.EOS.alpha, False, True)
                 star.solve_structure(self.prior.EOS.energydensities, self.prior.EOS.pressures, self.prior.EOS.energydensities_de, self.prior.EOS.pressures_de)
 
+
+                print('DE:', star.Mrot, star.Mdmcore, star.Req)
                 Mgrav = star.Mrot
                 Mde_core = star.Mdmcore
                 Req = star.Req
@@ -184,15 +184,14 @@ class Likelihood():
 
         if self.prior.EOS.adm_type == 'Dark Energy':
                 
-                if(self.prior.EOS.reach_fraction == False):
-                    return -1e101
                 
-                max_edsc_de = self.prior.EOS.max_edsc_de * rho_ns
-                star = Star(max_edsc_de, 0.0, self.prior.EOS.rho_plus, self.prior.EOS.alpha, False, True)
-                star.solve_structure(self.prior.EOS.energydensities, self.prior.EOS.pressures, self.prior.EOS.energydensities_de, self.prior.EOS.pressures_de)
+                # max_edsc_de = self.prior.EOS.max_edsc_de * rho_ns
+                # star = Star(max_edsc_de, 0.0, self.prior.EOS.rho_plus, self.prior.EOS.alpha, False, True)
+                # star.solve_structure(self.prior.EOS.energydensities, self.prior.EOS.pressures, self.prior.EOS.energydensities_de, self.prior.EOS.pressures_de)
 
-                if(star.Mrot < 1 or star.Mrot > 3 or star.Req > 16):
-                    return -1e101
+
+                # if(star.Mrot < 1 or star.Mrot > 3 or star.Req > 16):
+                #     return -1e101
                 
                 for i in range(self.prior.number_stars):
                     if pr_dict['rhoc_' + str(i + 1)] <= np.log10(self.prior.EOS.rho_plus):

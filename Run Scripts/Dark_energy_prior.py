@@ -60,8 +60,7 @@ pathlib.Path(directory).mkdir(parents=True, exist_ok=True) # Create the director
 #lower_bound_rho_plus = 1.5*rho_ns --> right down to the chiral EFT
 #upper_bound_rho_plus = 10**(16)/rho_ns = 37.31426766180507 #taken to the an energy density that captures all of the maximum central energy densities for the entire PP parameterization
 
-variable_params = {'gamma1':[1., 4.5], 'gamma2':[0., 8.], 'gamma3':[0.5, 8.], 'rho_t1':[1.5, 8.3], 'rho_t2':[1.5, 8.3],
-                  'A_param':[0.1, 0.7],'rho_plus': [1.1,37.31426766],'alpha':[0.1, 1.],'ceft':[EOS.min_norm, EOS.max_norm]}
+variable_params = {'gamma1':[1., 4.5], 'gamma2':[0., 8.], 'gamma3':[0.5, 8.], 'rho_t1':[1.5, 8.3], 'rho_t2':[1.5, 8.3],'A_param':[0.1, 0.7],'rho_plus': [1.1,37.31426766],'alpha':[0.1, 1.],'ceft':[EOS.min_norm, EOS.max_norm]}
 
 
 for i in range(number_stars):

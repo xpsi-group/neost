@@ -24,16 +24,22 @@ Msun = global_imports._M_s
 pi = global_imports._pi
 rho_ns = global_imports._rhons
 
+print(np.log10(36.864753138526*rho_ns))
 
-EOS = polytropes.PolytropicEoS(crust='ceft-Hebeler', rho_t= 2e14,adm_type = 'Dark Energy')
+EOS = polytropes.PolytropicEoS(crust = 'ceft-Keller-N3LO', rho_t = 1.1*rho_ns,adm_type = 'Dark Energy')
+
+
 EOS.update({'gamma1':2.3, 'gamma2':4., 'gamma3':2.6, 'rho_t1':1.8, 'rho_t2':4, 'A_param': 0.3, 'alpha': 0.4, 'rho_plus': 2.78, 'ceft': 2.6}, max_edsc_de = True)
 
 
-central_densities = np.linspace(EOS.rho_plus/rho_ns +0.1, EOS.max_edsc_de, 75)*rho_ns
+central_densities = np.linspace(EOS.rho_plus/rho_ns + 0.1, EOS.max_edsc_de, 75)*rho_ns
+
+
 MR = np.zeros((len(central_densities), 6))
 
 
-print(EOS.A_param)
+
+print(EOS.max_edsc_de, EOS.max_edsc/rho_ns)
 
 for i, eps in enumerate(central_densities):
     star = Star(eps,0.0,EOS.rho_plus, EOS.alpha, False, True)
@@ -44,6 +50,8 @@ for i, eps in enumerate(central_densities):
 
 end = time.time()
 
+print(MR[:,0])
+print(MR[:,1])
 print("Execution time of the MR is: " + str(end-start)) 
 
 
