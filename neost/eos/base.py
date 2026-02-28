@@ -124,7 +124,7 @@ class BaseEoS():
                 raise ValueError('The transition density should be between \
                     %.2f and 2.0 saturation density.' % self._rho_start_ceft)
 
-    def update(self, eos_params, max_edsc=True):
+    def update(self, eos_params, max_edsc=True, max_edsc_de = False):
         """
         Method to update a given EoS object with specified parameters.
 
@@ -136,6 +136,10 @@ class BaseEoS():
         max_edsc: bool
             If True, compute the maximum central energy density allowed
             by this set of parameters (default is True).
+
+
+        max_edsc_de: bool
+            If True, compute the maximum central energy density allowed by the set of parameters describing a neutron star with a dark enery core defined by the MCDF EoS.
 
         """
 
@@ -165,6 +169,12 @@ class BaseEoS():
             self.find_max_edsc()
         else:
             self.max_edsc = 0.0
+
+
+        if max_edsc_de is True:
+            self.find_max_edsc_de()
+        else:
+            self.max_edsc_de = 0.0
 
     # Compute the crust EoS
     def get_eos_crust(self):
@@ -368,6 +378,71 @@ class BaseEoS():
             self.min_edsc = min(eds_c[Ms[:,0] > 0.9])
         self.centraleds = eds_c
         self.massradius = Ms
+
+
+
+    # Find maximum central dark energy energy density
+    def find_max_edsc_de(self):
+
+        min_edsc0 = (self.rho_plus/rho_ns + 0.1)
+
+        eds = np.linspace(min_edsc0,20,len(self.energydensities_de))*rho_ns
+        #eds = np.logspace(14.3, np.log10(4e16), 1000) #same as above
+
+
+        cs = self.A_param*c**2. + self.B/(self.energydensities_de**2.*c**2.) 
+        cs = cs/c**2. #dpde(eds)/c**2
+        acausal = 1.
+        #dpde = self.eos_de.derivative(1) No need to compute dp_de here as we have the functional form of the speed of sound squared due to the simplicity of the MCDF EOS model.
+
+        if len(eds[cs > acausal]) != 0:
+
+            # NEoST v1.0
+            #maximum = eds[np.where(eds == min(eds[cs > acausal]))[0] - 1] # NEoST v1.0
+
+            # Updated version to get rid of the numpy ragged arrays issue
+            #maximum = eds[np.where(eds == min(eds[cs > acausal]))[0] - 1]
+
+            tmp = np.where(eds == min(eds[cs > acausal]))[0] # The issue is that this is a tuple (of length 1), not a scalar
+            try:
+                assert(len(tmp) == 1)
+            except (AssertionError, ValueError):
+                raise ValueError('Inconsistency in BaseEoS.find_max_edsc(), possibly caused by this attempt to fix a numpy issue. You can try reverting to the earlier version (see right above where this message originates).')
+            idx = tmp[0] - 1
+            maximum = eds[idx] # End of updated version
+
+            if maximum/rho_ns < min_edsc0: # g/cm^3
+                maximum = (min_edsc0 + 0.1)*rho_ns
+
+        else:
+            maximum = max(eds)
+
+
+ 
+        eds_c = np.linspace(min_edsc0, maximum/rho_ns, 40)*rho_ns # g/cm^3
+        Ms = np.zeros((len(eds_c),3))
+        
+        for i, e in enumerate(eds_c):
+            star = Star(e,0.0,self.rho_plus, self.alpha, False, True)
+            star.solve_structure(self.energydensities, self.pressures, self.energydensities_de, self.pressures_de)
+            if star.Mrot < Ms[i - 1][0]:
+                break
+            Ms[i] = star.Mrot, star.Req, star.tidal
+
+        Ms = Ms[Ms[:,0] > 0.0]
+        eds_c = eds_c[0:len(Ms)]
+        test, idx = np.unique(Ms[:,0], return_index=True)
+        Ms = Ms[idx]
+
+        eds_c = eds_c[idx]
+ 
+        self.max_M = max(Ms[:,0])
+        index_max_M = np.argmax(Ms[:,0])
+        self.Radius_max_M = Ms[:,1][index_max_M]
+        self.max_edsc_de = max(eds_c)/rho_ns
+        self.min_edsc_de = self.rho_plus/rho_ns + 0.005 #Just a slight shift off rho_plus as the EOS stops to make sense if the energy density is exactly rho_plus
+        self.centraleds_de = eds_c/rho_ns
+        self.massradius_de = Ms
 
     
     def f_chi_calc(self,epscent,epscent_dm):
