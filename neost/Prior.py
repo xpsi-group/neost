@@ -63,19 +63,20 @@ class Prior():
                 pr['gchi_over_mphi' ] = 10**pr['gchi_over_mphi']
 
         pr.update(self.static_params)
-        #if self.dark_energy is False:
-        self.EOS.update({k: pr[k] for k in tuple(self.EOS.param_names)},
+
+        if self.dark_energy is False:
+            self.EOS.update({k: pr[k] for k in tuple(self.EOS.param_names)},
                         max_edsc=True)
             
-        min_edsc = self.EOS.min_edsc
-        max_edsc = self.EOS.max_edsc    
+            min_edsc = self.EOS.min_edsc
+            max_edsc = self.EOS.max_edsc    
             
-        # else:
-        #     self.EOS.update({k: pr[k] for k in tuple(self.EOS.param_names)},
-        #                 max_edsc_de=True)
+        else:
+            self.EOS.update({k: pr[k] for k in tuple(self.EOS.param_names)},
+                        max_edsc_de=True)
             
-        #     min_edsc = self.EOS.min_edsc_de*rho_ns
-        #     max_edsc = self.EOS.max_edsc_de*rho_ns
+            min_edsc = self.EOS.min_edsc_de*rho_ns
+            max_edsc = self.EOS.max_edsc_de*rho_ns
         self.pr = pr
 
 
@@ -98,7 +99,7 @@ class Prior():
             self.max_edsc = self.EOS.max_edsc
 
         else:
-            self.max_edsc = self.EOS.max_edsc_de
+            self.max_edsc = self.EOS.max_edsc_de*rho_ns
 
         if self.standard_normal_ceft:
             # Transform ceft from U(0,1) to N(0,1)

@@ -45,7 +45,7 @@ class Likelihood():
                 star.solve_structure(self.prior.EOS.energydensities, self.prior.EOS.pressures, self.prior.EOS.energydensities_de, self.prior.EOS.pressures_de)
 
 
-                print('DE:', star.Mrot, star.Mdmcore, star.Req)
+                #print('DE:', star.Mrot, star.Mdmcore, star.Req)
                 Mgrav = star.Mrot
                 Mde_core = star.Mdmcore
                 Req = star.Req
