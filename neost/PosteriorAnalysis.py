@@ -12,6 +12,7 @@ import seaborn as sns
 from scipy.interpolate import UnivariateSpline
 from scipy.stats import gaussian_kde
 import corner
+from tqdm import tqdm
 
 # Local imports
 import neost
@@ -76,7 +77,7 @@ def get_quantiles(array, quantiles=[0.025, 0.5, 0.975]):
         plus = high - median
         return np.round(median,2),np.round(plus,2),np.round(minus,2)
 
-def compute_table_data(path, EOS, variable_params, static_params, dm=False, sampler='multinest', identifier=''):
+def compute_table_data(path, EOS, variable_params, static_params, dm=False, de=False, sampler='multinest', identifier=''):
     """
     Function to compute the table data in Raaijmakers et al. 2021 & Rutherford et al. 2024.
     In particular: M_TOV, R_TOV, eps_cent_TOV, rho_cent_TOV, P_cent_TOV, R_1.4, eps_cent_1.4, rho_cent_1.4, P_cent_1.4,
@@ -101,6 +102,9 @@ def compute_table_data(path, EOS, variable_params, static_params, dm=False, samp
     dm: bool
         If True ADM is included when computing the table data.
 
+    de: bool
+        If True Dark energy MCDF EOS is included when computing the table data.
+
     sampler: str
         The sampler used, either 'multinest' or 'ultranest'.
 
@@ -121,7 +125,7 @@ def compute_table_data(path, EOS, variable_params, static_params, dm=False, samp
         data_array = np.loadtxt(fname)
         if mpi_rank == 0:
             print(f'Reading and printing data from {fname}')
-            print_table_data(data_array)
+            print_table_data(data_array,de)
             return
         else:
             return
@@ -145,7 +149,7 @@ def compute_table_data(path, EOS, variable_params, static_params, dm=False, samp
     samples = comm.scatter(samples, root=0)
 
     # Compute table data in each process
-    data_array = _compute_table_data_thread(samples, EOS, variable_params, static_params, dm, mpi_rank)
+    data_array = _compute_table_data_thread(samples, EOS, variable_params, static_params, dm, de, mpi_rank)
 
     # Gather the results from the different processes
     data_array = comm.gather(data_array, root=0)
@@ -153,13 +157,16 @@ def compute_table_data(path, EOS, variable_params, static_params, dm=False, samp
     if mpi_rank == 0:
         # Return the array to the expected shape (num_samples, 13)
         data_array = np.concatenate(data_array, axis=0)
-        assert(data_array.shape == (num_samples, 13))
+        if de is True:
+            assert(data_array.shape == (num_samples,10))
+        else:
+            assert(data_array.shape == (num_samples, 13))
 
         # Save and print
         np.savetxt(fname, data_array)
-        print_table_data(data_array)
+        print_table_data(data_array,de)
 
-def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm, thread_number):
+def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm, de, thread_number):
     '''
     Here the calculations of table data is done.
     Reading/writing of files and parallelization is done by compute_table_data(),
@@ -170,20 +177,34 @@ def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm,
 
     # Contains Mtov, Rtov, eps_cent TOV, rho_cent TOV, P_cent TOV,R 1.4, eps_cent 1.4, rho_cent 1.4, P_cent 1.4, R 2.0, eps_cent 2.0, rho_cent 2.0, P_cent 2.0.
     # NOTE: ALL VALUES ARE THEIR ADMIXED VERSIONS WHEN dm == True!!
-    data_array = np.zeros((num_samples,13))
+    # NOTE: If de == True, thjen data_array is shorter since rho_cent_TOV, rho_2, rho_14 physically don't make sense for a dark energy core.
 
-    for i in range(0, num_samples):
+    if not de:
+        data_array = np.zeros((num_samples,13))
+
+    else:
+        data_array = np.zeros((num_samples,10))
+
+    for i in tqdm(range(0, num_samples)):
         pr = samples[i][0:len(variable_params)]
         par = {e:pr[j] for j, e in enumerate(list(variable_params.keys()))}
         par.update(static_params)
-        EOS.update(par, max_edsc=True)
 
-        edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0)
-        eps = np.logspace(14.4, np.log10(EOS.max_edsc), 40)
+        if not de:
+            EOS.update(par, max_edsc=True)
+            eps = np.logspace(14.4, np.log10(EOS.max_edsc), 40)
+
+        else:
+            EOS.update(par,max_edsc_de = True)
+            eps = np.linspace(EOS.min_edsc_de, EOS.max_edsc_de, 40)*rho_ns #Minimum & Maximum energy density with a Dark Energy core is computed
+                                                                            # in terms of n_0, hence the factor of rho_ns
+
+
         M = np.zeros(len(eps))
         R = np.zeros(len(eps))
 
-        if not dm:
+        if not dm and not de:
+            edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0)
             max_rhoc = edsrho(EOS.max_edsc) / rho_ns #division by rho_ns gives max_rhoc in terms of n_c/n_0 as mass density and number density only differ by a factor the mass of baryon, which is canceled out in this fraction
             for j, e in enumerate(eps):
                 star = Star(e)
@@ -220,7 +241,7 @@ def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm,
             # Construct a row of data_array
             row = [EOS.max_M, EOS.Radius_max_M, np.log10(EOS.max_edsc), max_rhoc, np.log10(EOS.eos(EOS.max_edsc)),R_14, np.log10(eps_14), rho_14, np.log10(pres_14),R_2, np.log10(eps_2), rho_2, np.log10(pres_2)]
 
-        else:
+        elif dm and not de:
             edsrho_dm = UnivariateSpline(EOS.energydensities_dm, EOS.massdensities_dm, k=1, s=0, ext = 1)
             epsdm_max = EOS.find_epsdm_cent(EOS.adm_fraction, EOS.max_edsc)
             max_rhocdm = edsrho_dm(epsdm_max) / rho_ns
@@ -246,7 +267,7 @@ def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm,
             Radius_max_M = R[index_max_M]
 
             MR = UnivariateSpline(M, R[indices], k=1, s=0, ext=1)
-            epsdm_Mdm = UnivariateSpline(Mdm[indicies], epsdm[indices], k=1, s=0, ext=1)
+            epsdm_Mdm = UnivariateSpline(Mdm[indices], epsdm[indices], k=1, s=0, ext=1)
             eps_total = eps + epsdm
             epsM = UnivariateSpline(M, eps_total[indices], k=1, s=0,ext = 1)
             eos_dm = UnivariateSpline(EOS.energydensities_dm, EOS.pressures_dm, k=1, s=0,ext = 1)
@@ -278,8 +299,50 @@ def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm,
                 rho_2 = edsrho(epsb_2) / rho_ns + edsrho_dm(epsdm_2) / rho_ns
                 pres_2 = EOS.eos(epsb_2) + eos_dm(epsdm_2)
 
+
             # Construct a row of data_array
             row = [max(M), Radius_max_M, np.log10(EOS.max_edsc + epsdm_max), max_rhoc, np.log10(EOS.eos(EOS.max_edsc) + eos_dm(epsdm_max)),R_14, np.log10(eps_14), rho_14, np.log10(pres_14),R_2, np.log10(eps_2), rho_2, np.log10(pres_2)]
+
+        elif not dm and de:
+            for j,e in enumerate(eps):
+                star = Star(e, 0.0, EOS.rho_plus, EOS.alpha, False, True)
+                star.solve_structure(EOS.energydensities, EOS.pressures, EOS.energydensities_de, EOS.pressures_de)
+                M[j] = star.Mrot
+                R[j] = star.Req
+
+            M, indices = np.unique(M, return_index=True)
+            MR = UnivariateSpline(M, R[indices], k=1, s=0, ext=1)
+            epsMde = UnivariateSpline(M, eps[indices], k=1, s=0,ext = 1)
+
+            R_14 = MR(1.4)
+            if R_14 == 0:
+                R_14 = np.nan # set to be nan so they don't impact the quantiles b/c we are using np.nanquantiles
+                epsde_14 = np.nan
+                presde_14 = np.nan
+            else:
+                epsde_14 = epsMde(1.4)
+                presde_14 = EOS.eos_de(epsde_14)
+
+            R_2 = MR(2.0)
+            if R_2 == 0:
+                R_2 = np.nan # see above for reasoning
+                eps_2 = np.nan
+                presde_2 = np.nan
+
+            else:
+                epsde_2 = epsMde(2.0)
+                presde_2 = EOS.eos_de(epsde_2)
+
+            
+            max_M = max(M)
+            index_max_M = np.argmax(M)
+            Radius_max_M = R[index_max_M]
+
+            row = [max_M, Radius_max_M, np.log10(EOS.max_edsc_de*rho_ns), np.log10(EOS.eos_de(EOS.max_edsc_de*rho_ns)), R_14, np.log10(epsde_14), np.log10(presde_14), R_2, np.log10(epsde_2), np.log10(presde_2)]
+
+        else:
+            raise ValueError("dm and de cannot both be true at the same time!")
+
 
         for k in range(len(row)):
             # Some of the values in row may be arrays of shape (1,),
@@ -293,21 +356,36 @@ def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm,
         data_array[i,:] = row
     return data_array
 
-def print_table_data(data_array):
-    print('M_TOV: ', get_quantiles(data_array[:,0]))
-    print('R_TOV: ', get_quantiles(data_array[:,1]))
-    print('eps_cent TOV: ', get_quantiles(data_array[:,2]))
-    print('rho_cent TOV: ', get_quantiles(data_array[:,3]))
-    print('P_cent TOV: ', get_quantiles(data_array[:,4]))
-    print('R_1.4: ', get_quantiles(data_array[:,5]))
-    print('eps_cent 1.4: ', get_quantiles(data_array[:,6]))
-    print('rho_cent 1.4: ', get_quantiles(data_array[:,7]))
-    print('P_cent 1.4: ', get_quantiles(data_array[:,8]))
-    print('R_2.0: ', get_quantiles(data_array[:,9]))
-    print('eps_cent 2.0: ', get_quantiles(data_array[:,10]))
-    print('rho_cent 2.0: ', get_quantiles(data_array[:,11]))
-    print('P_cent 2.0: ', get_quantiles(data_array[:,12]))
-    print('Delta R = R_2.0 - R_1.4: ', get_quantiles(data_array[:,9] - data_array[:,5]))
+def print_table_data(data_array,de=False):
+
+    if de is False:
+        print('M_TOV: ', get_quantiles(data_array[:,0]))
+        print('R_TOV: ', get_quantiles(data_array[:,1]))
+        print('eps_cent TOV: ', get_quantiles(data_array[:,2]))
+        print('rho_cent TOV: ', get_quantiles(data_array[:,3]))
+        print('P_cent TOV: ', get_quantiles(data_array[:,4]))
+        print('R_1.4: ', get_quantiles(data_array[:,5]))
+        print('eps_cent 1.4: ', get_quantiles(data_array[:,6]))
+        print('rho_cent 1.4: ', get_quantiles(data_array[:,7]))
+        print('P_cent 1.4: ', get_quantiles(data_array[:,8]))
+        print('R_2.0: ', get_quantiles(data_array[:,9]))
+        print('eps_cent 2.0: ', get_quantiles(data_array[:,10]))
+        print('rho_cent 2.0: ', get_quantiles(data_array[:,11]))
+        print('P_cent 2.0: ', get_quantiles(data_array[:,12]))
+        print('Delta R = R_2.0 - R_1.4: ', get_quantiles(data_array[:,9] - data_array[:,5]))
+
+    else:
+        print('M_TOV: ', get_quantiles(data_array[:,0]))
+        print('R_TOV: ', get_quantiles(data_array[:,1]))
+        print('eps_cent TOV: ', get_quantiles(data_array[:,2]))
+        print('P_cent TOV: ', get_quantiles(data_array[:,3]))
+        print('R_1.4: ', get_quantiles(data_array[:,4]))
+        print('eps_cent 1.4: ', get_quantiles(data_array[:,5]))
+        print('P_cent 1.4: ', get_quantiles(data_array[:,6]))
+        print('R_2.0: ', get_quantiles(data_array[:,7]))
+        print('eps_cent 2.0: ', get_quantiles(data_array[:,8]))
+        print('P_cent 2.0: ', get_quantiles(data_array[:,9]))
+        print('Delta R = R_2.0 - R_1.4: ', get_quantiles(data_array[:,7] - data_array[:,4]))
 
 def load_equal_weighted_samples(path, sampler, identifier):
     # For Multinest, 'path' is the directory containing all the output files.
@@ -352,6 +430,7 @@ def recast_equal_weighted_samples_for_mpi(equal_weighted_samples, num_processes)
             samples[current_core].append(equal_weighted_samples[idx])
     return samples
 
+    # TODO: develop the compute_auxiliary_data and compute_auxiliary_data_thread following the original neostde PosteriorAnalysis.py file
 def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_masses, dm=False, sampler='multinest', identifier=''):
     """
     Function to compute the posterior auxiliary data used to generate standard NEoST plots, such as, the pressures, (if dm = True)
