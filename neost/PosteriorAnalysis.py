@@ -515,6 +515,10 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
             pressures_b = np.concatenate([result.get('pressures_b') for result in results], axis=1)
             pressures_dm = np.concatenate([result.get('pressures_dm') for result in results], axis=1)
 
+        if de:
+            pressures_b = np.concatenate([result.get('pressures_b') for result in results], axis=1)
+            pressures_rho_b = np.concatenate([result.get('pressures_rho_b') for result in results], axis=1)
+
         # Filter out unphysical results
         mass_radius = mass_radius[mass_radius[:,1] != 0]
 
@@ -524,11 +528,24 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
         if dm:
             savedata['pressures_baryon.npy'] = pressures_b
             savedata['pressures_dm.npy'] = pressures_dm
+
+        if de:
+            savedata['pressures_baryon.npy'] = pressures_b
+            savedata['pressures_rho_baryon.npy'] = pressures_rho_b
+
         if not eos_is_fixed:
             minradii, maxradii = calc_bands(masses, radii)
             savedata['minradii.npy'] = minradii
             savedata['maxradii.npy'] = maxradii
-            if dm:
+
+            if not dm and not de:
+                minpres, maxpres = calc_bands(energydensities, pressures)
+                minpres_rho, maxpres_rho = calc_bands(energydensities, pressures_rho)
+                savedata['minpres_rho.npy'] = minpres_rho
+                savedata['maxpres_rho.npy'] = maxpres_rho
+                savedata['minpres.npy'] = minpres
+                savedata['maxpres.npy'] = maxpres
+            elif dm and not de:
                 minpres, maxpres = calc_bands(energydensities_b, pressures)
                 minpres_rho, maxpres_rho = calc_bands(energydensities_b, pressures_rho)
                 minpres_b, maxpres_b = calc_bands(energydensities_b, pressures_b)
@@ -541,13 +558,20 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
                 savedata['maxpres_baryon.npy'] = maxpres_b
                 savedata['minpres_dm.npy'] = minpres_dm
                 savedata['maxpres_dm.npy'] = maxpres_dm
-            else:
+            elif not dm and de:
                 minpres, maxpres = calc_bands(energydensities, pressures)
-                minpres_rho, maxpres_rho = calc_bands(energydensities, pressures_rho)
-                savedata['minpres_rho.npy'] = minpres_rho
-                savedata['maxpres_rho.npy'] = maxpres_rho
+                minpres_b, maxpres_b = calc_bands(energydensities, pressures_b)
+                minpres_rho_b, maxpres_rho_b = calc_bands(energydensities, pressures_rho_b)
                 savedata['minpres.npy'] = minpres
                 savedata['maxpres.npy'] = maxpres
+                savedata['minpres_baryon.npy'] = minpres_b
+                savedata['maxpres_baryon.npy'] = maxpres_b
+                savedata['minpres_rho_baryon.npy'] = minpres_rho_b
+                savedata['maxpres_rho_baryon.npy'] = maxpres_rho_b
+
+            else:
+                raise ValueError("dm and de cannot both be true at the same time!")
+            
         save_auxiliary_data(path, identifier, savedata)
 
  # TODO: figure out what to do about the de argument from here on, if anything. 
