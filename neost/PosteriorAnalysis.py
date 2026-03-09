@@ -431,7 +431,7 @@ def recast_equal_weighted_samples_for_mpi(equal_weighted_samples, num_processes)
     return samples
 
     # TODO: develop the compute_auxiliary_data and compute_auxiliary_data_thread following the original neostde PosteriorAnalysis.py file
-def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_masses, dm=False, sampler='multinest', identifier=''):
+def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_masses, dm=False, de=False, sampler='multinest', identifier=''):
     """
     Function to compute the posterior auxiliary data used to generate standard NEoST plots, such as, the pressures, (if dm = True)
     the baryonic pressure, mass-radius posteriors, and p-eps posteriors.
@@ -456,7 +456,10 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
         List determining if GW data is included. If None, just MR only.
 
     dm: bool
-        If True, ADM is included when computing the table data.
+        If True, ADM is included when computing the auxiliary data.
+
+    de: bool
+        If True, Dark energy MCDF EOS is included when computing the auxiliary data.
 
     sampler: str
         The sampler used, either 'multinest' or 'ultranest'.
@@ -488,7 +491,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
 
     # Scatter samples to the different processes and compute
     samples = comm.scatter(samples, root=0)
-    results = _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params, chirp_masses, dm, eos_is_fixed, mpi_rank)
+    results = _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params, chirp_masses, dm, de, eos_is_fixed, mpi_rank)
 
     # Gather
     results = comm.gather(results, root=0)
@@ -502,6 +505,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
         pressures_rho = np.concatenate([result.get('pressures_rho') for result in results], axis=1)
         scattered = np.concatenate([result.get('scattered') for result in results])
 
+    # TODO: figure out what to do about the de argument from here on, if anything. 
         # Dark matter
         energydensities_b = None
         energydensities_dm = None
@@ -546,7 +550,8 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
                 savedata['maxpres.npy'] = maxpres
         save_auxiliary_data(path, identifier, savedata)
 
-def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params, chirp_masses, dm, eos_is_fixed, thread_number):
+ # TODO: figure out what to do about the de argument from here on, if anything. 
+def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params, chirp_masses, dm, de, eos_is_fixed, thread_number):
     '''
     Here the calculations of auxiliary data is done.
     Reading/writing of files and parallelization is done by compute_auxiliary_data(),
@@ -579,14 +584,29 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
         pressures_b = np.zeros((num_grid_points, num_samples))
         pressures_rho_b = np.zeros((num_grid_points, num_samples))
 
-    for i in range(0, num_samples):
+    if de:
+        #There is no pressures_rho for the dark energy case since the dark energy EOS is a massless fluid, thus a mass density
+        #,and corresponding pressure, is not well defined. We can still specify the energy densities and pressures for the dark energy case.
+        #Moreover, we can also still compute the pressures_rho an pressures for the baryonic case to determine the impact of 
+        #including dark energy in the core of a neutron star. 
+        pressures_b = np.zeros((num_grid_points, num_samples)) 
+        pressures_rho_b = np.zeros((num_grid_points, num_samples))                                                                                                                          
+
+    for i in tqdm(range(0, num_samples)):
         pr = samples[i][0:len(variable_params)]
         par = {e:pr[j] for j, e in enumerate(list(variable_params.keys()))}
         par.update(static_params)
-        EOS.update(par, max_edsc=True)
+        if de:
+            EOS.update(par, max_edsc_de=True, max_edsc=True)
+            rhocs = np.logspace(np.log10(EOS.min_edsc_de*rho_ns), np.log10(EOS.max_edsc_de*rho_ns), 30)
+            #Defining the rhocs to be strictly above EOS.rho_plus as we do not want to consider a possible purely baryonic branch of the 
+            #mass-radius relation when including a dark energy core, as this would create twin-star configurations that Rutherford et al. 2026 does not consider.
+            #This part of the code (along with other specific parts; email Nathan Rutherford if wanting assistance) should be changed if a user want to consider possible twin star configurations. 
+        else:
+            EOS.update(par, max_edsc=True)
+            rhocs = np.logspace(14.5, np.log10(EOS.max_edsc), 30)
+            rhocsdm = np.zeros_like(rhocs)
 
-        rhocs = np.logspace(14.5, np.log10(EOS.max_edsc), 30)
-        rhocsdm = np.zeros_like(rhocs)
 
         M = np.zeros(len(rhocs))
         R = np.zeros(len(rhocs))
@@ -594,7 +614,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
         rhocpar = np.array([10**v for k,v in par.items() if 'rhoc' in k])
         scattered_elements = []
 
-        if not dm:
+        if not dm and not de:
             rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0)
             edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0)
             max_rhoc = edsrho(EOS.max_edsc)
@@ -631,7 +651,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             star = Star(10**rhoc)
             star.solve_structure(EOS.energydensities, EOS.pressures)
             mass_radius[i] = star.Mrot, star.Req
-        else:
+        elif dm and not de:
             rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0, ext = 1)
             edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0, ext = 1)
             max_rhoc = edsrho(EOS.max_edsc)
@@ -736,12 +756,76 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             if MR != 0:
                 radii[:,i] = MR(masses)
 
+        elif not dm and de:
+
+            for j in range(len(energydensities)):
+                if EOS.rho_plus < energydensities[j]:
+                    if energydensities[j]/rho_ns < EOS.max_edsc_de:
+                        pressures[:,i][j] = EOS.eos_de(energydensities[j])
+                        #dark energy contribution for central energy densities in which rho_plus is smaller than it.
+                else:
+                    if energydensities[j]/rho_ns < EOS.max_edsc_de:
+                        pressures[:,i][j] = EOS.eos(energydensities[j])
+                        #baryonic contribution for central energy densities in which rho_plus is larger than it.
+
+
+            rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0)
+            pressures_b[:,i][energydensities<EOS.max_edsc] = EOS.eos(energydensities[energydensities<EOS.max_edsc])
+            pressures_rho_b[:,i][indices] = rhopres(energydensities[indices])
+
+            for j,e in enumerate(rhocs):
+                star = Star(e, 0.0, EOS.rho_plus, EOS.alpha, False, True)
+                star.solve_structure(EOS.energydensities, EOS.pressures, EOS.energydensities_de, EOS.pressures_de)
+                M[j] = star.Mrot
+                R[j] = star.Req
+
+
+                M, indices = np.unique(M, return_index=True)
+                MR = UnivariateSpline(M, R[indices], k=1, s=0, ext=1)
+                rhocM = UnivariateSpline(M, rhocs[indices], k=1, s=0, ext=1)
+
+                for j, e in enumerate(rhocpar):
+                    if EOS.rho_plus < e:
+                        star = Star(e, 0.0, EOS.rho_plus, EOS.alpha, False, True)
+                        star.solve_structure(EOS.energydensities, EOS.pressures, EOS.energydensities_de, EOS.pressures_de)
+                        scattered_elements.append([e, EOS.eos_de(e), star.Mrot, star.Req, star.tidal])
+
+                    else:
+                        star = Star(e)
+                        star.solve_structure(EOS.energydensities, EOS.pressures)
+                        scattered_elements.append([e, EOS.eos(e), star.Mrot, star.Req, star.tidal])
+
+                    if chirp_masses[j] is not None:
+                        M2 = m1(chirp_masses[j], scattered_elements[j][2])
+                        rhoc = rhocM(M2)
+                        star = Star(rhoc)
+                        star.solve_structure(EOS.energydensities, EOS.pressures)
+                        scattered_elements.append([rhoc, EOS.eos(rhoc), star.Mrot, star.Req, star.tidal])
+
+                scattered.append(scattered_elements)
+                radii[:,i] = MR(masses)
+                rhoc = np.random.rand() *(np.log10(EOS.max_edsc_de*rho_ns) - np.log10(EOS.rho_plus)) + np.log10(EOS.rho_plus)
+                star = Star(10**rhoc, 0.0, EOS.rho_plus, EOS.alpha, False, True)
+                star.solve_structure(EOS.energydensities, EOS.pressures, EOS.energydensities_de, EOS.pressures_de)
+                mass_radius[i] = star.Mrot, star.Req
+
+        else:
+            raise ValueError("dm and de cannot both be true at the same time!")
+        
+
+
     return_values = {'pressures':pressures, 'pressures_rho':pressures_rho, 'masses':masses, 'radii':radii, 'scattered':scattered, 'mass_radius':mass_radius, 'energydensities':energydensities}
     if dm:
         return_values['pressures_b'] = pressures_b
         return_values['pressures_dm'] = pressures_dm
         return_values['energydensities_b'] = energydensities_b
         return_values['energydensities_dm'] = energydensities_dm
+
+    if de:
+        return_values = {'pressures':pressures, 'masses':masses, 'radii':radii, 'scattered':scattered, 'mass_radius':mass_radius, 'energydensities':energydensities}
+        return_values['pressures_b'] = pressures_b
+        return_values['pressures_rho_b'] = pressures_rho_b
+
     return return_values
 
 def cornerplot(path, variable_params, dm=False, sampler='multinest', identifier=''): #Add ADM functionality

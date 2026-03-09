@@ -385,6 +385,9 @@ class BaseEoS():
     def find_max_edsc_de(self):
 
         min_edsc0 = (self.rho_plus/rho_ns + 0.1)
+        #Defining the min_edsc0 to be strictly above EOS.rho_plus as we do not want to consider a possible purely baryonic branch of the 
+            #mass-radius relation when including a dark energy core, as this would create twin-star configurations that Rutherford et al. 2026 does not consider.
+            #This part of the code (along with other specific parts; email Nathan Rutherford if wanting assistance) should be changed if a user want to consider possible twin star configurations. 
 
         eds = np.linspace(min_edsc0,20,len(self.energydensities_de))*rho_ns
         #eds = np.logspace(14.3, np.log10(4e16), 1000) #same as above

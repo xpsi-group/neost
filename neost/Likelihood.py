@@ -40,6 +40,9 @@ class Likelihood():
 
                 if pr_dict['rhoc_' + str(i + 1)] < np.log10(self.prior.EOS.rho_plus):
                     return -1e101
+                #Defining the rhocs to be strictly above EOS.rho_plus as we do not want to consider a possible purely baryonic branch of the 
+            #mass-radius relation when including a dark energy core, as this would create twin-star configurations that Rutherford et al. 2026 does not consider.
+            #This part of the code (along with other specific parts; email Nathan Rutherford if wanting assistance) should be changed if a user want to consider possible twin star configurations. 
                 
                 star = Star(10**(pr_dict['rhoc_' + str(i + 1)]), 0.0, self.prior.EOS.rho_plus, self.prior.EOS.alpha, False, True)
                 star.solve_structure(self.prior.EOS.energydensities, self.prior.EOS.pressures, self.prior.EOS.energydensities_de, self.prior.EOS.pressures_de)
