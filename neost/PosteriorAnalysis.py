@@ -798,9 +798,14 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
                     if chirp_masses[j] is not None:
                         M2 = m1(chirp_masses[j], scattered_elements[j][2])
                         rhoc = rhocM(M2)
-                        star = Star(rhoc)
-                        star.solve_structure(EOS.energydensities, EOS.pressures)
-                        scattered_elements.append([rhoc, EOS.eos(rhoc), star.Mrot, star.Req, star.tidal])
+                        if EOS.rho_plus < rhoc:
+                            star = Star(rhoc, 0.0, EOS.rho_plus, EOS.alpha, False, True)
+                            star.solve_structure(EOS.energydensities, EOS.pressures, EOS.energydensities_de, EOS.pressures_de)
+                            scattered_elements.append([rhoc, EOS.eos_de(rhoc), star.Mrot, star.Req, star.tidal])
+                        else:
+                            star = Star(rhoc)
+                            star.solve_structure(EOS.energydensities, EOS.pressures)
+                            scattered_elements.append([rhoc, EOS.eos(rhoc), star.Mrot, star.Req, star.tidal])
 
                 scattered.append(scattered_elements)
                 radii[:,i] = MR(masses)
