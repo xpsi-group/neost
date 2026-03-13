@@ -178,7 +178,8 @@ def initial_conditions(double rhocent, double pcent, adindcent=2.):
         Args: 
             rhocent (float): The central energy density of the star in geometrized units (g/cm^3 converted to g/cm).
             pcent (float): The central pressure of the star in geometrized units (g/(cm s^2) converted to g/(cm s^2)).
-            adindcent (float, optional): The adiabatic index at the center of the star. Default is 2, which corresponds to a relativistic degenerate gas.
+            adindcent (float, optional): The adiabatic index at the center of the star. Default is 2, which 
+            corresponds to a relativistic degenerate gas.
 
         Returns:
             tuple: tuple containing:

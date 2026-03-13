@@ -36,10 +36,22 @@ class BaseEoS():
 
     Methods
     -------
-    update(eos_params, max_edsc=True)
+    update(eos_params, max_edsc=True, max_edsc_de = False)
         Update the EoS object with a given set of parameters
     get_eos_crust()
         Construct the crust of the equation of state, with or without cEFT.
+    get_eos()
+        Construct the core of the equation of state, with or without cEFT.
+    find_max_edsc()
+        Find the maximum central energy density allowed by the EoS parameters.
+    find_max_edsc_de()
+        Find the maximum central energy density allowed by the EoS parameters describing a neutron star with a dark energy core defined by the MCDF EoS.
+    fchi_calc(epscent,epscent_dm)
+        Calculate the ADM mass-fraction given the baryonic and ADM central densities, respectively.
+    find_epsdm_cent(ADM_fraction,epscent)
+        Calculate the ADM central energy density given the baryonic central energy density and ADM mass-fraction. Uses a wide array of different intervals of central energy densities to determine the ADM central energy density as a root finding problem.
+    mass_radius()
+        Compute the mass-radius curve of the EoS.
     plot()
         Plot the equation of state.
     plot_massradius()
@@ -322,7 +334,14 @@ class BaseEoS():
 
     # Find maximum central energy density
     def find_max_edsc(self):
+        """ Compute the maximum central energy density allowed by the EoS parameters. This is done by first finding the maximum energy density for which the speed of sound is causal,
+          and then solving the TOV equations for a range of central energy densities up to this maximum to find the maximum mass configuration. The maximum central energy density is then set to 
+          be the central energy density of the maximum mass configuration, or the maximum energy density for which the speed of sound is causal, whichever is smaller.
 
+          Returns:
+            max_edsc (float): The maximum central energy density allowed by the EoS parameters in cgs units for mass-density, i.e., divided by the speed of light squared.
+        
+        """
         min_edsc0 = 14.3
         if self.rho_t is not None:
             eds = np.logspace(np.log10(self.rho_t), 
