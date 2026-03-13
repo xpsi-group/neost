@@ -15,6 +15,30 @@ Msun = global_imports._M_s
 
 @jit(nopython=True)
 def TOV_complete(r, Z, epsgrid_dm, presgrid_dm, epsgrid, presgrid):
+    """
+    Calculate the derivatives of the mass and pressure for both the baryonic and dark matter components, as well as the metric function alpha, at a given radius `r` and state vector `Z`. This function is used to solve the complete TOV equations for a neutron star with a dark matter component. The state vector `Z` contains the following components:
+    - Z[0]: Mass of the baryonic component enclosed within radius `r` (mb)
+    - Z[1]: Mass of the dark matter component enclosed within radius `r` (mchi)
+    - Z[2]: Pressure of the baryonic component at radius `r` (pb)
+    - Z[3]: Pressure of the dark matter component at radius `r` (pchi)
+    - Z[4]: Metric function alpha(r) related to the time component of the metric
+
+    Args:
+        r (float): Radial coordinate at which to evaluate the derivatives.
+        Z (np.ndarray): The state vector at radius `r`, containing the components described above.
+        epsgrid_dm (np.ndarray): Grid of energy density values for the dark matter component in geometrized units (g/cm^3 converted to g/cm).
+        presgrid_dm (np.ndarray): Grid of pressure values for the dark matter component in geometrized units (g/(cm s^2) converted to g/(cm s^2)).
+        epsgrid (np.ndarray): Grid of energy density values for the baryonic component in geometrized units (g/cm^3 converted to g/cm).
+        presgrid (np.ndarray): Grid of pressure values for the baryonic component in geometrized units (g/(cm s^2) converted to g/(cm s^2)).
+
+    Returns:
+        np.ndarray: An array containing the derivatives of the mass and pressure for both components, as well as the derivative of the metric function alpha, in the following order:
+        - dmbdr: Derivative of the mass of the baryonic component with respect to radius (dmb/dr)
+        - dmchidr: Derivative of the mass of the dark matter component with respect to radius (dmchi/dr)
+        - dpbdr: Derivative of the pressure of the baryonic component with respect to radius (dpb/dr)
+        - dpchidr: Derivative of the pressure of the dark matter component with respect to radius (dpchi/dr)
+        - dalphadr: Derivative of the metric function alpha with respect to radius (dalpha/dr)
+    """
     mb = Z[0]
     mchi = Z[1]
     M = mb + mchi
@@ -33,6 +57,22 @@ def TOV_complete(r, Z, epsgrid_dm, presgrid_dm, epsgrid, presgrid):
 
 @jit(nopython=True)
 def TOV_single(r, Z, epsgrid, presgrid):
+    """
+    Calculate the derivatives for the TOV equations. This function is used to solve the single-fluid TOV equations for either the baryonic or dark matter component after the complete TOV equations have been solved and one of the components has dropped to zero pressure. The state vector `Z` contains the following components:
+    - Z[0]: Mass of the component enclosed within radius `r`
+    - Z[1]: Pressure of the component at radius `r`
+
+    Args:
+        r (float): Radial coordinate at which to evaluate the derivatives.
+        Z (np.ndarray): The state vector at radius `r`, containing the components described above   (mass and pressure of the remaining component). 
+        epsgrid (np.ndarray): Grid of energy density values for the component in geometrized units (g/cm^3 converted to g/cm).
+        presgrid (np.ndarray): Grid of pressure values for the component in geometrized units (g/(cm s^2) converted to g/(cm s^2)).
+    Returns:
+        np.ndarray: An array containing the derivatives of the mass and pressure for the remaining component, as well as the derivative of the metric function alpha, in the following order:
+        - dmbdr: Derivative of the mass of the component with respect to radius (dm/dr)
+        - dpbdr: Derivative of the pressure of the component with respect to radius (dp/dr) 
+        - dalphadr: Derivative of the metric function alpha with respect to radius (dalpha/dr)
+    """
     mb = Z[0]
     pb = Z[1]
     P = pb

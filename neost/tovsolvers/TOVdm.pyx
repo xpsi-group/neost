@@ -24,6 +24,17 @@ cdef double Msun = global_imports._M_s
 
 
 cdef int binarySearch(double arr[], int low, int high, double key) nogil:
+    """Perform a binary search to find the index of the largest value in `arr` that is less than or equal to `key`.
+
+    Args:
+        arr (double[]): A sorted array of double values.
+        low (int): The starting index of the search range.
+        high (int): The ending index of the search range.
+        key (double): The value to search for.
+
+    Returns:
+        int: The index of the largest value in `arr` that is less than or equal to `key`. If `key` is smaller than the smallest value in `arr`, returns 0. If `key` is larger than the largest value in `arr`, returns `high`.
+    """
     cdef int mid 
     while high > low:
         mid = (low + high) / 2
@@ -38,6 +49,20 @@ cdef int binarySearch(double arr[], int low, int high, double key) nogil:
 
 # in terms of r
 cdef double EofP(double pressure, double eps[], double pres[], int idx) nogil:
+    """
+    Calculate the energy density corresponding to a given pressure. This function uses a piecewise power-law 
+    interpolation based on the provided `eps` and `pres` arrays, which represent the energy density and pressure 
+    values of the equation of state (EOS) grid, respectively. The `idx` parameter indicates the index in the EOS 
+    grid that corresponds to the given pressure.
+    Args:        
+        pressure (double): The pressure for which to calculate the energy density, in geometrized units (g/(cm s^2) converted to g/(cm s^2)).
+        eps (double): An array of energy density values corresponding to the EOS grid, in geometrized units (g/cm^3 converted to g/cm).
+        pres (double): An array of pressure values corresponding to the EOS grid, in geometrized units (g/(cm s^2) converted to g/(cm s^2)).
+        idx (int): The index in the EOS grid that corresponds to the given pressure. This index is obtained using a binary search on the `pres` array.
+
+    Returns:
+        double: The energy density corresponding to the given pressure, calculated using piecewise power-law interpolation
+    """
     if idx == 0:
         eds = eps[0] * pow(pressure / pres[0], 3. / 5.)
     if idx > 0:
@@ -46,6 +71,19 @@ cdef double EofP(double pressure, double eps[], double pres[], int idx) nogil:
     return eds
 
 cdef double PofE(double epsilon, double pres[], double eps[], int idx) nogil:
+    """
+    Calculate the pressure corresponding to a given energy density. This function uses a piecewise power-law 
+    interpolation based on the provided `eps` and `pres` arrays, which represent the energy density and pressure 
+    values of the equation of state (EOS) grid, respectively. The `idx` parameter indicates the index in the EOS grid that corresponds to the given energy density.
+    Args:        
+        epsilon (double): The energy density for which to calculate the pressure, in geometrized units (g/cm^3 converted to g/cm).
+        pres (double): An array of pressure values corresponding to the EOS grid, in geometrized units (g/(cm s^2) converted to g/(cm s^2)).
+        eps (double): An array of energy density values corresponding to the EOS grid, in geometrized units (g/cm^3 converted to g/cm).
+        idx (int): The index in the EOS grid that corresponds to the given energy density. This index is obtained using a binary search on the `eps` array.
+
+    Returns:
+        double: The pressure corresponding to the given energy density, calculated using piecewise power-law interpolation
+    """
     if idx==0:
         pressure = pres[0]*pow(epsilon/eps[0], 5./3.)
     if idx>0.:
@@ -56,6 +94,19 @@ cdef double PofE(double epsilon, double pres[], double eps[], int idx) nogil:
 
 
 cdef int TOV_single(double r, const double y[], double f[], void * par) noexcept nogil:
+
+    """
+    Calculate the derivatives of the TOV equations for a single fluid (either baryonic or dark matter) at a given radius `r` and state `y`. This function is designed to be used with
+    the GSL ODE solver and takes additional parameters through the `par` argument, which contains the EOS data for the fluid.
+    Args:
+        r (double): The radial coordinate at which to evaluate the derivatives, in geometrized units (cm).
+        y (double[]): An array containing the current values of the variables [P, m, alpha], where P is the pressure, m is the mass enclosed within radius `r`, and alpha is a metric function related to the time component of the metric.
+        f (double[]): An array to store the calculated derivatives [dP/dr, dm/dr, dalpha/dr].
+        par (void*): A pointer to additional parameters needed for the calculation. This should be a pointer to an array of pointers containing the EOS data for energy density and pressure.
+
+    Returns:
+        int: A status code indicating the success of the calculation. Returns GSL_SUCCESS if the calculation was successful.
+    """
 
     cdef double p
     cdef double eps
@@ -82,6 +133,22 @@ cdef int TOV_single(double r, const double y[], double f[], void * par) noexcept
 
 
 cdef int TOV_complete(double r, const double y[], double f[],void * par) noexcept nogil:
+
+    """Calculate the derivatives of the TOV equations for a two-fluid system (baryonic matter and dark matter) at a given radius `r` and state `y`. This function is designed to be used with
+    the GSL ODE solver and takes additional parameters through the `par` argument, which contains the EOS data for both fluids. The function calculates the derivatives of pressure and mass for both fluids
+    as well as the derivative of the metric function alpha, which is related to the time component of the metric.
+
+    Args:
+        r (double): The radial coordinate at which to evaluate the derivatives, in geometrized units (cm).
+        y (double[]): An array containing the current values of the variables [Pb, Pdm, Mb, Mdm, alpha], where Pb is the pressure of baryonic matter, Pdm is the pressure of dark matter, Mb is the mass of baryonic
+        matter enclosed within radius `r`, Mdm is the mass of dark matter enclosed within radius `r`, and alpha is a metric function related to the time component of the metric.
+        f (double[]): An array to store the calculated derivatives [dPb/dr, dPdm/dr, dMb/dr, dMdm/dr, dalpha/dr].
+        par (void*): A pointer to additional parameters needed for the calculation. This should be a pointer to an array
+        of pointers containing the EOS data for energy density and pressure for both baryonic matter and dark matter.
+
+    Returns:
+        int: A status code indicating the success of the calculation. Returns GSL_SUCCESS if the calculation was successful.
+    """
 
     cdef double pb
     cdef double epsb
@@ -161,6 +228,40 @@ def initial_conditions(double rhobcent,double rhodmcent, double pbcent, double p
 
 def solveTOVdm(double rhobcent, double rhodmcent, eos_epsb, eos_presb, eos_epsdm, eos_presdm, dm_halo, two_fluid_tidal,double atol,
               double rtol, double hmax, double step):
+
+    """
+    Solve the TOV equations for a two-fluid system consisting of baryonic matter and dark matter, 
+    given the central densities and the equations of state (EOS) for both fluids. The function uses the 
+    GSL ODE solver to integrate the TOV equations from the center of the star outward until the pressure drops
+     below a specified minimum value. The function also determines whether the dark matter forms a core or a 
+     halo based on the relative pressures of the two fluids at the radius where the integration stops.
+
+     Args:
+        rhobcent (double): The central energy density of the baryonic matter in geometrized units (g/cm^3 converted to g/cm).
+        rhodmcent (double): The central energy density of the dark matter in geometrized units (g/cm^3 converted to g/cm).
+        eos_epsb (np.ndarray): An array of energy density values for the baryonic matter EOS, in geometrized units (g/cm^3 converted to g/cm).
+        eos_presb (np.ndarray): An array of pressure values for the baryonic matter EOS, in geometrized units (g/(cm s^2) converted to g/(cm s^2)).
+        eos_epsdm (np.ndarray): An array of energy density values for the dark matter EOS, in geometrized units (g/cm^3 converted to g/cm).
+        eos_presdm (np.ndarray): An array of pressure values for the dark matter EOS, in geometrized units (g/(cm s^2) converted to g/(cm s^2)).
+        dm_halo (bool): A boolean flag indicating whether to calculate a dark matter halo if the dark matter pressure exceeds the baryonic pressure at the radius where the integration stops.
+        two_fluid_tidal (bool): A boolean flag indicating whether to calculate tidal deformability using a two-fluid model. If False, tidal deformability will be set to 0.
+         atol (double): The absolute tolerance for the GSL ODE solver.
+         rtol (double): The relative tolerance for the GSL ODE solver.
+         hmax (double): The maximum step size for the GSL ODE solver.
+         step (double): The initial step size for the GSL ODE solver.
+
+    
+        Returns:
+            tuple: A tuple containing the following elements:
+                - **Array** (*np.ndarray*): A 2D array where each row corresponds to a radius and contains the following columns: [radius, total mass enclosed, baryonic energy density, baryonic pressure, dark matter energy density, dark matter pressure].
+                - **Rns** (*double*): The radius of the neutron star in cm.
+                - **Mb** (*double*): The mass of the baryonic matter in solar masses.
+                - **Mdm_core** (*double*): The mass of the dark matter core in solar masses.   
+                - **Mdm_halo** (*double*): The mass of the dark matter halo in solar masses. If there is no dark matter halo, this will be set to 0.
+                - **Rdm_core** (*double*): The radius of the dark matter core in cm. If there is no dark matter core.
+                - **Rdm_halo** (*double*): The radius of the dark matter halo in cm. If there is no dark matter halo, this will be set to 0.
+
+    """
 
     #cdef double atol=1e-6
     #cdef double rtol=1e-4
