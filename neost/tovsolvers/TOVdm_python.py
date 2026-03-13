@@ -72,6 +72,38 @@ def PofE(E, epsgrid, presgrid):
 
 
 def solveTOVdm(epscent, epscent_dm, eps, pres, eps_dm, pres_dm, dm_halo, two_fluid_tidal, atol, rtol, hmax, step):
+
+    """Solve the TOV equations for a neutron star with a dark matter component, which can be either a core or a halo. The TOV equations are solved in two steps: first, we solve the complete 
+    TOV equations for both the baryonic and dark matter components until the pressure of either component drops to
+     zero. Then, we solve the single-fluid TOV equations for the remaining component until its pressure drops to
+    zero. The function returns the mass and radius of the neutron star, as well as the mass and radius of the 
+    dark matter core and halo (if present), and the tidal deformability if requested.
+    
+    Args:        epscent (float): The central energy density of the baryonic component in cgs units (g/cm^3).
+        epscent_dm (float): The central energy density of the dark matter component in cgs units (g/cm^3).
+        eps (np.ndarray): Grid of energy density values for the baryonic component in cgs units (g/cm^3).
+        pres (np.ndarray): Grid of pressure values for the baryonic component in cgs units (g/(cm s^2)).
+        eps_dm (np.ndarray): Grid of energy density values for the dark matter component in cgs units (g/cm^3).
+        pres_dm (np.ndarray): Grid of pressure values for the dark matter component in cgs units (g/(cm s^2)).
+        dm_halo (bool): Whether to solve for a dark matter halo (True) or just a dark matter core (False).
+        two_fluid_tidal (bool): Whether to calculate the tidal deformability using the two-fluid TOV equations (True) or just the single-fluid TOV equations (False).
+        atol (float): Absolute tolerance for the ODE solver.
+        rtol (float): Relative tolerance for the ODE solver.
+        hmax (float): Maximum step size for the ODE solver.
+        step (float): Initial step size for the ODE solver.
+
+        Returns:
+        tuple: tuple containing:
+            - **Mb** (*float*): The mass of the baryonic component of the neutron star in grams.
+            - **Rns** (*float*): The radius of the neutron star in centimeters.
+            - **Mdm_core** (*float*): The mass of the dark matter core in grams.
+            - **Mdm_halo** (*float*): The mass of the dark matter halo in grams. If there is no halo, this will be zero.
+            - **Rdm_core** (*float*): The radius of the dark matter core in centimeters. If there is no core, this will be zero.
+            - **Rdm_halo** (*float*): The radius of the dark matter halo in centimeters. If there is no halo, this will be zero.
+            - **tidal** (*float*): The tidal deformability of the neutron star. If `two_fluid_tidal` is False, this will be zero.
+
+    
+    """
     
 
     #Scaling the baryonic and dark matter equations of state from cgs (g/cm^3 for the energy densities and g/(cm s^2) for pressure) to geometrized units
