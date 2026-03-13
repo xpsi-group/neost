@@ -8,4 +8,4 @@ examples/chains
 __pycache__/
 .ipynb_checkpoints
 neost/tovsolvers/*.so
-'Run Scripts'/
+Run Scripts/
