@@ -38,7 +38,7 @@ class SpeedofSoundEoS(BaseEoS):
         The name of the cEFT calculations used at low density.
         Can be one of 'Hebeler', 'Drischler', 'Lynn', 'Keller-N2LO', 'Keller-N3L0', or 'Tews'.
     adm_type: str
-        The name of the ADM particle type. Can be 'None', 'Bosonic', or 'Fermionic'
+        The name of the ADM particle type. Can be 'None', 'Bosonic', or 'Fermionic' or 'Dark Energy'.
     dm_halo: bool
         If True, ADM halos will be allowed.
     two_fluid_tidal: bool

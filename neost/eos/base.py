@@ -137,9 +137,10 @@ class BaseEoS():
             If True, compute the maximum central energy density allowed
             by this set of parameters (default is True).
 
-
         max_edsc_de: bool
-            If True, compute the maximum central energy density allowed by the set of parameters describing a neutron star with a dark enery core defined by the MCDF EoS.
+                If True, compute the maximum central energy density allowed by the set of parameters describing a neutron star with a dark energy core defined by the MCDF EoS. 
+                The default is False, as this is a more computationally expensive calculation that is only relevant for users interested in the MCDF EoS.
+
 
         """
 
