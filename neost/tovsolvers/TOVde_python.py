@@ -11,6 +11,23 @@ Msun = global_imports._M_s
 
 @jit(nopython=True)
 def pressure_epsilon(P, epsgrid, presgrid):
+
+    """Convert pressure to energy density using a piecewise power-law interpolation.
+
+    This function is used by the TOV solver to obtain the energy density (epsilon)
+    corresponding to a given pressure `P`, based on precomputed tables of
+    pressure and energy density (`presgrid`, `epsgrid`). The interpolation
+    is done in log-space by assuming locally polytropic behavior between
+    adjacent grid points.
+
+    Args:
+        P (float): Pressure value at which to evaluate the energy density.
+        epsgrid (np.ndarray): Grid of energy density values.
+        presgrid (np.ndarray): Grid of pressure values corresponding to `epsgrid`.
+
+    Returns:
+        float: Interpolated energy density corresponding to `P`.
+    """
     idx = np.searchsorted(presgrid, P)
     if idx == 0:
         eds = epsgrid[0] * np.power(P / presgrid[0], 3. / 5.)
@@ -23,6 +40,10 @@ def pressure_epsilon(P, epsgrid, presgrid):
 
 @jit(nopython=True)
 def epsilon_pressure(E, epsgrid, presgrid):
+    """Convert energy density to pressure using a piecewise power-law interpolation. This is similar to `pressure_epsilon`, 
+    but in the opposite direction and the argument P is replaced by E.
+
+    """  
     idx = np.searchsorted(epsgrid, E)
     if idx == 0:
         pres = presgrid[0] * np.power(E / epsgrid[0], 5. / 3.)
@@ -35,6 +56,16 @@ def epsilon_pressure(E, epsgrid, presgrid):
 
 @jit(nopython=True)
 def pressure_adind(P, epsgrid, presgrid):
+    """Calculate the adiabatic index using a piecewise power-law interpolation. This is used in the computation of the tidal deformability.
+
+    Args:
+        P (float): Pressure value at which to evaluate the adiabatic index.
+        epsgrid (np.ndarray): Grid of energy density values.
+        presgrid (np.ndarray): Grid of pressure values corresponding to `epsgrid`.
+
+    Returns:
+        float: Interpolated adiabatic index corresponding to `P`.
+    """
     idx = np.searchsorted(presgrid, P)
     if idx == 0:
         eds = epsgrid[0] * np.power(P / presgrid[0], 3. / 5.)
@@ -50,6 +81,21 @@ def pressure_adind(P, epsgrid, presgrid):
 
 @jit(nopython=True)
 def TOV(r, y, epsgrid, presgrid):
+    """Calculate the derivatives of the TOV equations at a given radius `r` and state `y`, using the provided energy density and pressure grids for interpolation.
+        Args:
+            r (float): The radial coordinate at which to evaluate the derivatives.
+            y (np.ndarray): The state vector at radius `r`, containing the following components:
+                - y[0]: Pressure (P)
+                - y[1]: Mass enclosed within radius `r` (m)
+                - y[2]: Metric function h(r) related to the radial component of the metric
+                - y[3]: Metric function b(r) related to the time component of the metric
+                - y[4]: Metric function alpha(r) related to the time component of the metric
+            epsgrid (np.ndarray): Grid of energy density values for interpolation.
+            presgrid (np.ndarray): Grid of pressure values corresponding to `epsgrid` for interpolation.
+
+        Returns:
+            np.ndarray: An array containing the derivatives [dp/dr, dm/dr, dh/dr, db/dr, dalpha/dr] at radius `r`.
+    """
 
     p = y[0]
     eps = pressure_epsilon(p, epsgrid, presgrid)
@@ -76,6 +122,25 @@ def TOV(r, y, epsgrid, presgrid):
 
 @jit(nopython=True)
 def TOV_eps(r, y, epsgrid, presgrid, rho_minus):
+
+    """Calculate the derivatives of the TOV equations at a given radius `r` and state `y`, with a specified energy density cutoff `rho_minus` for the outer shell.
+        This is particularly useful for solvingn the TOV equations when there are two distinct regions in the star, such as a dark energy core and normal matter shell, where the energy density in the outer shell is capped at `rho_minus`.
+        Args:
+            r (float): The radial coordinate at which to evaluate the derivatives.
+            y (np.ndarray): The state vector at radius `r`, containing the following components:
+                - y[0]: Pressure (P)
+                - y[1]: Mass enclosed within radius `r` (m)
+                - y[2]: Metric function h(r) related to the radial component of the metric
+                - y[3]: Metric function b(r) related to the time component of the metric
+                - y[4]: Metric function alpha(r) related to the time component of the metric
+
+            epsgrid (np.ndarray): Grid of energy density values for interpolation.
+            presgrid (np.ndarray): Grid of pressure values corresponding to `epsgrid` for interpolation.
+            rho_minus (float): The energy density cutoff for the outer shell.
+
+        Returns:
+            np.ndarray: An array containing the derivatives [dp/dr, dm/dr, dh/dr, db/dr, dalpha/dr, deps/dr] at radius `r`.
+    """
 
     p = y[0]
     eps = y[5]
@@ -125,10 +190,9 @@ def initial_conditions(epscent, pcent, adindcent=2.):
         Set the initial conditions for solving the structure equations. 
 
         Args: 
-            eos (object): An object that takes energy density as input and outputs pressure, both in cgs units.
-            w0 (float): The initial value of the rotational drag. Not known a priori, but can be calculated after the TOV equations are solved.
-            j0 (float): The initial value of j. Not known a priori, but can be calculated after the TOV equations are solved.
-            static (bool): Calculate initial conditions for a static star (True) or a rotating star (False). 
+            epscent (float): The central energy density of the star in geometrized units (g/cm^3 converted to g/cm).
+            pcent (float): The central pressure of the star in geometrized units (g/(cm s^2) converted to g/(cm s^2)).
+            adindcent (float, optional): The adiabatic index at the center of the star. Default is 2, which corresponds to a relativistic degenerate gas.
 
         Returns:
             tuple: tuple containing:
@@ -183,6 +247,31 @@ def tidal_deformability(y2, Mns, Rns):
 
 
 def solveTOVde(epscent, rho_plus, alpha, eos_eps, eos_pres, eos_epsde, eos_presde, atol, rtol, hmax, step): #assumed to be in cgs units as inputs eps has units of g/cm^3 and pres has units g/(cm s^2)
+    """Solve the TOV equations for a star with a dark energy core and normal matter shell, given the central energy density of the core, the energy density of the shell, and the equation of state for both regions.
+
+    Args:        
+    
+        epscent (float): The central energy density of the dark energy core in cgs units (g/cm^3).
+        rho_plus (float): The energy density cut off for the dark energy core in cgs units (g/cm^3).
+        alpha (float): The ratio of the energy density cut offs defining the gap of the phase transition from dark energy to normal matter, i.e. rho_minus = alpha * rho_plus.
+        eos_eps (np.ndarray): An array of energy density values for the normal matter equation of state in cgs units (g/cm^3).
+        eos_pres (np.ndarray): An array of pressure values corresponding to `eos_eps` for the normal matter equation of state in cgs units (g/(cm s^2)).
+        eos_epsde (np.ndarray): An array of energy density values for the dark energy equation of state in cgs units (g/cm^3).
+        eos_presde (np.ndarray): An array of pressure values corresponding to `eos_epsde` for the dark energy equation of state in cgs units (g/(cm s^2)).
+        atol (float): Absolute tolerance for the ODE solver.
+        rtol (float): Relative tolerance for the ODE solver.
+        hmax (float): Maximum step size for the ODE solver.
+        step (float): Initial step size for the ODE solver.
+
+    Returns:
+        tuple: A tuple containing the following elements:
+            - **Mb** (*float*): The mass of the normal matter shell in grams.
+            - **Mde** (*float*): The mass of the dark energy core in grams.
+            - **Rde_core** (*float*): The radius of the dark energy core in centimeters. 
+            - **Rns** (*float*): The radius of the neutron star (core + shell) in centimeters.
+            - **tidal** (*float*): The tidal deformability of the neutron star.
+            - **Gtt** (*np.ndarray*): An array containing the metric function Gtt as a function of radius in the core. The first column is the radius in centimeters, and the second column is Gtt.
+    """
 
     eos_pres, indices = np.unique(np.log10(eos_pres).round(decimals=5), return_index=True)
     eos_pres = 10**eos_pres * G * np.power(c,-4) #scaled into geometrized
@@ -218,6 +307,7 @@ def solveTOVde(epscent, rho_plus, alpha, eos_eps, eos_pres, eos_epsde, eos_presd
     # print(epscent*np.power(c,2) / G, pcent*np.power(c,4) / G,initial[0]*np.power(c,4) / G)
 
     def stop(r,y,epsgrid,presgird):
+        """Event function to stop the integration when the pressure drops to p_plus, which defines the boundary of the dark energy core."""
         return y[0] - p_plus
     stop.terminal = True
     stop.direction = -1.0
