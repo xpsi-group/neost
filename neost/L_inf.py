@@ -1,5 +1,6 @@
 import os
 import numpy as np
+import neost
 from neost import global_imports
 
 from scipy.stats import norm
@@ -14,8 +15,7 @@ number_density_ns = energydensities/rhons
 number_density = number_density_ns * n_ns
 
 # Load data (for calculating the correlation, doesnt have to be done every time)
-path = os.path.dirname(__file__)    # current path, points to wherever this file is installed
-file_path = f'{path}/data'
+file_path = f'{neost.__path__[0]}/data'    # path to where data files are located; neost.__path__ is the root installation directory of NEoST
 
 N3LO_beta = np.loadtxt(f'{file_path}/N3LO_beta_X2D.txt')
 N3LO_pnm = np.loadtxt(f'{file_path}/N3LO_PNM_X2D.txt')
