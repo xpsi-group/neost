@@ -121,8 +121,7 @@ class BaseEoS():
                     self._rho_end_BPS = 0.5
 
             if rho_t > 2.0 * rho_ns or rho_t < self._rho_start_ceft * rho_ns:
-                raise ValueError('The transition density should be between \
-                    %.2f and 2.0 saturation density.' % self._rho_start_ceft)
+                raise ValueError(f'The transition density should be between {self._rho_start_ceft:.2f} and 2.0 saturation density, is {rho_t / rho_ns}.')
 
     def update(self, eos_params, max_edsc=True):
         """
