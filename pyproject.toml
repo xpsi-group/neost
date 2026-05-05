@@ -1,5 +1,6 @@
 [build-system]
-requires = ['setuptools', 'numpy', 'Cython']
+requires = ['setuptools', 'setuptools-scm', 'numpy', 'Cython']
+# 'setuptools-scm' enables that any file tracked by git will be included in the installed package, thus enabling the inclusion of e.g. text files with data
 build-backend = 'setuptools.build_meta'
 
 [project]
