@@ -140,8 +140,7 @@ class BaseEoS():
                     print(self.rho_t)
 
                     if (self.rho_t/rho_ns)==1.5:
-                        self.min_norm = -1.03672695569872628  #previously, self.min_norm = 0.01130384423855279          ## check this
-                        ### self.min_norm = 0.03672695569872628  #previously, self.min_norm = 0.01130384423855279
+                        self.min_norm = 0.03672695569872628  #previously, self.min_norm = 0.01130384423855279
                     if (self.rho_t/rho_ns)==1.1:
                         self.min_norm = 0.000379475716119094
                     self.max_norm = 1.0
