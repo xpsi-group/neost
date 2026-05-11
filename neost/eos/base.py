@@ -137,7 +137,7 @@ class BaseEoS():
 
                 if crust == 'ceft-Goettling-N3LO':          ### now filtering out before it goes to multinest sampling
                     
-                    print(self.rho_t)
+                    #print(self.rho_t)
 
                     if (self.rho_t/rho_ns)==1.5:
                         self.min_norm = 0.03672695569872628  #previously, self.min_norm = 0.01130384423855279
@@ -539,10 +539,13 @@ class BaseEoS():
 
             if np.log10(maximum) < min_edsc0: # g/cm^3
                 maximum = min_edsc0 + 0.01
-
+                
         else:
             maximum = max(eds)
- 
+             
+        if type(maximum)!=np.float64:  ## to ensure maximum is a float, otherwise problems with Star.py function. np.float64 was deprecated, if more instances are found, replace for float in newer versions of Python
+            maximum=float(maximum[0])
+
         eds_c = np.logspace(min_edsc0, np.log10(maximum), 50) # g/cm^3
         Ms = np.zeros((len(eds_c),3))
         
@@ -603,13 +606,17 @@ class BaseEoS():
                 maximum = min_edsc0 + 0.01
 
         else:
-            maximum = max(eds)           
+            maximum = max(eds)
 
-
-        eds_c = np.logspace(min_edsc0, np.log10(maximum), 50) # g/cm^3
+        if type(maximum)!=np.float64:
+            maximum=float(maximum[0])
+       
+        #print(maximum)
+        eds_c = np.logspace(min_edsc0, np.log10(maximum), 50) # g/cm^3  ##added [0] because maximum is being automatically turned into a list, which leads to a problem in Star function below
         Ms = np.zeros((len(eds_c),3))
-
+        
         for i, e in enumerate(eds_c):
+            #print(e)
             star = Star(e)
             star.solve_structure(self.energydensities, self.pressures)
             if star.Mrot < Ms[i - 1][0]:
