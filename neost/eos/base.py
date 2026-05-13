@@ -142,7 +142,7 @@ class BaseEoS():
                     if (self.rho_t/rho_ns)==1.5:
                         self.min_norm = 0.03672695569872628  #previously, self.min_norm = 0.01130384423855279
                     if (self.rho_t/rho_ns)==1.1:
-                        self.min_norm = 0.000379475716119094
+                        self.min_norm = 0.00048342414238377744
                     self.max_norm = 1.0
                     self._rho_start_ceft = 0.6  #an arbitrary number that is not actually used
                     self._rho_end_BPS = 0.5
