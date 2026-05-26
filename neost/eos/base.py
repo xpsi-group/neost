@@ -5,7 +5,7 @@ from scipy import optimize
 import matplotlib.pyplot as plt
 
 import os
-#import math  ## is it needed?
+#import math  ##apparently not needed, check
 
 from .. Star import Star
 from .. import global_imports
@@ -219,7 +219,10 @@ class BaseEoS():
                 #print(X)
             
             # Checks where EOS breaks down due to pqcd
-            self.maximum_pqcd = self.get_maximum_pqcd(X)
+            if max_edsc is True:
+                self.maximum_pqcd = self.get_maximum_pqcd(X)   ## only if the user wants to find the max mass
+            else:
+                self.maximum_pqcd = self.energydensities[len(self.energydensities)-1]   ##we'll check this first
 
             # Only if EOS breaks due to pqcd, calculate extension and run find_max_edsc again to find where the extension breaks due to causality or max mass
             if self.maximum_pqcd != -1:
@@ -552,8 +555,11 @@ class BaseEoS():
         for i, e in enumerate(eds_c):
             star = Star(e)
             star.solve_structure(self.energydensities, self.pressures)
-            if star.Mrot < Ms[i - 1][0]:
+            
+            if np.less(star.Mrot, Ms[i - 1][0], where=(Ms[i - 1][0]-star.Mrot)>1e-3):  ## 1e-3 chosen for now
                 break
+            #if star.Mrot < Ms[i - 1][0]:             ## adjusting the absolute values of this comparison to accommodate softer eos
+            #    break
             Ms[i] = star.Mrot, star.Req, star.tidal
 
         Ms = Ms[Ms[:,0] > 0.0]
@@ -619,8 +625,10 @@ class BaseEoS():
             #print(e)
             star = Star(e)
             star.solve_structure(self.energydensities, self.pressures)
-            if star.Mrot < Ms[i - 1][0]:
+            if np.less(star.Mrot, Ms[i - 1][0], where=(Ms[i - 1][0]-star.Mrot)>1e-3):  ## 1e-3 chosen for now
                 break
+            #if star.Mrot < Ms[i - 1][0]:                    ## adjusting the absolute values of this comparison to accommodate softer eos
+            #    break
             Ms[i] = star.Mrot, star.Req, star.tidal
 
         Ms = Ms[Ms[:,0] > 0.0]

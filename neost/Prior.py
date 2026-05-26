@@ -99,8 +99,10 @@ class Prior():
                     logminedsc = np.log10(logminedsc)
                     logmaxedsc = np.log10(logmaxedsc)
                     pr.update({'rhoc_' + str(i + 1):hypercube['rhoc_' + str(i + 1)] * (logmaxedsc - logminedsc) + logminedsc})
-                except:
-                    print(list(pr.values()))
+                except: 
+                    print('Warning in prior')
+                    print(self.EOS.massradius)
+                    print(list(pr.values()))     ## to follow the full MR curve for a few examples
         self.MRT = self.EOS.massradius
         self.max_edsc = self.EOS.max_edsc
 
