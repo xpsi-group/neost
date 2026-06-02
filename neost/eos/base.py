@@ -514,10 +514,6 @@ class BaseEoS():
 
         min_edsc0 = 14.3
         if self.rho_t is not None:  ## will only be none for tabulated EOS (check)
-            #if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
-            #    eds = np.logspace(np.log10(self.Rho_t), np.log10(4e16), 1000)
-            #else:
-                 #eds = np.logspace(np.log10(self.rho_t), np.log10(4e16), 1000) #eds is in units of g/cm^3  
             eds = np.logspace(np.log10(self.rho_t), np.log10(4e16), 1000) #eds is in units of g/cm^3
 
         else:
@@ -556,10 +552,9 @@ class BaseEoS():
             star = Star(e)
             star.solve_structure(self.energydensities, self.pressures)
             
-            if np.less(star.Mrot, Ms[i - 1][0], where=(Ms[i - 1][0]-star.Mrot)>1e-3):  ## 1e-3 chosen for now
-                break
-            #if star.Mrot < Ms[i - 1][0]:             ## adjusting the absolute values of this comparison to accommodate softer eos
-            #    break
+            if star.Req < 100.0:                     ## to avoid running into the unstable branch of the white dwarf-NS transition when dealing with too soft eos 
+                if star.Mrot < Ms[i - 1][0]:             ## adjusting the absolute values of this comparison to accommodate softer eos
+                    break
             Ms[i] = star.Mrot, star.Req, star.tidal
 
         Ms = Ms[Ms[:,0] > 0.0]
@@ -625,12 +620,13 @@ class BaseEoS():
             #print(e)
             star = Star(e)
             star.solve_structure(self.energydensities, self.pressures)
-            if np.less(star.Mrot, Ms[i - 1][0], where=(Ms[i - 1][0]-star.Mrot)>1e-3):  ## 1e-3 chosen for now
-                break
-            #if star.Mrot < Ms[i - 1][0]:                    ## adjusting the absolute values of this comparison to accommodate softer eos
-            #    break
+            
+            if star.Req < 100.0:                                ## to avoid problems with extremely soft eos
+                if star.Mrot < Ms[i - 1][0]:                    ## adjusting the absolute values of this comparison to accommodate softer eos
+                    break
             Ms[i] = star.Mrot, star.Req, star.tidal
 
+        #print(len(Ms))
         Ms = Ms[Ms[:,0] > 0.0]
         eds_c = eds_c[0:len(Ms)]
         test, idx = np.unique(Ms[:,0], return_index=True)

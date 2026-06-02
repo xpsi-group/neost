@@ -49,7 +49,7 @@ def calc_bands(x, y):
     maxy = np.zeros((len(y),3))
 
     for i in range(len(y)):
-        z = y[i][y[i]>0.0]
+        z = y[i][y[i]>0.0]        ## now that the initial evaluated pressure is too low, maybe the standard precision of 1e-10/12 is not enough and it's mistakely assuming a small value is zero? that's not it apparently, changing back from 1e-30 to 0.0 
         if len(z)<200:
             print('sample too small for %.2f' %x[i])
             continue
@@ -425,6 +425,8 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
         pressures = np.concatenate([result.get('pressures') for result in results], axis=1)
         pressures_rho = np.concatenate([result.get('pressures_rho') for result in results], axis=1)
         cs = np.concatenate([result.get('cs') for result in results], axis=1)
+        #aux_e = np.concatenate([result.get('aux_e') for result in results], axis=1)
+        #aux_n = np.concatenate([result.get('aux_n') for result in results], axis=1)
         scattered = np.concatenate([result.get('scattered') for result in results])
         mrt = np.concatenate([result.get('mrt') for result in results])
         p_e_n_endpoints = np.concatenate([result.get('p_e_n_endpoints') for result in results])
@@ -444,6 +446,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
         mass_radius = mass_radius[mass_radius[:,1] != 0]
 
         # Save everything
+        #savedata = {'pressures.npy':pressures, 'pressures_rho.npy':pressures_rho, 'cs.npy':cs, 'aux_e.npy':aux_e, 'aux_n.npy':aux_n, 'radii.npy':radii, 'scattered.npy':scattered, 'mrt.npy':mrt, 'MR_prpr.txt':mass_radius, 'p_e_n_endpoints.txt':p_e_n_endpoints, 'max_pqcd_point':max_pqcd_point}
         savedata = {'pressures.npy':pressures, 'pressures_rho.npy':pressures_rho, 'cs.npy':cs, 'radii.npy':radii, 'scattered.npy':scattered, 'mrt.npy':mrt, 'MR_prpr.txt':mass_radius, 'p_e_n_endpoints.txt':p_e_n_endpoints, 'max_pqcd_point':max_pqcd_point}
 
         if dm:
@@ -467,7 +470,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
                 savedata['minpres_dm.npy'] = minpres_dm
                 savedata['maxpres_dm.npy'] = maxpres_dm
             else:
-                minpres, maxpres = calc_bands(energydensities, pressures)
+                minpres, maxpres = calc_bands(energydensities, pressures)                        ## had to comment this entire block out if working with min_pressure<14.2, unclear why
                 minpres_rho, maxpres_rho = calc_bands(energydensities, pressures_rho)
                 savedata['minpres_rho.npy'] = minpres_rho
                 savedata['maxpres_rho.npy'] = maxpres_rho
@@ -487,23 +490,27 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
     # Grids
     # More points are added to account for larger energy density spread from ADM
     # total ADM [1e12,1e18] + baryonic energy densities [1e14.2,1e16]
-    num_grid_points = 200 if dm else 50
+    num_grid_points = 200 if dm else 50                         ## normally 50, but increasing to 80 if working with initial energy density<14.2
     masses = np.linspace(.2, 2.9, num_grid_points)
-    energydensities = np.logspace(14.2, 16, num_grid_points)
+    energydensities = np.logspace(14.2, 16, num_grid_points)    ## normally 14.2, temporarily changing it to 13.7 to check the intersection with BPS
 
     mass_radius = np.zeros((num_samples, 2))
     radii = np.zeros((num_grid_points, num_samples))
     pressures = np.zeros((num_grid_points, num_samples))
     pressures_rho = np.zeros((num_grid_points, num_samples))
-    p_e_n_endpoints = np.zeros((num_samples, 3))                 ## for pqcd
+    p_e_n_endpoints = np.zeros((num_samples, 2))                 ## for pqcd
     scattered = []
     cs = np.full((num_grid_points, num_samples), -1.0)
+
+    #aux_e = np.zeros((num_grid_points, num_samples))
+    #aux_n = np.zeros((num_grid_points, num_samples))
+
     mrt = []
     max_pqcd_point = np.zeros((num_samples, 3))                  ## for pqcd
 
     if dm:
         # We can always specify these even if they're not used I think
-        energydensities_b = np.logspace(14.2, 16, num_grid_points)
+        energydensities_b = np.logspace(14.2, 16, num_grid_points)                     
         energydensities_dm = np.logspace(10, 18, num_grid_points)
         energydensities = energydensities_b + energydensities_dm # Overwrite energydensities, length is the same
 
@@ -518,7 +525,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
         par.update(static_params)
         EOS.update(par, max_edsc=True)
 
-        rhocs = np.logspace(14.5, np.log10(float(np.asarray(EOS.max_edsc))), 30)    ## temporary fix
+        rhocs = np.logspace(14.5, np.log10(float(np.asarray(EOS.max_edsc))), 30)    ## float is temporary fix        
         rhocsdm = np.zeros_like(rhocs)
 
         M = np.zeros(len(rhocs))
@@ -534,10 +541,14 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             max_rhoc = edsrho(EOS.max_edsc)
             indices = energydensities<max_rhoc
             pressures_rho[:,i][indices] = rhopres(energydensities[indices])
+
             indices = energydensities<EOS.max_edsc
             pressures[:,i][indices] = EOS.eos(energydensities[indices])
             dpde = EOS.eos.derivative(1)
             cs[:,i][indices] = dpde(energydensities[indices])/c**2
+            #aux_e[:,i][indices] = energydensities[indices]
+            #aux_n[:,i][indices] = edsrho(energydensities[indices])  #divide by mn to give n
+
 
             for j, e in enumerate(rhocs):
                 star = Star(e)
@@ -566,7 +577,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             mrt.append(mrt_elements)
             radii[:,i] = MR(masses)
 
-            #small workaround m<msun for priors (only in PosteriorAnalysis)
+            #small workaround m<msun for priors (only in PosteriorAnalysis)       ## dont' forget to improve this
             if 'rhoc_2' in par.keys(): #then it's not a prior, priors only record one central density
                 rhoc = np.random.rand() *(np.log10(EOS.max_edsc) - 14.6) + 14.6   ## works if posterior, but returns m<msun too often for the prior
             else:
@@ -578,7 +589,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             p_e_n_endpoints[i] = EOS.eos(EOS.max_edsc).item()*dyncm2_to_MeVfm3, EOS.max_edsc.item()*gcm3_to_MeVfm3,  max_rhoc.item()/rho_ns   ## for pqcd
 
             if EOS.pqcd_ext:
-                max_pqcd_point[i] = float(np.asarray(EOS.maximum_pqcd)), EOS.ext, EOS.X                          ## for pqcd  ## very temporary fix
+                max_pqcd_point[i] = float(np.asarray(EOS.maximum_pqcd)), EOS.ext, EOS.X                          ## for pqcd  ## float is temporary fix
 
         else:
             rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0, ext = 1)
@@ -686,15 +697,16 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
                 radii[:,i] = MR(masses)
 
     ## debugging
-    print('MRT')
+    #print('MRT')
     #print(np.shape(mrt))
     #print(mrt[0])
-    print(mrt)
-    print('P, E, n')
-    print(p_e_n_endpoints)
-    print('Max pqcd')
-    print(max_pqcd_point)
+    #print(mrt)
+    #print('P, E, n')
+    #print(p_e_n_endpoints)
+    #print('Max pqcd')
+    #print(max_pqcd_point)
 
+    #return_values = {'pressures':pressures, 'pressures_rho':pressures_rho,  'cs':cs, 'aux_e': aux_e, 'aux_n': aux_n, 'masses':masses, 'radii':radii, 'scattered':scattered, 'mrt':mrt, 'mass_radius':mass_radius, 'energydensities':energydensities, 'p_e_n_endpoints': p_e_n_endpoints, 'max_pqcd_point': max_pqcd_point}
     return_values = {'pressures':pressures, 'pressures_rho':pressures_rho,  'cs':cs, 'masses':masses, 'radii':radii, 'scattered':scattered, 'mrt':mrt, 'mass_radius':mass_radius, 'energydensities':energydensities, 'p_e_n_endpoints': p_e_n_endpoints, 'max_pqcd_point': max_pqcd_point}
     if dm:
         return_values['pressures_b'] = pressures_b
