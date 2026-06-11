@@ -35,6 +35,8 @@ class Prior():
             ceft_max = tmp[1]
             assert(ceft_min == 0 and ceft_max == 1)
 
+    # I am pretty sure the input is not actually a hypercube,
+    # but instead a 1D array
     def inverse_sample(self, hypercube):
         hypercube = {e:hypercube[i] for i, e in
                      enumerate(self.variable_params)}
@@ -78,7 +80,7 @@ class Prior():
                 logmaxedsc = np.log10(logmaxedsc)
                 pr.update({'rhoc_' + str(i + 1):hypercube['rhoc_' + str(i + 1)]
                           * (logmaxedsc - logminedsc) + logminedsc})
-        self.MRT = self.EOS.massradius
+        self.MRTI = self.EOS.massradius
         self.max_edsc = self.EOS.max_edsc
 
         if self.standard_normal_ceft:

@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import warnings
 
 try:
-    from neost.tovsolvers.TOVr import solveTOVr
+    from neost.tovsolvers.TOVrHartle import solveTOVrHartle
     from neost.tovsolvers.TOVh import solveTOVh
     from neost.tovsolvers.TOVdm import solveTOVdm
 except ImportError:
@@ -40,6 +40,7 @@ class Star():
         self.Mb = 0
         self.Rns = 0
         self.tidal = 0
+        self.moi = 0
         self.enthalpy = enthalpy
         self.radius_dm_core = 0
         self.radius_dm_halo = 0
@@ -76,11 +77,15 @@ class Star():
 
         else:
             if self.epscent_dm == 0.0:
-                self.Mb, self.Rns, self.tidal, self.Gtt = solveTOVr(self.epscent, eps, pres, atol, rtol, hmax, step)
+                self.Mb, self.Rns, self.tidal, self.moi = solveTOVrHartle(self.epscent, eps, pres)
 
             else:
                 self.Mb, self.Rns, self.Mdm_core, self.Mdm_halo, self.radius_dm_core, self.radius_dm_halo, self.tidal = solveTOVdm(self.epscent, self.epscent_dm, eps, pres, eps_dm, pres_dm, dm_halo,two_fluid_tidal, atol, rtol, hmax, step)
 
+    @property
+    def moi45(self):
+        """ Get the moment of inertia in units of 10^45 g cm^2. """
+        return self.moi / 1e45
 
     @property
     def Mrot(self):
@@ -140,7 +145,7 @@ class Star():
         radius_grid_baryon = self.dist_baryon[:,0]/1e5
         mass_dist_baryon = self.dist_baryon[:,1]/ Msun
         pres_dist_baryon = self.dist_baryon[:,2]
-        fig, ax = pyplot.subplots(1,2, figsize=(14,6))
+        fig, ax = plt.subplots(1,2, figsize=(14,6))
         ax[0].plot(radius_grid_baryon, mass_dist_baryon,
                    c='#005ABD', lw=2.5, label='Baryonic')
         ax[1].plot(radius_grid_baryon, pres_dist_baryon, c='#005ABD',
@@ -169,6 +174,6 @@ class Star():
             ax[i].xaxis.set_major_formatter(ScalarFormatter())
         ax[0].legend(prop={'size':16})
 
-        pyplot.savefig('Structure_plot.png',dpi = 300)
+        plt.savefig('Structure_plot.png',dpi = 300)
         plt.tight_layout()
         plt.show()

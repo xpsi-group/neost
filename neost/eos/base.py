@@ -343,14 +343,14 @@ class BaseEoS():
             maximum = max(eds)
  
         eds_c = np.logspace(min_edsc0, np.log10(maximum), 50) # g/cm^3
-        Ms = np.zeros((len(eds_c),3))
+        Ms = np.zeros((len(eds_c),4))
         
         for i, e in enumerate(eds_c):
             star = Star(e)
             star.solve_structure(self.energydensities, self.pressures)
             if star.Mrot < Ms[i - 1][0]:
                 break
-            Ms[i] = star.Mrot, star.Req, star.tidal
+            Ms[i] = star.Mrot, star.Req, star.tidal, star.moi45
 
         Ms = Ms[Ms[:,0] > 0.0]
         eds_c = eds_c[0:len(Ms)]

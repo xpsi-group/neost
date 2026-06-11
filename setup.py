@@ -83,6 +83,16 @@ TOVh = Extension(
             extra_link_args=extra_link_args,
         )
 
+TOVrHartle = Extension(
+            name = 'neost.tovsolvers.TOVrHartle',
+            sources = ['neost/tovsolvers/TOVrHartle.pyx'],
+            libraries = libraries,
+            library_dirs = library_dirs,
+            include_dirs=include_dirs,
+            extra_compile_args=extra_compile_args,
+            extra_link_args=extra_link_args,
+        )
+
 setup(
-    ext_modules=[TOVr, TOVdm, TOVh]
+    ext_modules=[TOVr, TOVdm, TOVh, TOVrHartle]
 )
