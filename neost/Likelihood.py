@@ -17,13 +17,13 @@ n_ns = global_imports._n_ns
 class Likelihood():
 
     def __init__(self, prior, likelihood_functions,
-                 likelihood_params, chirp_masses):
+                 likelihood_params, chirp_masses, freq):
 
         self.prior = prior
         self.likelihood_functions = likelihood_functions
         self.likelihood_params = likelihood_params
         self.chirp_masses = chirp_masses
-
+        self.freq = freq
     def call(self, pr):
 
         likelihoods = []
@@ -48,7 +48,7 @@ class Likelihood():
                                      self.prior.EOS.energydensities_dm,
                                      self.prior.EOS.pressures_dm,
                                      self.prior.EOS.dm_halo,
-                                     self.prior.EOS.two_fluid_tidal)
+                                     self.prior.EOS.two_fluid_tidal, rot_cor='uni_rel', freq=self.freq[i])
                     Mgrav = star.Mrot
                     Req = star.Req
                     Rdm_halo = star.Rdm_halo
@@ -77,7 +77,7 @@ class Likelihood():
                                             self.prior.EOS.energydensities_dm,
                                             self.prior.EOS.pressures_dm,
                                             self.prior.EOS.dm_halo,
-                                            self.prior.EOS.two_fluid_tidal)
+                                            self.prior.EOS.two_fluid_tidal, rot_cor='uni_rel', freq=self.freq[i])
                 
                         Mgrav = star.Mrot
                         Req = star.Req
@@ -87,7 +87,7 @@ class Likelihood():
                 
             if self.prior.EOS.adm_type == 'None':
                 star = Star(10**(pr_dict['rhoc_' + str(i + 1)]), 0.0)
-                star.solve_structure(self.prior.EOS.energydensities,self.prior.EOS.pressures)
+                star.solve_structure(self.prior.EOS.energydensities,self.prior.EOS.pressures, rot_cor='uni_rel', freq=self.freq[i])
                 Mgrav = star.Mrot
                 Req = star.Req
                 tidal = star.tidal
@@ -150,16 +150,20 @@ class Likelihood():
             return -1e101
 
         if self.prior.EOS.adm_type == 'None':
-            star = Star(self.prior.EOS.max_edsc)
-            star.solve_structure(self.prior.EOS.energydensities,
-                                 self.prior.EOS.pressures)
-            if(star.Mrot < 1):
-                    return -1e101
+            
 
             for i in range(self.prior.number_stars):
+                star = Star(self.prior.EOS.max_edsc)
+                star.solve_structure(self.prior.EOS.energydensities,
+                                 self.prior.EOS.pressures, rot_cor='uni_rel', freq=self.freq[i])
+                
+                if(star.Mrot < 1.):
+                    return -1e101
+                
                 star = Star(10**(pr_dict['rhoc_' + str(i + 1)]), 0.0)
                 star.solve_structure(self.prior.EOS.energydensities,
-                                 self.prior.EOS.pressures)
+                                 self.prior.EOS.pressures, rot_cor='uni_rel', freq=self.freq[i])
+                
                 if(star.Mrot < 1.):
                     return -1e101
 
@@ -179,15 +183,7 @@ class Likelihood():
                 if self.prior.EOS.reach_fraction == False:
                     return -1e101
 
-                star = Star(self.prior.EOS.max_edsc,epsdm_cent)
-                star.solve_structure(self.prior.EOS.energydensities,
-                                    self.prior.EOS.pressures,
-                                    self.prior.EOS.energydensities_dm,
-                                    self.prior.EOS.pressures_dm,
-                                    self.prior.EOS.dm_halo,
-                                    self.prior.EOS.two_fluid_tidal)
-                if(star.Mrot < 1.):
-                    return -1e101
+
 
                 if self.prior.EOS.dm_halo == False and star.Rdm_halo > 0:
                     return -1e101
@@ -198,14 +194,24 @@ class Likelihood():
 
                     if self.prior.EOS.reach_fraction == False:
                         return -1e101
-
+                    
+                    star = Star(self.prior.EOS.max_edsc,epsdm_cent)
+                    star.solve_structure(self.prior.EOS.energydensities,
+                                    self.prior.EOS.pressures,
+                                    self.prior.EOS.energydensities_dm,
+                                    self.prior.EOS.pressures_dm,
+                                    self.prior.EOS.dm_halo,
+                                    self.prior.EOS.two_fluid_tidal, rot_cor='uni_rel', freq=self.freq[i])
+                    if(star.Mrot < 1.):
+                        return -1e101
+                
                     star = Star(10**(pr_dict['rhoc_' + str(i + 1)]), epsdm_cent)
                     star.solve_structure(self.prior.EOS.energydensities,
                                     self.prior.EOS.pressures,
                                     self.prior.EOS.energydensities_dm,
                                     self.prior.EOS.pressures_dm,
                                     self.prior.EOS.dm_halo,
-                                    self.prior.EOS.two_fluid_tidal)
+                                    self.prior.EOS.two_fluid_tidal, rot_cor='uni_rel', freq=self.freq[i])
                     if(star.Mrot < 1.):
                         return -1e101
 

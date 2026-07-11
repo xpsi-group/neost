@@ -124,7 +124,7 @@ class BaseEoS():
                 raise ValueError('The transition density should be between \
                     %.2f and 2.0 saturation density.' % self._rho_start_ceft)
 
-    def update(self, eos_params, max_edsc=True):
+    def update(self, eos_params, max_edsc=True, freq=0):
         """
         Method to update a given EoS object with specified parameters.
 
@@ -162,7 +162,7 @@ class BaseEoS():
         self.get_eos()
 
         if max_edsc is True:
-            self.find_max_edsc()
+            self.find_max_edsc(freq)
         else:
             self.max_edsc = 0.0
 
@@ -310,7 +310,7 @@ class BaseEoS():
 
 
     # Find maximum central energy density
-    def find_max_edsc(self):
+    def find_max_edsc(self,freq):
 
         min_edsc0 = 14.3
         if self.rho_t is not None:
@@ -347,7 +347,7 @@ class BaseEoS():
         
         for i, e in enumerate(eds_c):
             star = Star(e)
-            star.solve_structure(self.energydensities, self.pressures)
+            star.solve_structure(self.energydensities, self.pressures, rot_cor='uni_rel', freq=freq)
             if star.Mrot < Ms[i - 1][0]:
                 break
             Ms[i] = star.Mrot, star.Req, star.tidal
