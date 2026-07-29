@@ -25,6 +25,7 @@ rho_ns = global_imports._rhons
 
 # Define name for run, extra - at the end is for nicer formatting of output
 run_name = "PP-example-bosonic-adm-run"
+directory = 'chains'
 
 # We're exploring a polytropic (PP) EoS parametrization with a chiral effective field theory (cEFT) parametrization based on Hebeler's work
 # Transition between PP parametrisation and cEFT parametrization occurs at 1.1*saturation density
@@ -82,17 +83,16 @@ print("Testing done")
 # Then we start the sampling with MultiNest
 start = time.time()
 result = solve(LogLikelihood=likelihood.call, Prior=prior.inverse_sample, n_live_points=50, evidence_tolerance=0.1,
-               n_dims=len(variable_params), sampling_efficiency=0.8, outputfiles_basename='chains/' + run_name, verbose=True, resume=False)
+               n_dims=len(variable_params), sampling_efficiency=0.8, outputfiles_basename=f'{directory}/{run_name}', verbose=True, resume=False)
 end = time.time()
 print(end - start)
 
 # Compute auxiliary data for posterior analysis
-PosteriorAnalysis.compute_auxiliary_data('chains/' + run_name, polytropes_pp, 
-                                         variable_params, static_params, chirp_mass,dm = True)
+PosteriorAnalysis.compute_auxiliary_data(directory, polytropes_pp, variable_params, static_params, chirp_mass, dm=True, identifier=run_name)
 
 
 # Make some analysis plots
-PosteriorAnalysis.cornerplot('chains/' + run_name, variable_params, dm = True)
-PosteriorAnalysis.mass_radius_posterior_plot('chains/' + run_name,dm = True)
-PosteriorAnalysis.mass_radius_prior_predictive_plot('chains/' + run_name,variable_params, label_name='+ J0740 dataset', dm = True)
-PosteriorAnalysis.eos_posterior_plot('chains/' + run_name, variable_params)
+PosteriorAnalysis.cornerplot(directory, variable_params, dm=True, identifier=run_name)
+PosteriorAnalysis.mass_radius_posterior_plot(directory, dm=True, identifier=run_name)
+PosteriorAnalysis.mass_radius_prior_predictive_plot(directory, variable_params, identifier=run_name, label_name='+ J0740 dataset', dm=True)
+PosteriorAnalysis.eos_posterior_plot(directory, variable_params, identifier=run_name)

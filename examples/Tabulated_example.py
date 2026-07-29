@@ -61,6 +61,7 @@ chirp_mass = [None, None, None]
 number_stars = len(chirp_mass)
 
 run_name = "tabulated_AP4_test_2D_gaussian"
+directory = 'chains'
 
 # We only vary the parameters 'gamma1' and 'ceft' for now
 variable_params = {}
@@ -88,19 +89,16 @@ print("Testing done")
 # Then we start the sampling
 start = time.time()
 result = solve(LogLikelihood=likelihood.call, Prior=prior.inverse_sample, n_live_points=1000, evidence_tolerance=0.1,
-               n_dims=len(variable_params), sampling_efficiency=0.8, outputfiles_basename='chains/' + run_name, verbose=True, resume=False)
+               n_dims=len(variable_params), sampling_efficiency=0.8, outputfiles_basename=f'{directory}/{run_name}', verbose=True, resume=False)
 end = time.time()
 print(end - start)
 
 # Compute auxiliary data for posterior analysis
-PosteriorAnalysis.compute_auxiliary_data('chains/' + run_name, tabulated_example, 
-                                          variable_params, static_params, chirp_mass)
+PosteriorAnalysis.compute_auxiliary_data(directory, tabulated_example, variable_params, static_params, chirp_mass, identifier=run_name)
 
 
 # Make some analysis plots
-PosteriorAnalysis.cornerplot('chains/' + run_name, variable_params)
-PosteriorAnalysis.mass_radius_posterior_plot('chains/' + run_name)
+PosteriorAnalysis.cornerplot(directory, variable_params, identifier=run_name)
+PosteriorAnalysis.mass_radius_posterior_plot(directory, identifier=run_name)
 
 #Cannot make the other Posterior Analysis files since EoS is tabulated and cannot be varied
-#PosteriorAnalysis.mass_radius_prior_predictive_plot('chains/' + run_name,variable_params, label_name='+ Synethetic MR data')
-#PosteriorAnalysis.eos_posterior_plot('chains/' + run_name,variable_params)

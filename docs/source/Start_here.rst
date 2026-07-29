@@ -6,6 +6,14 @@ Start here
 
 All tutorials listed below may be found as Jupyter notebooks under ``docs/source/``. We encourage running these yourself as you go through the tutorials as a means of practice. Note, these scripts can take a considerable amount of time to run on your personal computer. To shorten the time to run the scripts, we recommend changing ``n_live_points=5000`` to ``n_live_points=500``. Any external data files needed such as the AP4 tabulated equation of state data and mass-radius data are available on `GitHub <https://github.com/xpsi-group/neost/tree/main/examples>`_. These data files should be saved in ``neost/examples/``.
 
+**Multicore processing**
+
+NEoST supports multicore processing via MPI, which dramatically decreases computation time. To use MPI, execute your script like this (using 8 processes as an example):
+
+.. code-block:: bash
+
+	mpiexec -np 8 python yourscript.py
+
 **Overview of the available tutorials:**
 
 * :doc:`Piecewise Polytropic Example<PP_example>` a python script detailing how to perform a basic inference run using the piecewise polytropic equation of state parameterization.
