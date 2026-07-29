@@ -182,7 +182,7 @@ def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm,
         EOS.update(par, max_edsc=True)
 
         edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0)
-        eps = np.logspace(14.4, np.log10(EOS.max_edsc), 40)
+        eps = np.logspace(14.2, np.log10(EOS.max_edsc), 50)   #to account for change below
         M = np.zeros(len(eps))
         R = np.zeros(len(eps))
 
@@ -490,9 +490,9 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
     # Grids
     # More points are added to account for larger energy density spread from ADM
     # total ADM [1e12,1e18] + baryonic energy densities [1e14.2,1e16]
-    num_grid_points = 200 if dm else 80                         ## normally 50, but increasing to 80 if working with initial energy density<14.2
+    num_grid_points = 200 if dm else 50                         ## normally 50, but increasing to 80 if working with initial energy density<14.2
     masses = np.linspace(.2, 2.9, num_grid_points)
-    energydensities = np.logspace(13.7, 16, num_grid_points)    ## normally 14.2, temporarily changing it to 13.7 to check the intersection with BPS
+    energydensities = np.logspace(14.2, 16, num_grid_points)    ## normally 14.2, temporarily changing it to 13.7 to check the intersection with BPS
 
     mass_radius = np.zeros((num_samples, 2))
     radii = np.zeros((num_grid_points, num_samples))
