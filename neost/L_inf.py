@@ -10,7 +10,7 @@ rhons = global_imports._rhons
 n_ns = global_imports._n_ns
 dyncm2_to_MeVfm3 = global_imports._dyncm2_to_MeVfm3
 
-energydensities = np.logspace(13.7, 16, 80)                # log of grams per centimeter cubed  #if changes the PosteriorAnalysis, changes here too (14.2, 16, 50) instead
+energydensities = np.logspace(14.2, 16, 50)                # log of grams per centimeter cubed  #if changes the PosteriorAnalysis, changes here too (14.2, 16, 50) instead
 number_density_ns = energydensities/rhons
 number_density = number_density_ns * n_ns
 
