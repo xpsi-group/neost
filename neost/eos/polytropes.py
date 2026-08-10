@@ -69,7 +69,6 @@ class PolytropicEoS(BaseEoS):
         self.eos_name = 'polytropes'
         self.param_names = ['gamma1', 'gamma2', 'gamma3','rho_t1', 'rho_t2']
         
-        # uncomment two lines below when sampling X from multinest
         if self.pqcd_ext:
             if x_f == False:
                 self.param_names.append('X')
@@ -97,10 +96,6 @@ class PolytropicEoS(BaseEoS):
         
         self._rho_core = np.zeros(297)
 
-        #if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
-        #    self._rho_core[0:99] = np.linspace(self.Rho_t / rho_ns, self.rho_ts[0], 100)[1::]   #Rho_t coming from base.py instead of rho_t input by user, to avoid artificial phase transition
-        #else:
-        #    self._rho_core[0:99] = np.linspace(self.rho_t / rho_ns, self.rho_ts[0], 100)[1::]
         self._rho_core[0:99] = np.linspace(self.rho_t / rho_ns, self.rho_ts[0], 100)[1::] 
 
         self._rho_core[99:198] = np.linspace(self.rho_ts[0],
@@ -118,14 +113,14 @@ class PolytropicEoS(BaseEoS):
                                self._pres_core / dyncm2_to_MeVfm3])
 
         eps0 = self._eds_crust[-1]
-        prho = 0     
+        prho = 0
         totalrho, indices = np.unique(totalrho, return_index = True)
         totalpres = totalpres[indices]
         try:
             prho = UnivariateSpline(totalrho, totalpres, k=2, s=0)
         except ValueError:
             print('Careful: rho does not monotonically increase. Changing interpolation routine to interp1d, linear with extrapolation')
-            prho = interp1d(totalrho, totalpres, kind = 'linear', fill_value = 'extrapolate')    
+            prho = interp1d(totalrho, totalpres, kind = 'linear', fill_value = 'extrapolate')
 
         result = odeint(self.edens, eps0,
                         totalrho[totalrho >= self._rho_crust[-1]],
@@ -133,18 +128,9 @@ class PolytropicEoS(BaseEoS):
         self._eds_core = result.flatten()[1::]
 
         totaleps = np.hstack([self._eds_crust, self._eds_core])
-        self.pressures = totalpres 
+        self.pressures = totalpres
         self.energydensities = totaleps   
         self.massdensities = totalrho
-        
-        ### debugging
-        #if self._eds_crust[-1] == self._eds_core[0]:
-        #    print('same energy density at transition')
-        #    print([i for i in self.eos_params])
-        
-        #if all(x<y for x, y in zip(self._eds_core, self._eds_core[1:]))==False:
-        #    print('energy density of the core not monotonically increasing')
-        #    print([i for i in self.eos_params])
 
         self.eos = UnivariateSpline(self.energydensities,
                                     self.pressures, k=1, s=0)
@@ -156,10 +142,6 @@ class PolytropicEoS(BaseEoS):
         P_ts, k = (np.zeros(len(self.gammas)) for i in range(2))
         P_ts[0] = P_t
         
-        #if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
-        #    k[0] = P_t / ((self.Rho_t / rho_ns)**self.gammas[0])
-        #else:
-        #    k[0] = P_t / ((self.rho_t / rho_ns)**self.gammas[0])    
         k[0] = P_t / ((self.rho_t / rho_ns)**self.gammas[0])
 
         P_ts[1] = k[0] * self.rho_ts[0]**self.gammas[0]

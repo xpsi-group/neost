@@ -153,10 +153,6 @@ def tidal_deformability(y2, Mns, Rns):
 
 def solveTOVr(epscent, eos_eps, eos_pres, atol, rtol, hmax, step): #assumed to be in cgs units as inputs eps has units of g/cm^3 and pres has units g/(cm s^2)
 
-    ##debugging
-    print(type(eos_pres))
-    print(len(eos_pres))
-
     eos_pres, indices = np.unique(np.log10(eos_pres).round(decimals=3), return_index=True)
     eos_pres = 10**eos_pres * G * np.power(c,-4) #scaled into geometrized
     eos_eps = eos_eps[np.sort(indices)] * G * np.power(c,-2) #scaled into geometrized

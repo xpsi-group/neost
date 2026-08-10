@@ -24,14 +24,6 @@ class Prior():
         self.standard_normal_ceft = standard_normal_ceft # Transform ceft parameter to N(0,1)?
         self.standard_normal = norm() # Only used if standard_normal_ceft is True
 
-        ## due to filtering out unphysical eos values, the min value runs above 0 now
-        #if standard_normal_ceft:
-        #    # The transform only works correctly if ceft is from U(0,1)
-        #    tmp = variable_params.get('ceft')
-        #    ceft_min = tmp[0]
-        #    ceft_max = tmp[1]
-        #    assert(ceft_min == 0 and ceft_max == 1)
-
     def inverse_sample(self, hypercube):
         hypercube = {e:hypercube[i] for i, e in
                      enumerate(self.variable_params)}
@@ -63,33 +55,15 @@ class Prior():
         pr.update(self.static_params)
         
         if self.standard_normal_ceft:
-            #print(pr.get('ceft'))
-            # Transform ceft from U(0,1) to N(0,1)
-            #print('original')
-            #print(pr.get('ceft'))
-            
-            #pr['ceft'] = self.standard_normal.ppf(pr.get('ceft'))
-            #print(self.standard_normal.ppf(pr.get('ceft')))
             pr.update({'ceft': self.standard_normal.ppf(pr.get('ceft'))})
-            
-            #test = open("ceft_raw.txt", "a")
-            #print(pr['ceft'], file=test)
-            #test.close()
-           
-                        
-            #print('normal')
-            #print(pr['ceft'])
-            
-            #print('all values')
-            #print(list(pr.values()))
-        
+
         self.EOS.update({k: pr[k] for k in tuple(self.EOS.param_names)},
                         max_edsc=True)
         self.pr = pr
 
         for i in range(self.number_stars):
             if self.chirp_masses[i] is None:
-                logminedsc = np.log10(self.EOS.min_edsc)  
+                logminedsc = np.log10(self.EOS.min_edsc)
                 logmaxedsc = np.log10(self.EOS.max_edsc)
                 pr.update({'rhoc_' + str(i + 1):hypercube['rhoc_' + str(i + 1)]
                           * (logmaxedsc - logminedsc) + logminedsc})
@@ -99,15 +73,11 @@ class Prior():
                     logminedsc = np.log10(logminedsc)
                     logmaxedsc = np.log10(logmaxedsc)
                     pr.update({'rhoc_' + str(i + 1):hypercube['rhoc_' + str(i + 1)] * (logmaxedsc - logminedsc) + logminedsc})
-                except: 
+                except:
                     print('Warning in prior')
                     print(self.EOS.massradius)
                     print(list(pr.values()))     ## to follow the full MR curve for a few examples
         self.MRT = self.EOS.massradius
         self.max_edsc = self.EOS.max_edsc
-
-        #if self.standard_normal_ceft:
-            # Transform ceft from U(0,1) to N(0,1)
-            #pr['ceft'] = self.standard_normal.ppf(pr.get('ceft'))
 
         return list(pr.values())

@@ -447,7 +447,6 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
 
         # Save everything
         savedata = {'pressures.npy':pressures, 'pressures_rho.npy':pressures_rho, 'cs.npy':cs, 'aux_e.npy':aux_e, 'aux_n.npy':aux_n, 'radii.npy':radii, 'scattered.npy':scattered, 'mrt.npy':mrt, 'MR_prpr.txt':mass_radius, 'p_e_n_endpoints.txt':p_e_n_endpoints, 'max_pqcd_point':max_pqcd_point}
-        #savedata = {'pressures.npy':pressures, 'pressures_rho.npy':pressures_rho, 'cs.npy':cs, 'radii.npy':radii, 'scattered.npy':scattered, 'mrt.npy':mrt, 'MR_prpr.txt':mass_radius, 'p_e_n_endpoints.txt':p_e_n_endpoints, 'max_pqcd_point':max_pqcd_point}
 
         if dm:
             savedata['pressures_baryon.npy'] = pressures_b
@@ -697,18 +696,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             if MR != 0:
                 radii[:,i] = MR(masses)
 
-    ## debugging
-    #print('MRT')
-    #print(np.shape(mrt))
-    #print(mrt[0])
-    #print(mrt)
-    #print('P, E, n')
-    #print(p_e_n_endpoints)
-    #print('Max pqcd')
-    #print(max_pqcd_point)
-
     return_values = {'pressures':pressures, 'pressures_rho':pressures_rho,  'cs':cs, 'aux_e': aux_e, 'aux_n': aux_n, 'masses':masses, 'radii':radii, 'scattered':scattered, 'mrt':mrt, 'mass_radius':mass_radius, 'energydensities':energydensities, 'p_e_n_endpoints': p_e_n_endpoints, 'max_pqcd_point': max_pqcd_point}
-    #return_values = {'pressures':pressures, 'pressures_rho':pressures_rho,  'cs':cs, 'masses':masses, 'radii':radii, 'scattered':scattered, 'mrt':mrt, 'mass_radius':mass_radius, 'energydensities':energydensities, 'p_e_n_endpoints': p_e_n_endpoints, 'max_pqcd_point': max_pqcd_point}
     if dm:
         return_values['pressures_b'] = pressures_b
         return_values['pressures_dm'] = pressures_dm

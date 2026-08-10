@@ -6,7 +6,6 @@ from scipy.integrate import cumulative_trapezoid, solve_ivp
 from . base import BaseEoS
 
 from .. import global_imports
-#import neost?
 
 c = global_imports._c
 G = global_imports._G
@@ -87,10 +86,10 @@ class SpeedofSoundEoS(BaseEoS):
         
         if self.adm_type in ['Bosonic','Fermionic']:
             self.param_names +=['mchi','gchi_over_mphi', 'adm_fraction']
-        
+
 
     def get_eos(self):
-        
+
         self._eds_core = np.logspace(np.log10(self.eds_t), 16.65, 400)
         cs_t = self.CofE(self.eds_t, self._eds_crust, self._pres_crust)
         sol = optimize.minimize(self.match_func, [0.],
@@ -101,16 +100,6 @@ class SpeedofSoundEoS(BaseEoS):
                            self.norm, negative=0.0), self._eds_core,
                            initial=0.0) * c**2. + self.P_t)
 
-        #if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
-        #    result = solve_ivp(lambda eps, rho: self.rhodens(rho, eps),
-        #                   t_span=(self._eds_core[0], self._eds_core[-1]),
-        #                   y0=[self.Rho_t], t_eval=self._eds_core,
-        #                   method='LSODA')                                                        #Rho_t coming from base.py instead of rho_t input by user, to avoid artificial phase transition
-        #else:
-        #    result = solve_ivp(lambda eps, rho: self.rhodens(rho, eps),
-        #                   t_span=(self._eds_core[0], self._eds_core[-1]),
-        #                   y0=[self.rho_t], t_eval=self._eds_core,
-        #                   method='LSODA')
         result = solve_ivp(lambda eps, rho: self.rhodens(rho, eps),
                            t_span=(self._eds_core[0], self._eds_core[-1]),
                            y0=[self.rho_t], t_eval=self._eds_core,
@@ -121,18 +110,9 @@ class SpeedofSoundEoS(BaseEoS):
         totalrho = np.hstack([self._rho_crust, self._rho_core[1:]])
         totalpres = np.hstack([self._pres_crust, self._pres_core[1:]])
         totaleps = np.hstack([self._eds_crust, self._eds_core[1:]])
-        self.pressures = totalpres 
+        self.pressures = totalpres
         self.energydensities = totaleps 
         self.massdensities = totalrho 
-
-        ### debugging
-        #if self._eds_crust[-1] == self._eds_core[0]:
-        #    print('same energy density at transition')
-        #    print([i for i in self.eos_params])
-        
-        #if all(x<y for x, y in zip(self._eds_core, self._eds_core[1:]))==False:
-        #    print('energy density of the core not monotonically increasing')
-        #    print([i for i in self.eos_params])
 
         self.eos = UnivariateSpline(self.energydensities,
                                     self.pressures, k=1, s=0)
@@ -163,10 +143,6 @@ class SpeedofSoundEoS(BaseEoS):
                 cscrust)**2.
 
     def Cs_model_total(self, x, norm):
-        #if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
-        #    xt = self.Rho_t / rho_ns
-        #else:
-        #    xt = self.rho_t / rho_ns
         xt = self.rho_t / rho_ns
         beta = 1e-10
         dmin = .5 * (1. - np.tanh(pi / beta * (x - xt)))
