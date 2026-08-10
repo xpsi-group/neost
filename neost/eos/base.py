@@ -10,6 +10,7 @@ from .. Star import Star
 from .. import global_imports
 from .. utils import m1_from_mc_m2, m1_m2_from_mc_q
 from neost.pQCD import pQCD
+import neost
 
 c = global_imports._c
 G = global_imports._G
@@ -55,7 +56,7 @@ class BaseEoS():
         Builds pQCD extensions to make EOS compatible with pQCD
     """
 
-    def __init__(self, crust='ceft-Hebeler', rho_t=2e14, filename_n2lo="newest_Goettling_N2LO_e.txt", filename_n3lo="newest_Goettling_N3LO_e.txt", pqcd_ext=False, x_f=False):  
+    def __init__(self, crust='ceft-Hebeler', rho_t=2e14, pqcd_ext=False, x_f=False):
         if crust not in ['ceft-Hebeler', 'ceft-Drischler', 'ceft-Lynn',
                          'ceft-Tews', 'ceft-Keller-N2LO', 'ceft-Keller-N3LO', 'ceft-old', 'ceft-Goettling-N2LO', 
                          'ceft-Goettling-N3LO', 'BPS', None]:
@@ -130,7 +131,8 @@ class BaseEoS():
                     self.max_norm = 1.0
                     self._rho_start_ceft = 0.6  #an arbitrary number that is not actually used
                     self._rho_end_BPS = 0.5
-                    self.filename = filename_n2lo
+                    filename = f'{neost.__path__[0]}/data/newest_Goettling_N2LO_e.txt'
+                    self.filename = filename
 
                 if crust == 'ceft-Goettling-N3LO':          ### now filtering out before it goes to multinest sampling
                     if (self.rho_t/rho_ns)==1.5:
@@ -140,7 +142,8 @@ class BaseEoS():
                     self.max_norm = 1.0
                     self._rho_start_ceft = 0.6  #an arbitrary number that is not actually used
                     self._rho_end_BPS = 0.5
-                    self.filename = filename_n3lo
+                    filename = f'{neost.__path__[0]}/data/newest_Goettling_N3LO_e.txt'
+                    self.filename = filename
 
                 if crust == 'ceft-old':
                     self.min_norm = 1.7
@@ -306,14 +309,10 @@ class BaseEoS():
 
     #Crust for Goettling chiral EFT EOS
     def get_eos_crust_GP(self):
-        path = os.path.dirname(__file__)  ##current path
-
         if self.crust == 'ceft-Goettling-N2LO':  #bc if this function is called, it's one of these two anyways
-            path_filename=path+'/'+self.filename
-            self.ceft_eos = self.get_G_N2LO(path_filename)
+            self.ceft_eos = self.get_G_N2LO(self.filename)
         else:
-            path_filename=path+'/'+self.filename
-            self.ceft_eos = self.get_G_N3LO(path_filename)        #self.cEFT_eos is the unfiltered txt file as array
+            self.ceft_eos = self.get_G_N3LO(self.filename)        #self.cEFT_eos is the unfiltered txt file as array
 
         #### eos below ending BPS point
         ## energy density

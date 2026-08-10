@@ -3,8 +3,8 @@ from math import pow
 from scipy.interpolate import UnivariateSpline,interp1d
 from scipy.integrate import odeint
 
+import neost
 from . base import BaseEoS
-
 from .. import global_imports
 
 c = global_imports._c
@@ -62,9 +62,9 @@ class PolytropicEoS(BaseEoS):
 
     """
 
-    def __init__(self, crust, rho_t, filename_n2lo='newest_Goettling_N2LO_e.txt', filename_n3lo='newest_Goettling_N3LO_e.txt', adm_type = 'None', dm_halo = False, two_fluid_tidal = False, pqcd_ext=False, x_f=False):
+    def __init__(self, crust, rho_t, adm_type = 'None', dm_halo = False, two_fluid_tidal = False, pqcd_ext=False, x_f=False):
 
-        super(PolytropicEoS, self).__init__(crust, rho_t, filename_n2lo, filename_n3lo, pqcd_ext=pqcd_ext, x_f=x_f)
+        super(PolytropicEoS, self).__init__(crust, rho_t, pqcd_ext=pqcd_ext, x_f=x_f)
 
         self.eos_name = 'polytropes'
         self.param_names = ['gamma1', 'gamma2', 'gamma3','rho_t1', 'rho_t2']

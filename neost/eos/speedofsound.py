@@ -3,8 +3,8 @@ from scipy.interpolate import UnivariateSpline
 from scipy import optimize
 from scipy.integrate import cumulative_trapezoid, solve_ivp
 
+import neost
 from . base import BaseEoS
-
 from .. import global_imports
 
 c = global_imports._c
@@ -63,9 +63,9 @@ class SpeedofSoundEoS(BaseEoS):
 
     """
 
-    def __init__(self, crust, rho_t, filename_n2lo='newest_Goettling_N2LO_e.txt', filename_n3lo='newest_Goettling_N3LO_e.txt', adm_type = 'None', dm_halo = False, two_fluid_tidal = False, pqcd_ext=False, x_f= False):
+    def __init__(self, crust, rho_t, adm_type = 'None', dm_halo = False, two_fluid_tidal = False, pqcd_ext=False, x_f= False):
 
-        super(SpeedofSoundEoS, self).__init__(crust, rho_t, filename_n2lo, filename_n3lo, pqcd_ext=pqcd_ext, x_f=x_f)
+        super(SpeedofSoundEoS, self).__init__(crust, rho_t, pqcd_ext=pqcd_ext, x_f=x_f)
 
         self.eos_name = 'speedofsound'
         self.param_names = ['a1', 'a2', 'a3/a2', 'a4', 'a5']
