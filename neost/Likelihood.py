@@ -13,6 +13,8 @@ pi = global_imports._pi
 rho_ns = global_imports._rhons
 n_ns = global_imports._n_ns
 
+gcm3_to_MeVfm3 = global_imports._gcm3_to_MeVfm3
+dyncm2_to_MeVfm3 = global_imports._dyncm2_to_MeVfm3
 
 class Likelihood():
 
@@ -53,7 +55,6 @@ class Likelihood():
                     Req = star.Req
                     Rdm_halo = star.Rdm_halo
                     tidal = star.tidal
-                #print('adm: ', Mgrav, Req, Rdm_halo,np.log10(pr_dict['mchi']), np.log10(pr_dict['gchi_over_mphi']), pr_dict['adm_fraction'])
                 
             if self.prior.EOS.adm_type == 'Fermionic':
                 #Hard cut-off imposed as all stars within these boxes have masses well below 1 Msun [~0.4 Msun down to ~0.001 Msun], thus this will save computation time if the code doesn't even have to compute them.
@@ -92,10 +93,10 @@ class Likelihood():
                 Req = star.Req
                 tidal = star.tidal
                 Rdm_halo = 0.0
-                
-                
-
-            if (Mgrav > 3. or Mgrav < 1. or Req > 16. or Req < Mgrav / Msun * 2. * G / c**2. / 1e5): 
+                                
+            ## can temporarily comment it out to avoid the M<1 constraint
+            if (Mgrav > 3. or Mgrav < 1. or Req > 16. or Req < Mgrav / Msun * 2. * G / c**2. / 1e5):
+            ##if (Mgrav > 3. or Req > 16. or Req < Mgrav / Msun * 2. * G / c**2. / 1e5): 
                 return -1e101
 
             if self.prior.EOS.dm_halo == False and Rdm_halo > 0:
@@ -123,12 +124,11 @@ class Likelihood():
                 like = self.likelihood_functions[i](point)
                 likelihoods.append(self.array_to_scalar(like))
 
-        
         like_total = np.prod(np.array(likelihoods))
         # print('lnlike is', like_total)
         if like_total == 0.0:
             return -1e101
-
+        
         return np.log(like_total)
     
     def array_to_scalar(self, var):
@@ -153,13 +153,15 @@ class Likelihood():
             star = Star(self.prior.EOS.max_edsc)
             star.solve_structure(self.prior.EOS.energydensities,
                                  self.prior.EOS.pressures)
+                
             if(star.Mrot < 1):
-                    return -1e101
+                return -1e101
 
             for i in range(self.prior.number_stars):
                 star = Star(10**(pr_dict['rhoc_' + str(i + 1)]), 0.0)
                 star.solve_structure(self.prior.EOS.energydensities,
                                  self.prior.EOS.pressures)
+                
                 if(star.Mrot < 1.):
                     return -1e101
 

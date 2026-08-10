@@ -3,8 +3,8 @@ from scipy.interpolate import UnivariateSpline
 from scipy import optimize
 from scipy.integrate import cumulative_trapezoid, solve_ivp
 
+import neost
 from . base import BaseEoS
-
 from .. import global_imports
 
 c = global_imports._c
@@ -12,10 +12,10 @@ G = global_imports._G
 Msun = global_imports._M_s
 pi = global_imports._pi
 rho_ns = global_imports._rhons
+n_ns = global_imports._n_ns
 dyncm2_to_MeVfm3 = global_imports._dyncm2_to_MeVfm3
 gcm3_to_MeVfm3 = global_imports._gcm3_to_MeVfm3
 oneoverfm_MeV = global_imports._oneoverfm_MeV
-n_ns = global_imports._n_ns
 
 
 class SpeedofSoundEoS(BaseEoS):
@@ -36,7 +36,7 @@ class SpeedofSoundEoS(BaseEoS):
         If True a low-density cEFT parameterization is used.
     ceft_method: str
         The name of the cEFT calculations used at low density.
-        Can be one of 'Hebeler', 'Drischler', 'Lynn', 'Keller-N2LO', 'Keller-N3L0', or 'Tews'.
+        Can be one of 'Hebeler', 'Drischler', 'Lynn', 'Keller-N2LO', 'Keller-N3L0', 'Goettling-N2LO', 'Goettling-N3L0'  or 'Tews' (or 'old').
     adm_type: str
         The name of the ADM particle type. Can be 'None', 'Bosonic', or 'Fermionic'
     dm_halo: bool
@@ -50,6 +50,8 @@ class SpeedofSoundEoS(BaseEoS):
         Update the EoS object with a given set of parameters
     get_eos_crust()
         Construct the crust of the equation of state, with or without cEFT.
+    get_eos_crust_GP()
+        Construct the crust of the equation of state, with normal distribution of cEFT EOS. Needs 'Goettling-N2LO' or 'Goettling-N3L0'.
     get_eos()
         Construct the high-density parameterization of the equation of state.
     add_adm_eos()
@@ -61,12 +63,16 @@ class SpeedofSoundEoS(BaseEoS):
 
     """
 
-    def __init__(self, crust, rho_t,adm_type = 'None',dm_halo = False,two_fluid_tidal = False):
+    def __init__(self, crust, rho_t, adm_type = 'None', dm_halo = False, two_fluid_tidal = False, pqcd_ext=False, x_f= False):
 
-        super(SpeedofSoundEoS, self).__init__(crust, rho_t)
+        super(SpeedofSoundEoS, self).__init__(crust, rho_t, pqcd_ext=pqcd_ext, x_f=x_f)
 
         self.eos_name = 'speedofsound'
         self.param_names = ['a1', 'a2', 'a3/a2', 'a4', 'a5']
+
+        if self.pqcd_ext:
+            if x_f == False:
+                self.param_names.append('X')
 
         self.adm_type = adm_type
         self.dm_halo = dm_halo
@@ -104,7 +110,7 @@ class SpeedofSoundEoS(BaseEoS):
         totalrho = np.hstack([self._rho_crust, self._rho_core[1:]])
         totalpres = np.hstack([self._pres_crust, self._pres_core[1:]])
         totaleps = np.hstack([self._eds_crust, self._eds_core[1:]])
-        self.pressures = totalpres #orginally in cgs 
+        self.pressures = totalpres
         self.energydensities = totaleps 
         self.massdensities = totalrho 
 
@@ -271,5 +277,14 @@ class SpeedofSoundEoS(BaseEoS):
             check = False
         if rising.size != 0 and falling.size != 0 and rising[0] < falling[0]:
             check = False
+                
+        ### probably unnecessary now
+        if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
+            if all(x<=y for x, y in zip(self.ceft_pressure_werror, self.ceft_pressure_werror[1:]))==False:   ## self._pres_crust might be overkill (includes low, BPS and cEFT)
+                #print('Unphysical EOS')
+                #print(self.ceft_param)
+                check = False
+            else:
+                check = True     
 
         return check

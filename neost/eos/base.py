@@ -1,18 +1,23 @@
+from scipy.integrate import odeint, cumulative_trapezoid, solve_ivp
 import numpy as np
 from scipy.interpolate import UnivariateSpline
 from scipy import optimize
-from scipy.integrate import odeint
 import matplotlib.pyplot as plt
+
+import os
 
 from .. Star import Star
 from .. import global_imports
 from .. utils import m1_from_mc_m2, m1_m2_from_mc_q
+from neost.pQCD import pQCD
+import neost
 
 c = global_imports._c
 G = global_imports._G
 Msun = global_imports._M_s
 pi = global_imports._pi
 rho_ns = global_imports._rhons
+n_ns = global_imports._n_ns
 dyncm2_to_MeVfm3 = global_imports._dyncm2_to_MeVfm3
 gcm3_to_MeVfm3 = global_imports._gcm3_to_MeVfm3
 oneoverfm_MeV = global_imports._oneoverfm_MeV
@@ -21,14 +26,12 @@ oneoverfm_MeV = global_imports._oneoverfm_MeV
 class BaseEoS():
 
     """
-    Base class representing an equation of state object.
-
+    Base class representing an equation of state object
 
     Parameters
     ----------
     crust: str
-        The name of the EoS crust model to use. Can be either 'ceft-Hebeler',
-        'ceft-Drischler', 'ceft-Lynn', 'ceft-Tews', 'ceft-old', 'BPS', or None
+        The name of the EoS crust modeli to use. Can be None
         if a tabulated EoS with a crust model already included is used.
     rho_t: float
         The transition density between the crust EOS and the high density
@@ -40,26 +43,37 @@ class BaseEoS():
         Update the EoS object with a given set of parameters
     get_eos_crust()
         Construct the crust of the equation of state, with or without cEFT.
+    get_eos_crust_GP()
+        Construct the crust of the equation of state, when Keller cEFT band has uncertainties calculated with Gaussian process, aka, for Goettling cEFT band
     plot()
         Plot the equation of state.
     plot_massradius()
         Plot the mass-radius curve of the equation of state.
-
+    
+    get_maximum_pqcd() 
+        Finds the maximum central density that obeys causality, max mass and pQCD constraints
+    update_to_pqcd_extension()
+        Builds pQCD extensions to make EOS compatible with pQCD
     """
 
-    def __init__(self, crust='ceft-Hebeler', rho_t=2e14):
-
+    def __init__(self, crust='ceft-Hebeler', rho_t=2e14, pqcd_ext=False, x_f=False):
         if crust not in ['ceft-Hebeler', 'ceft-Drischler', 'ceft-Lynn',
-                         'ceft-Tews', 'ceft-Keller-N2LO', 'ceft-Keller-N3LO', 'ceft-old', 'BPS', None]:
+                         'ceft-Tews', 'ceft-Keller-N2LO', 'ceft-Keller-N3LO', 'ceft-old', 'ceft-Goettling-N2LO', 
+                         'ceft-Goettling-N3LO', 'BPS', None]:
             raise TypeError('crust model not recognized, choose either \
                 "ceft-Hebeler", "ceft-Drischler", "ceft-Lynn", "ceft-Tews", \
-                "ceft-Keller-N2LO", "ceft-Keller-N3LO", "BPS" or None if no crust is needed')
+                "ceft-Keller-N2LO", "ceft-Keller-N3LO", "ceft-Goettling-N2LO", "ceft-Goettling-N3LO",\
+                "BPS" or None if no crust is needed')
 
         self.crust = crust
         self.rho_t = rho_t
+        self.pqcd_ext = pqcd_ext
+        self.x_f = x_f
+        self.ext = 0   ## checks if max or min construction is built
+
         if crust is not None:
             self.BPS = self.get_BPS()
-            self.ceft = crust[0:4] == 'ceft'
+            self.ceft = crust[0:4] == 'ceft'  ## just to check if BPS is included
 
             if self.ceft is True:
 
@@ -71,6 +85,7 @@ class BaseEoS():
                     self._rho_start_ceft = 0.5792
                     self._rho_end_BPS = 0.5
 
+                ## should we remove the next three and 'ceft-old'? fail in sample.py anyways
                 if crust == 'ceft-Drischler':
                     self.min_norm = 2.136
                     self.max_norm = 3.339
@@ -111,6 +126,24 @@ class BaseEoS():
                     self._rho_start_ceft = 0.5792
                     self._rho_end_BPS = 0.5
 
+                if crust == 'ceft-Goettling-N2LO':
+                    self.min_norm = 0.03920390328748265  #previously, self.min_norm = 0.02357223574914916
+                    self.max_norm = 1.0
+                    self._rho_start_ceft = 0.6  #an arbitrary number that is not actually used
+                    self._rho_end_BPS = 0.5
+                    filename = f'{neost.__path__[0]}/data/newest_Goettling_N2LO_e.txt'
+                    self.filename = filename
+
+                if crust == 'ceft-Goettling-N3LO':          ### now filtering out before it goes to multinest sampling
+                    if (self.rho_t/rho_ns)==1.5:
+                        self.min_norm = 0.03672695569872628  #previously, self.min_norm = 0.01130384423855279
+                    if (self.rho_t/rho_ns)==1.1:
+                        self.min_norm = 0.00048342414238377744
+                    self.max_norm = 1.0
+                    self._rho_start_ceft = 0.6  #an arbitrary number that is not actually used
+                    self._rho_end_BPS = 0.5
+                    filename = f'{neost.__path__[0]}/data/newest_Goettling_N3LO_e.txt'
+                    self.filename = filename
 
                 if crust == 'ceft-old':
                     self.min_norm = 1.7
@@ -123,6 +156,9 @@ class BaseEoS():
             if rho_t > 2.0 * rho_ns or rho_t < self._rho_start_ceft * rho_ns:
                 raise ValueError('The transition density should be between \
                     %.2f and 2.0 saturation density.' % self._rho_start_ceft)
+
+            if self.pqcd_ext and global_imports._verbose:
+                print('Using NEoST with pQCD constraints.') #previous message displayed: 'Make sure the range of X is specified directly in log space, typically [0.5, 2.0].'
 
     def update(self, eos_params, max_edsc=True):
         """
@@ -144,14 +180,16 @@ class BaseEoS():
 
             if self.ceft is True:
                 self.ceft_param = eos_params['ceft']
+                #print('update')                                           #### this is a good place to put a print statement to see the eos that failed check constraints
+                #print(self.ceft_param)
                 self.eos_params = {i:eos_params[i] for i in eos_params if 
                                    i != 'ceft'}
-
-                if (self.ceft_param < self.min_norm or
-                        self.ceft_param > self.max_norm):
-                    raise TypeError(f'"ceft" variable should be either "None" or a float in the range [{self.min_norm}, {self.max_norm}]')
-                self.get_eos_crust()
-
+                
+                if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':           
+                    self.get_eos_crust_GP()
+                else:        
+                    self.get_eos_crust()
+                
             else:
                 self.eos_params = {i:eos_params[i] for i in eos_params}
                 self.get_eos_crust()
@@ -161,16 +199,42 @@ class BaseEoS():
         
         self.get_eos()
 
-        if max_edsc is True:
-            self.find_max_edsc()
-        else:
-            self.max_edsc = 0.0
+        if self.pqcd_ext:
+            self.ext = 0              
+
+            if self.x_f:
+                X = 1.0    # or some other number in [0.5, 2.0] 
+                self.X = X  # so it is saved in max_pqcd_point later
+            else:
+                # set scale for pQCD check (log uniform between X=0.5 and X=2)
+                X = self.eos_params.get('X')
+                self.X = X
+            
+            # Checks where EOS breaks down due to pqcd
+            if max_edsc is True:
+                self.maximum_pqcd = self.get_maximum_pqcd(X)   ## only if the user wants to find the max mass
+            else:
+                self.maximum_pqcd = self.energydensities[len(self.energydensities)-1]   ##we'll check this first
+
+            # Only if EOS breaks due to pqcd, calculate extension and run find_max_edsc again to find where the extension breaks due to causality or max mass
+            if self.maximum_pqcd != -1:
+                self.update_to_pqcd_extension(X)
+                if max_edsc is True:
+                    self.find_max_edsc()   ## should this be run again if get_maximum_pqcd was already called?
+                else:
+                    self.max_edsc = 0.0
+
+        else:  ## only runs this part is pqcd_ext is off
+            if max_edsc is True:
+                self.find_max_edsc()
+            else:
+                self.max_edsc = 0.0
+
 
     # Compute the crust EoS
     def get_eos_crust(self):
         if self.ceft is True:
             # TODO: add function that rho_t can be below 0.58*rho_ns
-            # attempt at making a different jump off from BPS
             
             rhocrust = self.BPS[:,0][self.BPS[:,0] <= self._rho_end_BPS]
             rhotrans = np.linspace(self._rho_end_BPS, self._rho_start_ceft, 10)
@@ -181,6 +245,7 @@ class BaseEoS():
             prescEFT = self.ceft_band_func(rhocEFT, self.ceft_param,
                                            self.min_norm, self.max_norm,
                                            self.min_index, self.max_index)
+
             prestrans = prescrust[-1] * (rhotrans / rhocrust[-1])**(
                 np.log10(prescEFT[0] / prescrust[-1]) /
                 np.log10(rhocEFT[0] / rhocrust[-1]))
@@ -242,11 +307,129 @@ class BaseEoS():
         self.eds_t = self._eds_crust[-1]
         self.P_t = self._pres_crust[-1]
 
+    #Crust for Goettling chiral EFT EOS
+    def get_eos_crust_GP(self):
+        if self.crust == 'ceft-Goettling-N2LO':  #bc if this function is called, it's one of these two anyways
+            self.ceft_eos = self.get_G_N2LO(self.filename)
+        else:
+            self.ceft_eos = self.get_G_N3LO(self.filename)        #self.cEFT_eos is the unfiltered txt file as array
+
+        #### eos below ending BPS point
+        ## energy density
+        epslow = np.logspace(-2, np.log10(self.BPS[0][2]/gcm3_to_MeVfm3), 50)  #g/cm^3
+        self.epsBPS = self.BPS[:,2][self.BPS[:,0] <= self._rho_end_BPS]/gcm3_to_MeVfm3 #g/cm^3
+        ## pressure
+        preslow = ((epslow / (self.BPS[0][0] * rho_ns))**(5. / 3.) * self.BPS[0][1] / dyncm2_to_MeVfm3) #dyn/cm^2
+        self.presBPS = self.BPS[:,1][self.BPS[:,0] <= self._rho_end_BPS]/dyncm2_to_MeVfm3 #previously prescrust #dyn/cm^2
+        ### mass density or number density
+        rholow = np.logspace(-2, np.log10(self.BPS[0][0] * rho_ns), 50) #g/cm^3
+        self.rhoBPS = self.BPS[:,0][self.BPS[:,0] <= self._rho_end_BPS]*rho_ns  #g/cm^3
+
+        #### finding starting ceft point (from sampled ceft parameter)
+        self.get_start_cEFT()
+        
+        #### from BPS end to cEFT end
+        epscEFT = self.ceft_energy[self.index_start_cEFT:]/gcm3_to_MeVfm3  #g/cm^3
+        prescEFT = self.ceft_pressure_werror[self.index_start_cEFT:]/dyncm2_to_MeVfm3  #dyn/cm^2
+        rhocEFT = (self.ceft_density[self.index_start_cEFT:]/n_ns)*rho_ns  #g/cm^3
+        
+        self.rhotrans = np.linspace(self.rhoBPS[-1], rhocEFT[0], 10)
+        
+        self.prestrans = self.presBPS[-1] * (self.rhotrans / self.rhoBPS[-1])**(
+                np.log10(prescEFT[0] / self.presBPS[-1]) /
+                np.log10(rhocEFT[0] / self.rhoBPS[-1]))
+        
+        ## ode to find energy density of the transiion
+        eps0 = self.epsBPS[-1]
+        aux_rho_crust = np.hstack([self.rhoBPS, self.rhotrans[1:-1], rhocEFT])
+        aux_pres_crust = np.hstack([self.presBPS, self.prestrans[1:-1], prescEFT])
+        prho = UnivariateSpline(aux_rho_crust, aux_pres_crust, k=2, s=0)
+ 
+        aux_ode_rho_crust= np.asarray([i for i in aux_rho_crust/rho_ns if (self.ceft_density[self.index_start_cEFT]/n_ns)>i>= self._rho_end_BPS])
+ 
+        result = odeint(self.edens, eps0, aux_ode_rho_crust, args=tuple([prho]))
+        self.epstrans = result.flatten()[1::]
+                
+        ## putting everything together       
+        self._eds_crust = np.hstack([epslow[0:-1], self.epsBPS, self.epstrans, epscEFT])
+        self._pres_crust = np.hstack([preslow[0:-1], self.presBPS, self.prestrans[1:-1], prescEFT])
+        
+        ##debugging
+        #if (any(np.isnan(self._pres_crust))):
+        #    print('Nan element found in p_crust')
+        #    print(list(np.isnan(self._pres_crust)).index(True))  ##returns index of nan element in _pres_crust, if any
+        #    print([i for i in eos_params])       
+        #else:
+        #    aux_ind = [i for i in range(0, len(self._pres_crust), 1) if self._pres_crust[i]==0]
+        #    if len(aux_ind)!=0:
+        #        print('Zero element found in p_crust')
+        #        print(np.asarray(aux_ind))       ##if not, returns index of 0 element, if any
+        #        print([i for i in eos_params])
+        
+        self._rho_crust = np.hstack([rholow[0:-1], self.rhoBPS, self.rhotrans[1:-1], rhocEFT])  
+
+        eos_crust = UnivariateSpline(self._eds_crust, self._pres_crust, k=1, s=0) 
+        self._cs_crust = eos_crust.derivative(1)
+        self.rhoeds_crust = UnivariateSpline(self._rho_crust, self._eds_crust, k=1, s=0)  
+        
+        #used for building the core EOS starting on these points
+        self.eds_t = self._eds_crust[-1]
+        self.P_t = self._pres_crust[-1]
+        #self.Rho_t = self._rho_crust[-1]  #capital rho to differentiate from rho_t input by user, with new table there's no difference, but there was before
+        
+
     #######################
     # Auxiliary functions #
     #######################
+    
+    def get_G_N2LO(self, path_filename):
+        n2lo_eos = np.loadtxt(path_filename, skiprows=2) #maybe we should skip the first two rows?
+               
+        self.ceft_density = n2lo_eos[:,0][n2lo_eos[:,0]<= (self.rho_t/rho_ns)*n_ns]  #1/fm3
+        self.ceft_energy = n2lo_eos[:,2][n2lo_eos[:,0]<= (self.rho_t/rho_ns)*n_ns]   #MeVfm3
+        
+        ceft_pressure_nucleons = n2lo_eos[:,3][n2lo_eos[:,0]<= (self.rho_t/rho_ns)*n_ns] #Mevfm3
+        ceft_pressure_electrons = n2lo_eos[:,4][n2lo_eos[:,0]<= (self.rho_t/rho_ns)*n_ns] #Mevfm3
+        
+        self.ceft_pressure = ceft_pressure_nucleons+ceft_pressure_electrons
+        
+        self.ceft_std = n2lo_eos[:,5][n2lo_eos[:,0]<= (self.rho_t/rho_ns)*n_ns]
+        self.ceft_pressure_werror = self.ceft_pressure + self.ceft_std * self.ceft_param 
+        return n2lo_eos     
+        
+    def get_G_N3LO(self, path_filename):
+        n3lo_eos = np.loadtxt(path_filename, skiprows=2)
+        
+        self.ceft_density = n3lo_eos[:,0][n3lo_eos[:,0]<= (self.rho_t/rho_ns)*n_ns]
+        self.ceft_energy = n3lo_eos[:,2][n3lo_eos[:,0]<= (self.rho_t/rho_ns)*n_ns]
+        
+        ceft_pressure_nucleons = n3lo_eos[:,3][n3lo_eos[:,0]<= (self.rho_t/rho_ns)*n_ns] #Mevfm3
+        ceft_pressure_electrons = n3lo_eos[:,4][n3lo_eos[:,0]<= (self.rho_t/rho_ns)*n_ns] #Mevfm3
+        
+        self.ceft_pressure = ceft_pressure_nucleons+ceft_pressure_electrons
+                
+        self.ceft_std = n3lo_eos[:,5][n3lo_eos[:,0]<= (self.rho_t/rho_ns)*n_ns]
+        self.ceft_pressure_werror = self.ceft_pressure + self.ceft_std * self.ceft_param
+        return n3lo_eos
+        
+    def get_start_cEFT(self):
+        self.counter = 0
+        eps_grid = self.ceft_energy
+        for i in eps_grid:
+            if i > self.BPS[:,2][self.BPS[:,0] <= self._rho_end_BPS][-1]:
+                break
+            self.counter+=1
+        self.counter_p = 0
+        for i in self.ceft_pressure_werror[self.counter:]:    
+            if i> self.BPS[:,1][self.BPS[:,0] <= self._rho_end_BPS][-1]:
+                #print(self.BPS[:,1][self.BPS[:,0] <= self._rho_end_BPS][-1])
+                #print(i)
+                break
+            self.counter_p+= 1
+        self.index_start_cEFT = self.counter+self.counter_p
 
-    # Analytic representation of the SLy EoS, used for crust
+
+    # Analytic representation of the SLy EoS, used for crust (in the distant past)
     def SLYfit(self, rho):
 
         a = np.array([6.22, 6.121, 0.005925, 0.16326, 6.48, 11.4971, 19.105,
@@ -313,12 +496,12 @@ class BaseEoS():
     def find_max_edsc(self):
 
         min_edsc0 = 14.3
-        if self.rho_t is not None:
-            eds = np.logspace(np.log10(self.rho_t), 
-                                 np.log10(4e16), 1000) #eds is in units of g/cm^3,  
-                                                                
+        if self.rho_t is not None:  ## will only be none for tabulated EOS (check)
+            eds = np.logspace(np.log10(self.rho_t), np.log10(4e16), 1000) #eds is in units of g/cm^3
+
         else:
             eds = np.logspace(14.3, np.log10(4e16), 1000) #same as above
+            
         dpde = self.eos.derivative(1)
         cs = dpde(eds)/c**2
         acausal = 1.
@@ -338,18 +521,23 @@ class BaseEoS():
 
             if np.log10(maximum) < min_edsc0: # g/cm^3
                 maximum = min_edsc0 + 0.01
-
+                
         else:
             maximum = max(eds)
- 
+             
+        if type(maximum)!=np.float64:  ## to ensure maximum is a float, otherwise problems with Star.py function. np.float64 was deprecated, if more instances are found, replace for float in newer versions of Python
+            maximum=float(maximum[0])
+
         eds_c = np.logspace(min_edsc0, np.log10(maximum), 50) # g/cm^3
         Ms = np.zeros((len(eds_c),3))
         
         for i, e in enumerate(eds_c):
             star = Star(e)
             star.solve_structure(self.energydensities, self.pressures)
-            if star.Mrot < Ms[i - 1][0]:
-                break
+            
+            if star.Req < 100.0:                     ## to avoid running into the unstable branch of the white dwarf-NS transition when dealing with too soft eos 
+                if star.Mrot < Ms[i - 1][0]:             ## adjusting the absolute values of this comparison to accommodate softer eos
+                    break
             Ms[i] = star.Mrot, star.Req, star.tidal
 
         Ms = Ms[Ms[:,0] > 0.0]
@@ -369,7 +557,210 @@ class BaseEoS():
         self.centraleds = eds_c
         self.massradius = Ms
 
+    #### pQCD related functions
+
+    # Finds maximum central density with pQCD
+    def get_maximum_pqcd(self, X):
     
+        #debugging to make sure all eos have increasing pressure
+        #probably can delete this block
+        if all(x<=y for x, y in zip(self.pressures, self.pressures[1:]))==False:   ## if for some reason it's not, before any checks or extensions, print warning
+            print('unphysical EOS')
+            print(self.ceft_params)
+            print(eos_params.values())
+
+
+        # First check where the EOS would break down due to mass or causality then check if it breaks down due to pqcd before and if yes where
+        min_edsc0 = 14.3
+        if self.rho_t is not None:
+            eds = np.logspace(np.log10(self.rho_t), 
+                                 np.log10(4e16), 1000) #eds is in units of g/cm^3,  
+
+        else:
+            eds = np.logspace(14.3, np.log10(4e16), 1000) #same as above
+        dpde = self.eos.derivative(1)
+        cs = dpde(eds)/c**2
+        acausal = 1.
+
+
+        if len(eds[cs > acausal]) != 0:
+            maximum = eds[np.where(eds == min(eds[cs > acausal]))[0] - 1]
+
+            if np.log10(maximum) < min_edsc0: # g/cm^3
+                maximum = min_edsc0 + 0.01
+
+        else:
+            maximum = max(eds)
+
+        if type(maximum)!=np.float64:
+            maximum=float(maximum[0])
+       
+        eds_c = np.logspace(min_edsc0, np.log10(maximum), 50) # g/cm^3  ##added [0] because maximum is being automatically turned into a list, which leads to a problem in Star function below
+        Ms = np.zeros((len(eds_c),3))
+        
+        for i, e in enumerate(eds_c):
+            #print(e)
+            star = Star(e)
+            star.solve_structure(self.energydensities, self.pressures)
+            
+            if star.Req < 100.0:                                ## to avoid problems with extremely soft eos
+                if star.Mrot < Ms[i - 1][0]:                    ## adjusting the absolute values of this comparison to accommodate softer eos
+                    break
+            Ms[i] = star.Mrot, star.Req, star.tidal
+
+        Ms = Ms[Ms[:,0] > 0.0]
+        eds_c = eds_c[0:len(Ms)]
+        test, idx = np.unique(Ms[:,0], return_index=True)
+        Ms = Ms[idx]
+
+        eds_c = np.asarray(eds_c[idx])    ## make eds_c array first, to avoid the forming of internal lists in the linspace line below
+
+        # Find out where the EOS breaks down due to pqcd  
+        #eds_pqcd = np.linspace(10**15, max(eds_c), 200) # g/cm^3    starting at 10**15 because usually pQCD doesn't break before, but should be tested with gp
+        
+        eds_pqcd = np.linspace(1e14, float(max(eds_c)), 400) # g/cm^3
+        edsrho = UnivariateSpline(self.energydensities, self.massdensities, k=1, s=0)
+        pQCD1 = pQCD(X) 
+
+        for i, e in enumerate(eds_pqcd):
+            pqcd_rhoc = edsrho(e)    
+            n_pqcd = pqcd_rhoc/rho_ns*0.16
+            p_pqcd = self.eos(e)*dyncm2_to_MeVfm3/1000
+            e_pqcd = e*gcm3_to_MeVfm3/1000   
+            pqcd_allowed = pQCD1.constraints(e0 = e_pqcd, p0 = p_pqcd, n0 = n_pqcd, muQCD = 2.6, cs2 = 1.0)       #choose muQCD = 2.6 and sos limit 1 (default values)            
+            
+            if pqcd_allowed == 0 and i > 0:             # last EOS point that is allowed
+                maximum_pqcd = eds_pqcd[i - 1]
+                if maximum_pqcd<1e+15:
+                    print('Careful')
+                    print(self.ceft_params)
+                    print(eos_params.values())
+                break
+            elif pqcd_allowed == 0 and i == 0:
+                maximum_pqcd = eds_pqcd[0]
+                if maximum_pqcd<1e+15:
+                    print('Careful')
+                    print(self.ceft_params)
+                    print(eos_params.values())
+                break            
+            else:
+                maximum_pqcd = -1
+
+        #this block we only need to calculate for break, because if there is an extension we re run finding the max edsc
+        '''
+        if maximum_pqcd != -1:
+            eds_c_index_pqcd = len(eds_c[eds_c < maximum_pqcd]) - 1       
+            self.max_M = max(Ms[:eds_c_index_pqcd +1 ,0])
+            index_max_M = np.argmax(Ms[:eds_c_index_pqcd + 1,0])
+            self.Radius_max_M = Ms[:eds_c_index_pqcd +1,1][index_max_M]
+            self.max_edsc = maximum_pqcd
+            self.min_edsc = 10**(min_edsc0)
+            if Ms[:,0][eds_c_index_pqcd] > 0.9:
+                self.min_edsc = min(eds_c[: eds_c_index_pqcd + 1][Ms[:eds_c_index_pqcd + 1,0] > 0.9])
+            self.centraleds = eds_c[eds_c <= maximum_pqcd]
+            self.massradius = Ms[: eds_c_index_pqcd +1] 
+        '''    
+
+        if maximum_pqcd == -1:
+            self.max_M = max(Ms[:,0])
+            index_max_M = np.argmax(Ms[:,0])
+            self.Radius_max_M = Ms[:,1][index_max_M]
+            self.max_edsc = max(eds_c)
+            self.min_edsc = 10**(min_edsc0)
+            if Ms[:,0][-1] > 0.9:
+                self.min_edsc = min(eds_c[Ms[:,0] > 0.9])
+            self.centraleds = eds_c
+            self.massradius = Ms
+
+        #else:
+        #    print(max(eds_c))
+        #    print(maximum_pqcd)
+
+        return maximum_pqcd    
+
+    def n_mu_extension(self, p, mu, n_pqcd, mu_pqcd):
+        return mu*n_pqcd/mu_pqcd
+
+    def n_mu_extension_min(self, p, mu, n_last, mu_last):
+        return mu*n_last/mu_last
+
+    def update_to_pqcd_extension(self, X):
+    
+        # totalrho in rho_ns, totaleps in gcm3 unit (cgs), totalpres in dyncm2 unit (cgs)       
+        # n in 1/fm3, p and eps in GeV/fm3, mu in GeV transfer later to cgs units       
+
+        pQCD1 = pQCD(X) # X in paper equals 2*X in solver (different scales) here use X=0.5, 1, 2
+
+        #pqcd point
+        mu_pqcd = 2.6                            # in GeV
+        n_pqcd = pQCD1.number_density(mu_pqcd)   # in 1/fm3     
+        p_pqcd = pQCD1.pressure(mu_pqcd)         # in GeV/fm3 
+
+        # last allowed EOS point
+        edsrho = UnivariateSpline(self.energydensities, self.massdensities, k=1, s=0)
+        max_rhoc = edsrho(self.maximum_pqcd)
+        n_last = max_rhoc/rho_ns*0.16                                   # in 1/fm3 
+        p_last = self.eos(self.maximum_pqcd)*dyncm2_to_MeVfm3/1000      # in GeV/fm3
+        e_last = self.maximum_pqcd*gcm3_to_MeVfm3/1000                  # in GeV/fm3
+        mu_last = (p_last + e_last)/n_last                              # in GeV
+
+        # Calculate allowed Delta Ps and Delta n from paper to check wether to apply the minimum or maximum extension
+        pMin = 0.5 * (mu_pqcd * (mu_pqcd/ mu_last)  - mu_last) * n_last
+        pMax = 0.5 * (mu_pqcd - mu_last * (mu_last / mu_pqcd)) * n_pqcd
+        nMax = n_pqcd * (mu_last / mu_pqcd)
+
+        # Calculate extension(s) (calculation in GeV fm3 units, then transformed to cgs units)
+        mus = np.linspace(mu_last, mu_pqcd, 100)
+        mus = np.ravel(mus)
+
+        # Checks whether Delta P_max or Delta P_min extension needs to be applied and calculates the extension (or none if pQCD point already exceeded)     
+        if ((abs(pMax - (p_pqcd - p_last)) < abs(pMin - (p_pqcd - p_last))) and (mu_last < 2.6)):             
+            self.ext = 1
+            #print('max')
+            n_extension = np.array([m*n_pqcd/mu_pqcd*rho_ns/0.16 for m in mus])
+            P_extension =  odeint(self.n_mu_extension, p_last, mus, args=(n_pqcd, mu_pqcd)).flatten()*1000/dyncm2_to_MeVfm3
+            eps_extension = ((-1)*P_extension*dyncm2_to_MeVfm3/1000 + mus**2*n_pqcd/mu_pqcd)/gcm3_to_MeVfm3*1000
+
+        elif ((abs(pMax - (p_pqcd - p_last)) > abs(pMin - (p_pqcd - p_last))) and (mu_last < 2.6)):
+            self.ext = 2
+            #print('min')
+            n_extension = np.array([m*n_last/mu_last*rho_ns/0.16 for m in mus])
+            P_extension =  odeint(self.n_mu_extension_min, p_last, mus, args=(n_last, mu_last)).flatten()*1000/dyncm2_to_MeVfm3
+            eps_extension = ((-1)*P_extension*dyncm2_to_MeVfm3/1000 + mus**2*n_last/mu_last)/gcm3_to_MeVfm3*1000
+        
+        else:
+            n_extension = np.array([])
+            P_extension =  np.array([])
+            eps_extension = np.array([])
+
+        n_extension = np.squeeze(n_extension) # The calculation of totalrho fails if n_extension is multidimensional
+
+        # This line could be removed if it makes problems: checks whether the extension is compatible with pQCD which is the case by definition for the exact analytical extension >
+        # Is nowhere used for now, just fyi if pQCD check would be fulfilled
+        try:
+            pqcd_check = [pQCD1.constraints(e0 = eps_extension[i]*gcm3_to_MeVfm3/1000, p0 = P_extension[i]*dyncm2_to_MeVfm3/1000, n0 = n_extension[i]/rho_ns*0.16, muQCD = 2.6, cs2 = 1.0, return_values=True) for i in range(len(mus))]
+        except IndexError:
+            print('pqcd_check empty')
+            pqcd_check = [False] * len(mus) # Does this make sense? pQCD breakpoint should already have been reached, so by definition incompatible?
+
+        # To make sure the EOS is monotonically increasing (first extension point above last EOS point)
+        indices = np.where((P_extension > p_last*1000/dyncm2_to_MeVfm3) &  (eps_extension > e_last/gcm3_to_MeVfm3*1000) & (n_extension/rho_ns > n_last/0.16))
+        #print(indices)
+
+        # Stack together the original EOS and extension
+        totalrho = np.hstack([self.massdensities[self.energydensities <= self.maximum_pqcd], n_extension[indices]])
+        totaleps = np.hstack([self.energydensities[self.energydensities <= self.maximum_pqcd], eps_extension[indices]])
+        totalpres = np.hstack([self.pressures[self.energydensities <= self.maximum_pqcd], P_extension[indices]])   
+        ## add check here that pressure monotonically increasing
+
+        self.pressures = totalpres #originally in cgs units
+        self.energydensities = totaleps   
+        self.massdensities = totalrho
+        self.eos = UnivariateSpline(self.energydensities, self.pressures, k=1, s=0)
+
+        
+    #### DM related functions
+
     def f_chi_calc(self,epscent,epscent_dm):
         """
         Method to calculate the ADM mass-fraction given the baryonic and ADM central densities, respectively.
@@ -758,6 +1149,8 @@ class BaseEoS():
                 self.reach_fraction = False
         return epsdm_cent
 
+    ########
+
     def Mass_Radius(self,epscent,epscent_dm):
         star = Star(epscent, epscent_dm) 
         if epscent_dm ==0:
@@ -796,8 +1189,8 @@ class BaseEoS():
                  (max_index - min_index) + min_index)
         return self.polytropic_func(rho, norm, index)
 
-    
-    def plot(self, dm = 'None'):
+ 
+    def plot(self, dm = 'None'):             ### modified to make simple checks for pp
         """
             Plot the EoS. If dm is not 'None' will include ADM contribution.
         """
@@ -809,22 +1202,36 @@ class BaseEoS():
                                                         
             rho_core = np.logspace(np.log10(self.rho_t), 
                                       np.log10(8e15), 100) #same as above, but for rho_core
-
+                                      
             miny = min(self.eos(rho_crust)) #   units of g/(cm s^2)
                                                         
             maxy = max(self.eos(rho_core)) #same deal as above
 
-            ax.plot(rho_crust, self.eos(rho_crust), 
-                    c='red', label='Crust EoS', lw=1.5) 
-            ax.plot(rho_core, self.eos(rho_core),
-                    c='black', label='Core EoS', lw=1.5) 
+            #ax.plot(rho_crust, self.eos(rho_crust), 
+            #        c='red', label='Crust EoS', lw=1.5) 
+            #ax.plot(rho_core, self.eos(rho_core),
+            #        c='black', label='Core EoS', lw=1.5) 
+
+            if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
+                miny = min(self.eos(self.energydensities)) #units of g/(cm s^2)
+                maxy = max(self.eos(self.energydensities)) #same as above
+                
+                ax.plot(self.energydensities, self.pressures, color='black', marker='o', linestyle='-') #same as above, but for energydensities and pressures 
+                #color='green', marker='o', linestyle='dashed',linewidth=2, markersize=12)
+                
+                #aux=np.logspace(-2, np.log10(self.BPS[0][2]/gcm3_to_MeVfm3), 50)[-1]
+                
+                ax.vlines(self.eds_t, ymin=miny, ymax=maxy, color='black', linestyle='--', label='end chiral')
+                ax.vlines(self.epsBPS[-1], ymin=miny, ymax=maxy, color='red', linestyle='--', label ='end BPS')
+                ax.vlines(self.eos_params['rho_t1']*rho_ns, ymin=miny, ymax=maxy, color='blue', linestyle='--', label ='rho t1')   ## only works for rho_t1
+                #ax.vlines(aux, ymin=miny, ymax=maxy, color='blue', linestyle='--', label ='start BPS')
+                #ax.hline(self.P_t, ymin=0, ymax=1, '--')
 
         else:
             miny = min(self.eos(self.energydensities)) #units of g/(cm s^2)
             maxy = max(self.eos(self.energydensities)) #same as above
-            ax.plot(self.energydensities, 
-                    self.pressures, c='black', lw=1.5, label='EoS') #same as above, but for energydensities and pressures
-
+            ax.plot(self.energydensities, self.pressures, c='black', ls='-', lw=1.5, label='EoS') #same as above, but for energydensities and pressures
+            
         if dm in ['Bosonic', 'Fermionic']:
             ax.plot(self.energydensities_dm, 
                     self.pressures_dm, c='steelblue', 
@@ -834,15 +1241,16 @@ class BaseEoS():
             
         ax.set_xscale('log')
         ax.set_yscale('log')
+        
         ax.set_ylim(miny, maxy)
-
+        #ax.set_xlim(1e+5, 1e+30) #a bit random choice
 
         ax.tick_params(axis='both', which='major', labelsize=14)
         ax.set_xlabel(r'$\varepsilon$ [g/cm$^3$]', fontsize=15)
         ax.set_ylabel(r'Pressure [dyn/cm$^2$]', fontsize=15)
         ax.legend(prop={'size': 12})
         plt.tight_layout()
-        fig.savefig('testEoS_cgs.png')
+        fig.savefig(f'./fig/test.png')
         plt.show()
 
     def plot_massradius(self):
