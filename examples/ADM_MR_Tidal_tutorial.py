@@ -29,10 +29,7 @@ EOS = polytropes.PolytropicEoS(crust='ceft-Hebeler', rho_t= 2e14,adm_type = 'Bos
 EOS.update({'gamma1':2.3, 'gamma2':4., 'gamma3':2.6, 'rho_t1':1.8, 'rho_t2':4, 'mchi': 4.5*pow(10,4), 'gchi_over_mphi': pow(10,-1), 'adm_fraction': 4.7, 'ceft': 2.6}, max_edsc=True)
 
 
-np.set_printoptions(threshold=np.inf)
 
-print(EOS.pressures_dm)
-print(EOS.pressures_dm.dtype, np.any(EOS.pressures_dm == None))
 central_densities = np.logspace(14.5,np.log10(EOS.max_edsc), 75)
 MR = np.zeros((len(central_densities), 6))
 

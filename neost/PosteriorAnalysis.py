@@ -243,8 +243,8 @@ def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm,
 
         elif dm and not de:
             edsrho_dm = UnivariateSpline(EOS.energydensities_dm, EOS.massdensities_dm, k=1, s=0, ext = 1)
-            print(EOS.adm_fraction, EOS.max_edsc)
-            epsdm_max = EOS.find_epsdm_cent(EOS.adm_fraction, 1e15)
+            edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0)
+            epsdm_max = EOS.find_epsdm_cent(EOS.adm_fraction, EOS.max_edsc)
             max_rhocdm = edsrho_dm(epsdm_max) / rho_ns
             max_rhocb = edsrho(EOS.max_edsc) / rho_ns
             max_rhoc = max_rhocb + max_rhocdm
@@ -254,8 +254,8 @@ def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm,
             Mdm = np.zeros(len(eps))
 
             for j, e in enumerate(eps):
-                epsdm_cent = EOS.find_epsdm_cent(EOS.adm_fraction,eps)
-                epsdm[i] = epsdm_cent
+                epsdm_cent = EOS.find_epsdm_cent(EOS.adm_fraction, e)
+                epsdm[j] = epsdm_cent
                 star = Star(e,epsdm_cent)
                 star.solve_structure(EOS.energydensities, EOS.pressures,eps_dm = EOS.energydensities_dm, pres_dm = EOS.pressures_dm, dm_halo = EOS.dm_halo) # EOS.two_fluid_tidal not needed in this section since only MR, so default value is used (False).
                 M[j] = star.Mrot

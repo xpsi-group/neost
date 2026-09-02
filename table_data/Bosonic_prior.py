@@ -44,8 +44,7 @@ repro_path = os.getcwd()
 
 print(f"Folder created at: {repro_path}")
 
-variable_params = {'gamma1':[0.,8.],'gamma2':[0.,8.],'gamma3':[0.5,8.],'rho_t1':[2.,8.3],'rho_t2':[2.,8.3],
-                  'mchi':[0, 8],'gchi_over_mphi': [-2,3],'adm_fraction':[0., 5.],'ceft':[EOS.min_norm, EOS.max_norm]}
+variable_params = {'gamma1':[0.,8.],'gamma2':[0.,8.],'gamma3':[0.5,8.],'rho_t1':[2.,8.3],'rho_t2':[2.,8.3],'mchi':[0, 8],'gchi_over_mphi': [-2,3],'adm_fraction':[0., 5.],'ceft':[EOS.min_norm, EOS.max_norm]}
 
 
 for i in range(number_stars):
