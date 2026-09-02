@@ -25,10 +25,14 @@ pi = global_imports._pi
 rho_ns = global_imports._rhons
 
 
-EOS = polytropes.PolytropicEoS(crust='ceft-Hebeler', rho_t= 2e14,adm_type = 'Fermionic',dm_halo = True,two_fluid_tidal = True)
+EOS = polytropes.PolytropicEoS(crust='ceft-Hebeler', rho_t= 2e14,adm_type = 'Bosonic',dm_halo = True,two_fluid_tidal = True)
 EOS.update({'gamma1':2.3, 'gamma2':4., 'gamma3':2.6, 'rho_t1':1.8, 'rho_t2':4, 'mchi': 4.5*pow(10,4), 'gchi_over_mphi': pow(10,-1), 'adm_fraction': 4.7, 'ceft': 2.6}, max_edsc=True)
 
 
+np.set_printoptions(threshold=np.inf)
+
+print(EOS.pressures_dm)
+print(EOS.pressures_dm.dtype, np.any(EOS.pressures_dm == None))
 central_densities = np.logspace(14.5,np.log10(EOS.max_edsc), 75)
 MR = np.zeros((len(central_densities), 6))
 
@@ -37,7 +41,7 @@ MR = np.zeros((len(central_densities), 6))
 for i, eps in enumerate(central_densities):
     epsdm_cent = EOS.find_epsdm_cent(EOS.adm_fraction,eps) 
     star = Star(eps,epsdm_cent)
-    star.solve_structure(EOS.energydensities, EOS.pressures, EOS.energydensities_dm, EOS.pressures_dm,EOS.dm_halo, EOS.two_fluid_tidal)
+    star.solve_structure(EOS.energydensities, EOS.pressures, eps_dm = EOS.energydensities_dm, pres_dm = EOS.pressures_dm, dm_halo = EOS.dm_halo, two_fluid_tidal = EOS.two_fluid_tidal)
 
     #Just to get the purely baryonic Tidal def
     star2 = Star(eps)

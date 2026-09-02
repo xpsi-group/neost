@@ -153,6 +153,7 @@ class BaseEoS():
 
                 if (self.ceft_param < self.min_norm or
                         self.ceft_param > self.max_norm):
+                    print(self.ceft_param)
                     raise TypeError(f'"ceft" variable should be either "None" or a float in the range [{self.min_norm}, {self.max_norm}]')
                 self.get_eos_crust()
 
@@ -459,7 +460,10 @@ class BaseEoS():
 
         """
         star = Star(epscent, epscent_dm) 
-        star.solve_structure(self.energydensities, self.pressures, self.energydensities_dm, self.pressures_dm,self.dm_halo)
+        star.solve_structure(self.energydensities, self.pressures,
+                      eps_dm=self.energydensities_dm,
+                      pres_dm=self.pressures_dm,
+                      dm_halo=self.dm_halo)
         try:
             fchi = (star.Mdm/star.Mrot)*100
         except ZeroDivisionError:
@@ -482,6 +486,8 @@ class BaseEoS():
         epscent : float
             Baryonic central energy density in cgs units for mass-density, i.e., divided by the speed of light squared.
         """
+
+        print(epscent, np.log10(epscent))
         f = lambda y: self.f_chi_calc(epscent,y) - ADM_fraction
         x = 1 #variable to track which interval the solver fails/passes on
         try:
@@ -839,7 +845,7 @@ class BaseEoS():
             star.solve_structure(self.energydensities, self.pressures)
             res = star.Mb/Msun, star.Rns/1e+5, star.tidal 
         else:
-            star.solve_structure(self.energydensities, self.pressures, self.energydensities_dm, self.pressures_dm)
+            star.solve_structure(self.energydensities, self.pressures, eps_dm = self.energydensities_dm, pres_dm = self.pressures_dm, dm_halo = self.dm_halo)
             res = star.Mgrav,star.Req, star.Mdm,star.Rdm #? 
         return res
 
