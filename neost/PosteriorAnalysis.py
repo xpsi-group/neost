@@ -305,10 +305,6 @@ def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm,
             row = [max(M), Radius_max_M, np.log10(EOS.max_edsc + epsdm_max), max_rhoc, np.log10(EOS.eos(EOS.max_edsc) + eos_dm(epsdm_max)),R_14, np.log10(eps_14), rho_14, np.log10(pres_14),R_2, np.log10(eps_2), rho_2, np.log10(pres_2)]
 
         elif not dm and de:
-<<<<<<< HEAD
-
-=======
->>>>>>> 1b7e4e6e44b62e5e41ce4c08638560f4fb982d6d
             for j,e in enumerate(eps):
                 star = Star(e, 0.0, EOS.rho_plus, EOS.alpha, False, True)
                 star.solve_structure(EOS.energydensities, EOS.pressures, EOS.energydensities_de, EOS.pressures_de)
@@ -331,11 +327,7 @@ def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm,
             R_2 = MR(2.0)
             if R_2 == 0:
                 R_2 = np.nan # see above for reasoning
-<<<<<<< HEAD
                 epsde_2 = np.nan
-=======
-                eps_2 = np.nan
->>>>>>> 1b7e4e6e44b62e5e41ce4c08638560f4fb982d6d
                 presde_2 = np.nan
 
             else:
@@ -349,12 +341,6 @@ def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm,
 
             row = [max_M, Radius_max_M, np.log10(EOS.max_edsc_de*rho_ns), np.log10(EOS.eos_de(EOS.max_edsc_de*rho_ns)), R_14, np.log10(epsde_14), np.log10(presde_14), R_2, np.log10(epsde_2), np.log10(presde_2)]
 
-<<<<<<< HEAD
-            print(row[0], row[1], row[4], row[7])
-            
-
-=======
->>>>>>> 1b7e4e6e44b62e5e41ce4c08638560f4fb982d6d
         else:
             raise ValueError("dm and de cannot both be true at the same time!")
 
@@ -520,15 +506,10 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
         
         scattered = np.concatenate([result.get('scattered') for result in results])
 
-<<<<<<< HEAD
         if not de:
             pressures_rho = np.concatenate([result.get('pressures_rho') for result in results], axis=1)
 
             
-=======
-    # TODO: figure out what to do about the de argument from here on, if anything. 
-        # Dark matter
->>>>>>> 1b7e4e6e44b62e5e41ce4c08638560f4fb982d6d
         energydensities_b = None
         energydensities_dm = None
         if dm:
