@@ -25,6 +25,17 @@ cdef double Msun = global_imports._M_s
 cdef double ry
 
 cdef int binarySearch(double arr[], int low, int high, double key) nogil:
+    """Perform a binary search to find the index of the largest value in `arr` that is less than or equal to `key`.
+
+    Args:
+        arr (double[]): A sorted array of double values.
+        low (int): The starting index of the search range.
+        high (int): The ending index of the search range.
+        key (double): The value to search for.
+
+    Returns:
+        int: The index of the largest value in `arr` that is less than or equal to `key`. If `key` is smaller than the smallest value in `arr`, returns 0. If `key` is larger than the largest value in `arr`, returns `high`.
+    """
     cdef int mid 
     for i in range(high):
         mid = (low + high) / 2
@@ -38,6 +49,25 @@ cdef int binarySearch(double arr[], int low, int high, double key) nogil:
 
 # in terms of h
 cdef double h_epsilon(double hvar, double eps[], double h[], double pres[], int idx) nogil:
+
+    """
+    Convert the enthalpy variable h to energy density using a piecewise power-law interpolation. 
+    The interpolation is performed in the h-epsilon space, which allows for a more accurate representation 
+    of the equation of state, especially in regions where the pressure changes rapidly with energy density.
+
+    Args:
+        hvar (double): The enthalpy variable h for which to calculate the energy density.
+        eps (double[]): An array of energy density values corresponding to the grid points in h.
+        h (double[]): An array of enthalpy values corresponding to the grid points in eps.
+        pres (double[]): An array of pressure values corresponding to the grid points in h and eps.
+        idx (int): The index of the grid point in h that is just below hvar. This is used to determine which 
+        segment of the piecewise power-law interpolation to use.
+
+    Returns:
+        double: The energy density corresponding to the enthalpy variable hvar
+
+    """
+
     if idx == 0:
         eds = eps[0] * pow(eps[0] / pres[0] * (exp(2. * hvar / 5.) - 1.), 3. / 2.)
     if idx > 0:
@@ -46,6 +76,24 @@ cdef double h_epsilon(double hvar, double eps[], double h[], double pres[], int 
     return eds
 
 cdef double h_pressure(double hvar, double eps[], double h[], double pres[], int idx) nogil:
+
+    """
+    Convert the enthalpy variable h to pressure using a piecewise power-law interpolation. 
+    The interpolation is performed in the h-epsilon space, which allows for a more accurate representation 
+    of the equation of state, especially in regions where the pressure changes rapidly with energy density.
+
+    Args:
+        hvar (double): The enthalpy variable h for which to calculate the pressure.
+        eps (double[]): An array of energy density values corresponding to the grid points in h.
+        h (double[]): An array of enthalpy values corresponding to the grid points in eps.
+        pres (double[]): An array of pressure values corresponding to the grid points in h and eps.
+        idx (int): The index of the grid point in h that is just below hvar. This is used to determine which 
+        segment of the piecewise power-law interpolation to use.
+
+    Returns:
+        double: The pressure corresponding to the enthalpy variable hvar
+
+    """
     if idx == 0:
         eds = eps[0] * pow(eps[0] / pres[0] * (exp(2. * hvar / 5.) - 1.), 3. / 2.)
         pressure = pres[0] * pow(eds / eps[0], 5. / 3.)
@@ -56,6 +104,25 @@ cdef double h_pressure(double hvar, double eps[], double h[], double pres[], int
     return pressure
 
 cdef double h_adind(double hvar, double eps[], double h[], double pres[], int idx) nogil:
+
+
+    """
+    Convert the enthalpy variable h to adiabatic index using a piecewise power-law interpolation. 
+    The interpolation is performed in the h-epsilon space, which allows for a more accurate representation 
+    of the equation of state, especially in regions where the pressure changes rapidly with energy density.
+
+    Args:
+        hvar (double): The enthalpy variable h for which to calculate the adiabatic index.
+        eps (double[]): An array of energy density values corresponding to the grid points in h.
+        h (double[]): An array of enthalpy values corresponding to the grid points in eps.
+        pres (double[]): An array of pressure values corresponding to the grid points in h and eps.
+        idx (int): The index of the grid point in h that is just below hvar. This is used to determine which 
+        segment of the piecewise power-law interpolation to use.
+
+    Returns:
+        double: The adiabatic index corresponding to the enthalpy variable hvar
+
+    """
     if idx==0:
         eds = eps[0]*pow(eps[0]/pres[0]*(exp(2.*hvar/5.)-1.), 3./2.)
         pressure = pres[0]*pow(eds/eps[0], 5./3.)
@@ -70,6 +137,19 @@ cdef double h_adind(double hvar, double eps[], double h[], double pres[], int id
 
 cdef int TOV_h(double hvar, const double y[], double f[], void *par) noexcept nogil: # noexcept required for Cython3, it indicates that exceptions raised by this function will not be propagated to calling python functions. A warning will be printed, however.
 
+    """
+    Calculate the derivatives of the TOV equations in terms of the enthalpy variable h.
+
+        Args:
+            hvar (double): The enthalpy variable h at which to evaluate the derivatives.
+            y (double[]): An array containing the current values of the variables [m, r, y2].
+            f (double[]): An array to store the calculated derivatives [dm/dh, dr/dh, dy2/dh].
+            par (void*): A pointer to a structure containing the parameters needed for the calculations. 
+            This should include the arrays for energy density, pressure, enthalpy, and the number of grid points.
+
+        Returns:
+            int: A status code indicating the success or failure of the function. Returns GSL_SUCCESS if the calculations were successful, or an appropriate error code if there was an issue (e.g., if the input parameters were invalid or if there was a numerical issue during the calculations).
+    """
     cdef double eps, ad_index, p
 
     cdef double *rhotest = (<double**> par)[0]
@@ -110,6 +190,25 @@ cdef double Q21(double x) nogil:
 
 def h_initial_condition (double central_h, double central_P, double central_e, double central_Gamma):
 
+    """
+        Calculate the initial conditions for the TOV equations in terms of the enthalpy variable h. 
+        The initial conditions are derived from a series expansion of the TOV equations near the center of the star, 
+        where the radius r approaches zero. 
+        The series expansion allows us to express the mass m, radius r, and metric function y2 in terms of the 
+        central values of the energy density, pressure, and adiabatic index.
+    
+        Args:
+            central_h (double): The central value of the enthalpy variable h.
+            central_P (double): The central pressure of the star in geometrized units (g/(cm s^2) converted to g/(cm s^2)).
+            central_e (double): The central energy density of the star in geometrized units (g/cm^3 converted to g/cm).
+            central_Gamma (double): The adiabatic index at the center of the star.
+    
+        Returns:
+            tuple: A tuple containing:
+                - h_par (double): A slightly reduced value of the central enthalpy variable h, used as the starting point for integration.
+                - initial (np.ndarray): An array containing the initial values of mass m, radius r, and metric function y2 at h_par.
+        """
+
     # h = np.linspace(central_h, 0.0, 10000)
 
     h_par = 0.99999*central_h#h[1]
@@ -142,6 +241,28 @@ cdef double tidal_deformability(double y2, double Mns, double Rns) nogil:
 
 def solveTOVh(double rhocent, eos_eps, eos_pres, double atol=1e-6, 
               double rtol=1e-5, double hmax=1000., double step=0.46):
+
+    """    
+    Solve the Tolman-Oppenheimer-Volkoff (TOV) equations in terms of the enthalpy variable h, which is defined as h = ln((eps + p)/eps).
+    The TOV equations are defined in the function above as `TOV_h`, which calculates the derivatives of the mass, radius, and metric function with respect to h.
+
+    Args:
+        rhocent (float): The central energy density of the star in cgs units (g/cm^3).
+        eos_eps (np.ndarray): An array of energy density values for the equation of state, in cgs units (g/cm^3).
+        eos_pres (np.ndarray): An array of pressure values for the equation of state, in cgs units (g/(cm s^2)).
+        atol (float, optional): The absolute tolerance for the ODE solver. Default is 1e-6.
+        rtol (float, optional): The relative tolerance for the ODE solver. Default is 1e-5.
+        hmax (float, optional): The maximum value of the enthalpy variable h to integrate up to. Default is 1000.
+        step (float, optional): The initial step size for the ODE solver. Default is 0.46.
+
+    Returns:
+        tuple: A tuple containing:
+            - Mb (float): The gravitational mass of the neutron star in grams.
+            - Rns (float): The radius of the neutron star in centimeters.
+            - tidal (float): The dimensionless tidal deformability of the neutron star.
+    """
+
+
 
     cdef int i
     rhocent = rhocent * G * pow(c,-2)

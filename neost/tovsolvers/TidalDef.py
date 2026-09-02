@@ -15,6 +15,8 @@ import time
 
 @jit(float64(float64, float64[:], float64[:]), nopython=True)
 def EofP(P, epsgrid, presgrid):
+    """Convert pressure to energy density using a piecewise power-law interpolation. This is similar to `pressure_epsilon`, 
+    but in the opposite direction and the argument P is replaced by E."""
     epsgrid = epsgrid[::-1]
     presgrid = presgrid[::-1]
     #if P<=0:
@@ -33,6 +35,8 @@ def EofP(P, epsgrid, presgrid):
 
 @jit(float64(float64, float64[:], float64[:]), nopython=True)
 def PofE(E, epsgrid, presgrid):
+    """Convert energy density to pressure using a piecewise power-law interpolation. This is similar to `epsilon_pressure`, 
+    but in the opposite direction and the argument P is replaced by E."""
     epsgrid = epsgrid[::-1]
     presgrid = presgrid[::-1]
     #if E<=0:
@@ -107,6 +111,7 @@ def solveTidal(Array,dm_halo):
     
     
     def dp_deps(eps,deps,epsgrid,presgrid):
+        """Numerical derivative calculator of the derivative of pressure w.r.t energy density, which is needed for the tidal deformability calculation."""
         if eps <=0:
             deriv = 0
         else:
@@ -158,6 +163,8 @@ def solveTidal(Array,dm_halo):
         return dydr
     
     def tidal_deformability(y2, Mns, Rns):
+        """Calculate the tidal deformability from the value of y2 at the surface of the star, as well as the mass and radius of the star."""
+
         C = Mns/Rns
         Eps = 4.*C**3.*(13. - 11.*y2 + C*(3.*y2 - 2.) + 2.*C**2.*(1.+y2)) + 3.*(1.-2.*C)**2.*(2. - y2 + 2.*C*(y2-1.))*np.log(1.-2.*C) +2.*C*(6. - 3.*y2 + 3.*C*(5.*y2 - 8.))
         tidal_def = 16./(15.*Eps) *(1. - 2.*C)**2. *(2. + 2.*C*(y2-1.) - y2)

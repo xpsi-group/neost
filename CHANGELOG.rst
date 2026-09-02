@@ -33,6 +33,36 @@ and this project adheres to
 .. Attribution
 .. ^^^^^^^^^^^
 
+[v3.0.0 - 2026-04-01]
+~~~~~~~~~~~~~~~~~~~~~
+Summary
+^^^^^^^
+Support for a neutron star with a possible dark energy core described by the Modified Chaplygin Dark Fluid (MCDF) model as described in Rutherford, Prescod-Weinstein, and Watts 2026 (in preperation).
+
+
+Added
+^^^^^
+* A pythonic TOV solver for a neutron star with a possible MCDF core (TOVde_python.py). Note, there is a Cython version of this solver (TOVde.pyx), but it requires the step parameter in Star.py to be changed from 0.46 to 0.075 to get the same results as the python version.
+This essentially implies that the Cython version is not stable for this application, and thus we have set the Star.py to default to the python version of the TOV solver when dark energy is included. 
+That being said, the Cython version is still available for users who wish to experiment with it, but it is not recoommended for use at this time.    
+* Included the two-fluid tidal-deformability equations for a neutron star with a possible MCDF core.
+* Prior and posterior examples which include the possibility of a MCDF core (see Dark_energy_prior.py, Dark_energy_posterior.py, and DE_MR_Tidal_Tutorial.py).
+* A simple tutorial showing how to compute the mass-radius and mass-tidal relations for a neutron star with a possible MCDF core in NEoST.
+* MCDF functionality in base.py to compute the maximum central density of a neutron star with a MCDF core (find_max_edsc_de()).
+* Updated Star.py to call the TOV solver with the possibility of a MCDF core, and to access the MCDF mass and radius if present. This also required some changes to how Star.py is initialized. In particular, the following parameters have been defined
+  eps_plus = 0.0, alpha = 0.0, dark_energy = False, where eps_plus and alpha are the two parameters of the MCDF model, and dark_energy is a boolean that determines whether or not to include the possibility of a MCDF core in the TOV solver.
+* MCDF EOS in polytropes.py, speedofsound.py, and tablualted.py.
+* MCDF functionality in Likelihood.py with hard-cut offs included to eliminate non-physical parts of the MCDF EOS parameter space.
+* MCDF functionality in PosteriorAnalysis.py, thus calling compute_table_data() and compute_auxiliary_data() have an additional boolean argument called "de", which, if True, includes the possibility of a MCDF core in the computed data.
+* Central density sampling in Prior.py of a given source is sampled log-uniformly using the maximum central density of a neturon star with a MCDF core as the upper limit.
+* Added more detailed descriptions of argument lists/parameter definitions/returns of various functions and parameters in the documentation (see TOVr_python.py, TOVde_python.py, TOVdm_python.py, TOVr.pyx, TOVde.pyx, TOVdm.pyx, and base.py).
+
+
+
+Attribution
+^^^^^^^^^^^
+* NEoST core team
+
 [v2.2.0 - 2025-07-31]
 ~~~~~~~~~~~~~~~~~~~~~
 Summary

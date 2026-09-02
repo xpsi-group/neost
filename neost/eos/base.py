@@ -36,10 +36,22 @@ class BaseEoS():
 
     Methods
     -------
-    update(eos_params, max_edsc=True)
+    update(eos_params, max_edsc=True, max_edsc_de = False)
         Update the EoS object with a given set of parameters
     get_eos_crust()
         Construct the crust of the equation of state, with or without cEFT.
+    get_eos()
+        Construct the core of the equation of state, with or without cEFT.
+    find_max_edsc()
+        Find the maximum central energy density allowed by the EoS parameters.
+    find_max_edsc_de()
+        Find the maximum central energy density allowed by the EoS parameters describing a neutron star with a dark energy core defined by the MCDF EoS.
+    fchi_calc(epscent,epscent_dm)
+        Calculate the ADM mass-fraction given the baryonic and ADM central densities, respectively.
+    find_epsdm_cent(ADM_fraction,epscent)
+        Calculate the ADM central energy density given the baryonic central energy density and ADM mass-fraction. Uses a wide array of different intervals of central energy densities to determine the ADM central energy density as a root finding problem.
+    mass_radius()
+        Compute the mass-radius curve of the EoS.
     plot()
         Plot the equation of state.
     plot_massradius()
@@ -137,9 +149,10 @@ class BaseEoS():
             If True, compute the maximum central energy density allowed
             by this set of parameters (default is True).
 
-
         max_edsc_de: bool
-            If True, compute the maximum central energy density allowed by the set of parameters describing a neutron star with a dark enery core defined by the MCDF EoS.
+                If True, compute the maximum central energy density allowed by the set of parameters describing a neutron star with a dark energy core defined by the MCDF EoS. 
+                The default is False, as this is a more computationally expensive calculation that is only relevant for users interested in the MCDF EoS.
+
 
         """
 
@@ -322,7 +335,14 @@ class BaseEoS():
 
     # Find maximum central energy density
     def find_max_edsc(self):
+        """ Compute the maximum central energy density allowed by the EoS parameters. This is done by first finding the maximum energy density for which the speed of sound is causal,
+          and then solving the TOV equations for a range of central energy densities up to this maximum to find the maximum mass configuration. The maximum central energy density is then set to 
+          be the central energy density of the maximum mass configuration, or the maximum energy density for which the speed of sound is causal, whichever is smaller.
 
+          Returns:
+            max_edsc (float): The maximum central energy density allowed by the EoS parameters in cgs units for mass-density, i.e., divided by the speed of light squared.
+        
+        """
         min_edsc0 = 14.3
         if self.rho_t is not None:
             eds = np.logspace(np.log10(self.rho_t), 
@@ -386,6 +406,9 @@ class BaseEoS():
     def find_max_edsc_de(self):
 
         min_edsc0 = (self.rho_plus/rho_ns + 0.1)
+        #Defining the min_edsc0 to be strictly above EOS.rho_plus as we do not want to consider a possible purely baryonic branch of the 
+            #mass-radius relation when including a dark energy core, as this would create twin-star configurations that Rutherford et al. 2026 does not consider.
+            #This part of the code (along with other specific parts; email Nathan Rutherford if wanting assistance) should be changed if a user want to consider possible twin star configurations. 
 
         eds = np.linspace(min_edsc0,20,len(self.energydensities_de))*rho_ns
         #eds = np.logspace(14.3, np.log10(4e16), 1000) #same as above

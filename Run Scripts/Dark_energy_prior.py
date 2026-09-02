@@ -34,14 +34,10 @@ pi = global_imports._pi
 rho_ns = global_imports._rhons
 
 
+
 eos_name = 'polytropes'
 
-EOS = polytropes.PolytropicEoS(crust = 'ceft-Keller-N3LO', rho_t = 1.1*rho_ns, adm_type = 'Dark Energy')
-
-
-# EOS.plot()
-# EOS.plot_massradius()
-# Here we implement old NICER data on J0740 and J0030 from Riley et al.
+EOS = polytropes.PolytropicEoS(crust = 'ceft-Keller-N3LO', rho_t = 1.5*rho_ns, adm_type = 'Dark Energy')
 
 
 
@@ -60,7 +56,8 @@ pathlib.Path(directory).mkdir(parents=True, exist_ok=True) # Create the director
 #lower_bound_rho_plus = 1.5*rho_ns --> right down to the chiral EFT
 #upper_bound_rho_plus = 10**(16)/rho_ns = 37.31426766180507 #taken to the an energy density that captures all of the maximum central energy densities for the entire PP parameterization
 
-variable_params = {'gamma1':[1., 4.5], 'gamma2':[0., 8.], 'gamma3':[0.5, 8.], 'rho_t1':[1.5, 8.3], 'rho_t2':[1.5, 8.3],'A_param':[0.1, 0.7],'rho_plus': [1.1,37.31426766],'alpha':[0.1, 1.],'ceft':[EOS.min_norm, EOS.max_norm]}
+variable_params = {'gamma1':[0.,8.],'gamma2':[0.,8.],'gamma3':[0.5,8.],'rho_t1':[2.,8.3],'rho_t2':[2.,8.3],
+                  'A_param':[0.1, 0.7],'rho_plus': [1.5,37.3142677],'alpha':[0.1, 1.],'ceft':[EOS.min_norm, EOS.max_norm]}
 
 
 for i in range(number_stars):
@@ -81,16 +78,16 @@ print("number of parameters is %d" %len(variable_params))
 
 
 ## TESTING ##
-print("Testing prior and likelihood")
-cube = np.random.rand(500, len(variable_params))
-for i in range(len(cube)):
-    par = prior.inverse_sample(cube[i])
-    print(likelihood.loglike_prior(par),i)
-print("Testing done")
+# print("Testing prior and likelihood")
+# cube = np.random.rand(500, len(variable_params))
+# for i in range(len(cube)):
+#     par = prior.inverse_sample(cube[i])
+#     print(likelihood.loglike_prior(par),i)
+# print("Testing done")
 
 # Then we start the sampling, note the greatly increased number of livepoints, this is required because each livepoint terminates after 1 iteration
 start = time.time()
-result = solve(LogLikelihood=likelihood.loglike_prior, Prior=prior.inverse_sample, n_live_points=30000, evidence_tolerance=0.1,
+result = solve(LogLikelihood=likelihood.loglike_prior, Prior=prior.inverse_sample, n_live_points=50000, evidence_tolerance=0.1,
               n_dims=len(variable_params), sampling_efficiency=0.8, outputfiles_basename=f'{run_name}/{run_name}', verbose=True)
 end = time.time()
 print(end - start)
@@ -100,5 +97,4 @@ print(end - start)
 print('Solving done')
 print('Moving to Prior Analysis')
 
-PosteriorAnalysis.compute_auxiliary_data_de(run_name, EOS,
-                                         variable_params, static_params, prior = True)
+PosteriorAnalysis.compute_auxiliary_data(directory, EOS, variable_params, static_params, chirp_mass, dm=False, de=True, sampler='multinest', identifier=f'{run_name}')

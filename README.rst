@@ -35,7 +35,8 @@ Installation and Testing
 
 NEoST is best installed from source. The documentation provides
 `step-by-step installation instructions <https://xpsi-group.github.io/neost/install.html>`_
-for Linux and for limited MacOS systems. Note, NEoST offers two install options for the Tolman-Oppenheimer-Volkoff equation solvers: one using Cython and the other using Python. If one wishes to install using Python (e.g., due to incompatability with Cython and so the TOV solvers don't cythonize), we estimate the approximate speed-up of using Cython to Python to be at least 15x (if dark matter is turned on) and 20x (if dark matter is turned off).
+for Linux and for limited MacOS systems. Note, NEoST offers two install options for the Tolman-Oppenheimer-Volkoff equation solvers: one using Cython and the other using Python. If one wishes to install using Python (e.g., due to incompatability with Cython and so the TOV solvers don't cythonize), we estimate the approximate speed-up of using Cython to Python to be at least 15x (if dark matter is turned on) and 20x (if dark matter is turned off). If dark energy is turned on, there is no apparent speed-up between the Cythonized version and the Python version since the Cythonized version requires the resolution of the solver to be much higher than the Python version to achieve accurate solutions.
+
 
 Documentation
 -------------
@@ -68,5 +69,5 @@ more detail, including BibTeX entries and links to `appropriate papers <https://
 
 Copyright and Licensing
 -----------------------
-All content © 2020-2025 the authors.
+All content © 2020-2026 the authors.
 The code is distributed under the GNU General Public License v3.0; see `LICENSE <LICENSE>`_ for details.
