@@ -1,0 +1,56 @@
+{
+    "creators": [
+        {
+            "name": "Raaijmakers, Geert",
+            "orcid": "0000-0002-9397-786X"
+        },
+        {
+            "name": "Rutherford, Nathan",
+            "affiliation": "Foundational Questions Institute (FQxI)",
+            "orcid": "0000-0002-9626-7257"
+        },
+        {
+            "name": "Timmerman, Patrick",
+            "orcid": "0009-0003-2793-1569"
+        },        
+        {
+            "name": "Salmi, Tuomo",
+            "affiliation": "University of Helsinki",
+            "orcid": "0000-0001-6356-125X"
+        },   
+        {
+            "name": "Watts, Anna",
+            "affiliation": "University of Amsterdam",
+            "orcid": "0000-0002-1009-2354"
+        },        
+        {
+            "name": "Prescod-Weinstein, Chanda",
+            "affiliation": "University of New Hampshire",
+            "orcid": "0000-0002-6742-4532"
+        },        
+        {
+            "name": "Svensson, Isak",
+            "affiliation": "Technical University of Darmstadt",
+            "orcid": "0000-0002-9211-5555"
+        },
+        {
+            "name": "Mendes, Melissa",
+            "affiliation": "Technical University of Darmstadt",
+            "orcid": "0009-0007-0697-8869"
+        }
+    ],
+    "title": "xpsi-group/neost: Release v2.3.0",
+    "version": "2.3.0",
+    "license": "gpl-3.0-or-later",
+    "upload_type": "software",
+    "language": "eng",
+    "grants": [
+       {"id": "00k4n6c32::865768"},
+       {"id": "00k4n6c32::639217"},
+       {"id": "00k4n6c32::101020842"},
+       {"id": "04jsz6e67::639.042.612"},
+       {"id": "04jsz6e67::680-91-134"},
+       {"id": "04jsz6e67::OCENW.XL21.XL21.038"},
+       {"id": "10.13039/100000104::80NSSC22K0092"}
+    ]
+}

@@ -18,13 +18,18 @@ Core team
 
 Those involved in code maintenance and development (technical and scientific).
 
+**Current active members**
+
 * Melissa Mendes (melissa.mendes[at]physik.tu-darmstadt.de), TU Darmstadt
-* Geert Raaijmakers (g.raaijmakers93[at]gmail.com), the original developer of NEoST
 * Nathan Rutherford (nathan.rutherford[at]unh.edu), University of New Hampshire
 * Tuomo Salmi (t.h.j.salmi[at]uva.nl), University of Amsterdam
 * Isak Svensson (isak.svensson[at]physik.tu-darmstadt.de), TU Darmstadt
-* Patrick Timmerman (patrick.timmerman98[at]gmail.com)
 * Anna Watts (a.l.watts[at]uva.nl), University of Amsterdam
+
+**Past members**
+
+* Geert Raaijmakers, the original developer of NEoST
+* Patrick Timmerman
 
 Community
 ~~~~~~~~~
@@ -35,7 +40,9 @@ improvements.
 
 * Svenja Greif
 * Kai Hebeler
+* Mariska Hoogkamer
 * Daniela Huppenkothen
+* Lucien Mauviard
 * Samaya Nissanke
 * Chanda Prescod-Weinstein
 * Achim Schwenk
