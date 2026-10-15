@@ -468,13 +468,13 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
                 savedata['maxpres_baryon.npy'] = maxpres_b
                 savedata['minpres_dm.npy'] = minpres_dm
                 savedata['maxpres_dm.npy'] = maxpres_dm
-            #else:
-            #    minpres, maxpres = calc_bands(energydensities, pressures)                        ## had to comment this entire block out if working with min_pressure<14.2, unclear why
-            #    minpres_rho, maxpres_rho = calc_bands(energydensities, pressures_rho)
-            #    savedata['minpres_rho.npy'] = minpres_rho
-            #    savedata['maxpres_rho.npy'] = maxpres_rho
-            #    savedata['minpres.npy'] = minpres
-            #    savedata['maxpres.npy'] = maxpres
+            else: ## had to comment this entire block out if working with min_pressure<14.2, unclear why
+                minpres, maxpres = calc_bands(energydensities, pressures)
+                minpres_rho, maxpres_rho = calc_bands(energydensities, pressures_rho)
+                savedata['minpres_rho.npy'] = minpres_rho
+                savedata['maxpres_rho.npy'] = maxpres_rho
+                savedata['minpres.npy'] = minpres
+                savedata['maxpres.npy'] = maxpres
         save_auxiliary_data(path, identifier, savedata)
 
 def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params, chirp_masses, dm, eos_is_fixed, thread_number):  #non-DM case modified to save M/R/Tidal full curve for each EOS, pqcd included
