@@ -577,11 +577,11 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             mrt.append(mrt_elements)
             radii[:,i] = MR(masses)
 
-            #small workaround m<msun for priors (only in PosteriorAnalysis)       ## dont' forget to improve this
-            if 'rhoc_2' in par.keys(): #then it's not a prior, priors only record one central density
-                rhoc = np.random.rand() *(np.log10(EOS.max_edsc) - 14.6) + 14.6   ## works if posterior, but returns m<msun too often for the prior
+            # this bit introduced to avoid too many m<msun for priors (only needed in PosteriorAnalysis)
+            if pr[0][len(pr[0])-1] != 1.0: #then it's a posterior
+                rhoc = np.random.rand() *(np.log10(EOS.max_edsc) - 14.6) + 14.6   ## resample so we don't get the same results as scattered.py
             else:
-                rhoc = par['rhoc_1']
+                rhoc = par['rhoc_1'] ## if it's a prior, no need to resample (it tends to return too many m<msun)
 
             star = Star(10**rhoc)
             star.solve_structure(EOS.energydensities, EOS.pressures)
