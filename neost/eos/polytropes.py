@@ -258,20 +258,9 @@ class PolytropicEoS(BaseEoS):
 
     def check_constraints(self):
         check = True                   #required because there are checks in speedofsound.py file, but no constraints are needed for this file, if no DM nor normal distribution of cEFT
-
         if self.reach_fraction == True:
             check = True
         else:
             check = False
-                    
-        ### probably unnecessary now?
-        if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
-            if all(x<=y for x, y in zip(self.ceft_pressure_werror, self.ceft_pressure_werror[1:]))==False:   ## self._pres_crust might be overkill (includes low, BPS and cEFT)
-                #print('unphysical EOS')
-                #print(self.ceft_param)
-                check = False
-            else:
-                check = True            
-            
         return check
 

@@ -277,14 +277,4 @@ class SpeedofSoundEoS(BaseEoS):
             check = False
         if rising.size != 0 and falling.size != 0 and rising[0] < falling[0]:
             check = False
-                
-        ### probably unnecessary now
-        if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
-            if all(x<=y for x, y in zip(self.ceft_pressure_werror, self.ceft_pressure_werror[1:]))==False:   ## self._pres_crust might be overkill (includes low, BPS and cEFT)
-                #print('Unphysical EOS')
-                #print(self.ceft_param)
-                check = False
-            else:
-                check = True     
-
         return check
