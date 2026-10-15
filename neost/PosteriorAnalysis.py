@@ -578,7 +578,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             radii[:,i] = MR(masses)
 
             # this bit introduced to avoid too many m<msun for priors (only needed in PosteriorAnalysis)
-            if pr[0][len(pr[0])-1] != 1.0: #then it's a posterior
+            if samples[0][len(samples[0])-1] != 1.0: #then it's a posterior
                 rhoc = np.random.rand() *(np.log10(EOS.max_edsc) - 14.6) + 14.6   ## resample so we don't get the same results as scattered.py
             else:
                 rhoc = par['rhoc_1'] ## if it's a prior, no need to resample (it tends to return too many m<msun)
