@@ -525,7 +525,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
         par.update(static_params)
         EOS.update(par, max_edsc=True)
 
-        rhocs = np.logspace(14.5, np.log10(float(np.asarray(EOS.max_edsc))), 30)    ## float is temporary fix        
+        rhocs = np.logspace(14.5, np.log10(np.asarray(EOS.max_edsc)), 30)
         rhocsdm = np.zeros_like(rhocs)
 
         M = np.zeros(len(rhocs))
@@ -589,7 +589,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             p_e_n_endpoints[i] = EOS.eos(EOS.max_edsc).item()*dyncm2_to_MeVfm3, EOS.max_edsc.item()*gcm3_to_MeVfm3,  max_rhoc.item()/rho_ns   ## for pqcd
 
             if EOS.pqcd_ext:
-                max_pqcd_point[i] = float(np.asarray(EOS.maximum_pqcd)), EOS.ext, EOS.X                          ## for pqcd  ## float is temporary fix
+                max_pqcd_point[i] = np.asarray(EOS.maximum_pqcd), EOS.ext, EOS.X                          ## for pqcd
 
         else:
             rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0, ext = 1)
