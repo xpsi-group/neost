@@ -468,13 +468,13 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
                 savedata['maxpres_baryon.npy'] = maxpres_b
                 savedata['minpres_dm.npy'] = minpres_dm
                 savedata['maxpres_dm.npy'] = maxpres_dm
-            #else:
-            #    minpres, maxpres = calc_bands(energydensities, pressures)                        ## had to comment this entire block out if working with min_pressure<14.2, unclear why
-            #    minpres_rho, maxpres_rho = calc_bands(energydensities, pressures_rho)
-            #    savedata['minpres_rho.npy'] = minpres_rho
-            #    savedata['maxpres_rho.npy'] = maxpres_rho
-            #    savedata['minpres.npy'] = minpres
-            #    savedata['maxpres.npy'] = maxpres
+            else: ## had to comment this entire block out if working with min_pressure<14.2, unclear why
+                minpres, maxpres = calc_bands(energydensities, pressures)
+                minpres_rho, maxpres_rho = calc_bands(energydensities, pressures_rho)
+                savedata['minpres_rho.npy'] = minpres_rho
+                savedata['maxpres_rho.npy'] = maxpres_rho
+                savedata['minpres.npy'] = minpres
+                savedata['maxpres.npy'] = maxpres
         save_auxiliary_data(path, identifier, savedata)
 
 def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params, chirp_masses, dm, eos_is_fixed, thread_number):  #non-DM case modified to save M/R/Tidal full curve for each EOS, pqcd included
@@ -525,7 +525,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
         par.update(static_params)
         EOS.update(par, max_edsc=True)
 
-        rhocs = np.logspace(14.5, np.log10(float(np.asarray(EOS.max_edsc))), 30)    ## float is temporary fix        
+        rhocs = np.logspace(14.5, np.log10(np.asarray(EOS.max_edsc)), 30)
         rhocsdm = np.zeros_like(rhocs)
 
         M = np.zeros(len(rhocs))
@@ -577,11 +577,11 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             mrt.append(mrt_elements)
             radii[:,i] = MR(masses)
 
-            #small workaround m<msun for priors (only in PosteriorAnalysis)       ## dont' forget to improve this
-            if 'rhoc_2' in par.keys(): #then it's not a prior, priors only record one central density
-                rhoc = np.random.rand() *(np.log10(EOS.max_edsc) - 14.6) + 14.6   ## works if posterior, but returns m<msun too often for the prior
+            # this bit introduced to avoid too many m<msun for priors (only needed in PosteriorAnalysis)
+            if samples[0][len(samples[0])-1] != 1.0: #then it's a posterior
+                rhoc = np.random.rand() *(np.log10(EOS.max_edsc) - 14.6) + 14.6   ## resample so we don't get the same results as scattered.py
             else:
-                rhoc = par['rhoc_1']
+                rhoc = par['rhoc_1'] ## if it's a prior, no need to resample (it tends to return too many m<msun)
 
             star = Star(10**rhoc)
             star.solve_structure(EOS.energydensities, EOS.pressures)
@@ -589,7 +589,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             p_e_n_endpoints[i] = EOS.eos(EOS.max_edsc).item()*dyncm2_to_MeVfm3, EOS.max_edsc.item()*gcm3_to_MeVfm3,  max_rhoc.item()/rho_ns   ## for pqcd
 
             if EOS.pqcd_ext:
-                max_pqcd_point[i] = float(np.asarray(EOS.maximum_pqcd)), EOS.ext, EOS.X                          ## for pqcd  ## float is temporary fix
+                max_pqcd_point[i] = np.asarray(EOS.maximum_pqcd), EOS.ext, EOS.X                          ## for pqcd
 
         else:
             rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0, ext = 1)

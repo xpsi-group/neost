@@ -3,8 +3,8 @@ from math import pow
 from scipy.interpolate import UnivariateSpline,interp1d
 from scipy.integrate import odeint
 
+import neost
 from . base import BaseEoS
-
 from .. import global_imports
 
 c = global_imports._c
@@ -62,9 +62,9 @@ class PolytropicEoS(BaseEoS):
 
     """
 
-    def __init__(self, crust, rho_t, filename_n2lo='newest_Goettling_N2LO_e.txt', filename_n3lo='newest_Goettling_N3LO_e.txt', adm_type = 'None', dm_halo = False, two_fluid_tidal = False, pqcd_ext=False, x_f=False):
+    def __init__(self, crust, rho_t, adm_type = 'None', dm_halo = False, two_fluid_tidal = False, pqcd_ext=False, x_f=False):
 
-        super(PolytropicEoS, self).__init__(crust, rho_t, filename_n2lo, filename_n3lo, pqcd_ext=pqcd_ext, x_f=x_f)
+        super(PolytropicEoS, self).__init__(crust, rho_t, pqcd_ext=pqcd_ext, x_f=x_f)
 
         self.eos_name = 'polytropes'
         self.param_names = ['gamma1', 'gamma2', 'gamma3','rho_t1', 'rho_t2']
@@ -258,20 +258,9 @@ class PolytropicEoS(BaseEoS):
 
     def check_constraints(self):
         check = True                   #required because there are checks in speedofsound.py file, but no constraints are needed for this file, if no DM nor normal distribution of cEFT
-
         if self.reach_fraction == True:
             check = True
         else:
             check = False
-                    
-        ### probably unnecessary now?
-        if self.crust == 'ceft-Goettling-N2LO' or self.crust == 'ceft-Goettling-N3LO':
-            if all(x<=y for x, y in zip(self.ceft_pressure_werror, self.ceft_pressure_werror[1:]))==False:   ## self._pres_crust might be overkill (includes low, BPS and cEFT)
-                #print('unphysical EOS')
-                #print(self.ceft_param)
-                check = False
-            else:
-                check = True            
-            
         return check
 
