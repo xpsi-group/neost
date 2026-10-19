@@ -5,12 +5,12 @@ Publications
 
 NEoST has been applied in the following studies. If you have used NEoST for a project and would like to link it here, please contact the NEoST team and/or submit a pull-request on GitHub.  In particular, NEoST has been used extensively with masses and radii inferred from NICER data of rotation-powered millisecond pulsars by the `X-PSI team <https://xpsi-group.github.io/xpsi/index.html>`_.
 
-**Mendes et al. 2026** `(ApJ, 1008, 256) <https://ui.adsabs.harvard.edu/abs/2026ApJ..1008..256M/abstract>` *Astrophysics Equation of State Inference with Bayesian Chiral Effective Field Theory Uncertainties*.  See also the associated `Zenodo repository`__.
+**Mendes et al. 2026** `(ApJ, 1008, 256) <https://ui.adsabs.harvard.edu/abs/2026ApJ..1008..256M/abstract>`_ *Astrophysics Equation of State Inference with Bayesian Chiral Effective Field Theory Uncertainties*.  See also the associated `Zenodo repository`__.
 
 .. _Zenodo26b: https://doi.org/10.5281/zenodo.21416452
 __ Zenodo26b_
 
-**Kazantsev et al. 2026** `(Astronomy & Astrophysics, 710, A334) <https://ui.adsabs.harvard.edu/abs/2026A%26A...710A.334K/abstract>` *Mass and radius measurements of the neutron star 47 Tuc X7: A new bias-free method*. See also the associated `Zenodo repository`__.
+**Kazantsev et al. 2026** `(Astronomy & Astrophysics, 710, A334) <https://ui.adsabs.harvard.edu/abs/2026A%26A...710A.334K/abstract>`_ *Mass and radius measurements of the neutron star 47 Tuc X7: A new bias-free method*. See also the associated `Zenodo repository`__.
 
 .. _Zenodo26a: https://doi.org/10.5281/zenodo.20312255
 __ Zenodo26a_
