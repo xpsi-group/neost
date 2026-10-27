@@ -21,6 +21,7 @@ pi = global_imports._pi
 rho_ns = global_imports._rhons
 
 
+eos_name = 'Polytropes'
 
 EOS = polytropes.PolytropicEoS(crust = 'ceft-Keller-N3LO', rho_t = 1.1*rho_ns, adm_type = 'Dark Energy')
 
