@@ -1,9 +1,11 @@
 """ NEoST: Open-source code for equation of state inference via nested sampling. """
 from __future__ import print_function
 from importlib.metadata import metadata
+import re
 
 meta = metadata(__package__ or __name__)
 __version__ = meta.get('Version')
+__short_version__ = re.sub(r"\.\d+$", "", __version__) # remove last dot and number from version, e.g. 1.0.0 becomes 1.0
 __author__ = meta.get('Author-email')
 
 try:

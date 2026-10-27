@@ -33,7 +33,7 @@ and this project adheres to
 .. Attribution
 .. ^^^^^^^^^^^
 
-[v3.0.0 - 2026-04-01]
+[v3.0.0 - 2026-11-01]
 ~~~~~~~~~~~~~~~~~~~~~
 Summary
 ^^^^^^^
@@ -58,6 +58,30 @@ That being said, the Cython version is still available for users who wish to exp
 * Added more detailed descriptions of argument lists/parameter definitions/returns of various functions and parameters in the documentation (see TOVr_python.py, TOVde_python.py, TOVdm_python.py, TOVr.pyx, TOVde.pyx, TOVdm.pyx, and base.py).
 
 
+[v2.3.0 - 2026-10-16]
+~~~~~~~~~~~~~~~~~~~~~
+Summary
+^^^^^^^
+Support for Gaussian process implementation of chiral EFT band and pQCD constraints.
+
+Added
+^^^^^
+* GP-based chiral EFT bands G-N2LO/G-N3LO
+* Support for pQCD constraints and minimum/maximum extensions
+* Script for computing the L parameter
+* All files under version control are automatically copied to the installation directory
+* Two publications (Kazantsev 2026 and Mendes 2026)
+
+Changed
+^^^^^^^
+* PosteriorAnalysis.compute_auxiliary_data() non-DM case saves full M/R/tidal curves for each EOS, plus pQCD-related quantities
+* PosteriorAnalysis.compute_auxiliary_data() no longer resamples rho_c for prior runs
+* Version number specified in pyproject.toml only
+* Updated copyright year
+
+Removed
+^^^^^^^
+* Preliminary code related to Gaussian sampling of chiral EFT band
 
 Attribution
 ^^^^^^^^^^^

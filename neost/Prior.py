@@ -9,11 +9,6 @@ Msun = global_imports._M_s
 pi = global_imports._pi
 rho_ns = global_imports._rhons
 
-
-# TODO: put a constraint that the pr and hypercube must
-# be same length as bounds
-
-
 class Prior():
 
     def __init__(self, EOS, variable_params, static_params, chirp_masses, standard_normal_ceft=False, dark_energy=False):
@@ -30,12 +25,6 @@ class Prior():
         self.dark_energy = dark_energy
         self.standard_normal_ceft = standard_normal_ceft # Transform ceft parameter to N(0,1)?
         self.standard_normal = norm() # Only used if standard_normal_ceft is True
-        if standard_normal_ceft:
-            # The transform only works correctly if ceft is from U(0,1)
-            tmp = variable_params.get('ceft')
-            ceft_min = tmp[0]
-            ceft_max = tmp[1]
-            assert(ceft_min == 0 and ceft_max == 1)
 
     def inverse_sample(self, hypercube):
         hypercube = {e:hypercube[i] for i, e in
@@ -44,6 +33,9 @@ class Prior():
               (self.variable_params[e][1] - self.variable_params[e][0]) +
               self.variable_params[e][0] for i, e in
               enumerate(list(self.variable_params.keys()))}
+
+        if 'X' in self.variable_params.keys():
+            pr['X'] = np.exp(pr['X'])
 
         if 'rho_t1' and 'rho_t2' in self.variable_params.keys():
             # forced identifiability prior #
@@ -65,18 +57,25 @@ class Prior():
         pr.update(self.static_params)
 
         if self.dark_energy is False:
+            if self.standard_normal_ceft:
+                pr.update({'ceft': self.standard_normal.ppf(pr.get('ceft'))})
+
             self.EOS.update({k: pr[k] for k in tuple(self.EOS.param_names)},
-                        max_edsc=True)
+                            max_edsc=True)
             
             min_edsc = self.EOS.min_edsc
             max_edsc = self.EOS.max_edsc    
             
         else:
+            if self.standard_normal_ceft:
+                pr.update({'ceft': self.standard_normal.ppf(pr.get('ceft'))})
+
             self.EOS.update({k: pr[k] for k in tuple(self.EOS.param_names)},
                         max_edsc_de=True)
             
             min_edsc = self.EOS.min_edsc_de*rho_ns
             max_edsc = self.EOS.max_edsc_de*rho_ns
+            
         self.pr = pr
 
 
@@ -87,12 +86,15 @@ class Prior():
                 pr.update({'rhoc_' + str(i + 1):hypercube['rhoc_' + str(i + 1)]
                           * (logmaxedsc - logminedsc) + logminedsc})
             else:
-                logminedsc, logmaxedsc = self.EOS.get_minmax_edsc_chirp(
-                    self.chirp_masses[i])
-                logminedsc = np.log10(logminedsc)
-                logmaxedsc = np.log10(logmaxedsc)
-                pr.update({'rhoc_' + str(i + 1):hypercube['rhoc_' + str(i + 1)]
-                          * (logmaxedsc - logminedsc) + logminedsc})
+                try:
+                    logminedsc, logmaxedsc = self.EOS.get_minmax_edsc_chirp(self.chirp_masses[i])
+                    logminedsc = np.log10(logminedsc)
+                    logmaxedsc = np.log10(logmaxedsc)
+                    pr.update({'rhoc_' + str(i + 1):hypercube['rhoc_' + str(i + 1)] * (logmaxedsc - logminedsc) + logminedsc})
+                except:
+                    print('Warning in prior')
+                    print(self.EOS.massradius)
+                    print(list(pr.values()))     ## to follow the full MR curve for a few examples
         self.MRT = self.EOS.massradius
 
         if self.dark_energy is False:
@@ -100,9 +102,5 @@ class Prior():
 
         else:
             self.max_edsc = self.EOS.max_edsc_de*rho_ns
-
-        if self.standard_normal_ceft:
-            # Transform ceft from U(0,1) to N(0,1)
-            pr['ceft'] = self.standard_normal.ppf(pr.get('ceft'))
 
         return list(pr.values())
