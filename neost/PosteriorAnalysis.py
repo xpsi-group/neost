@@ -12,6 +12,7 @@ import seaborn as sns
 from scipy.interpolate import UnivariateSpline
 from scipy.stats import gaussian_kde
 import corner
+from tqdm import tqdm
 
 # Local imports
 import neost
@@ -77,7 +78,7 @@ def get_quantiles(array, quantiles=[0.025, 0.5, 0.975]):
         plus = high - median
         return np.round(median,2),np.round(plus,2),np.round(minus,2)
 
-def compute_table_data(path, EOS, variable_params, static_params, dm=False, sampler='multinest', identifier=''):
+def compute_table_data(path, EOS, variable_params, static_params, dm=False, de=False, sampler='multinest', identifier=''):
     """
     Function to compute the table data in Raaijmakers et al. 2021 & Rutherford et al. 2024.
     In particular: M_TOV, R_TOV, eps_cent_TOV, rho_cent_TOV, P_cent_TOV, R_1.4, eps_cent_1.4, rho_cent_1.4, P_cent_1.4,
@@ -102,6 +103,9 @@ def compute_table_data(path, EOS, variable_params, static_params, dm=False, samp
     dm: bool
         If True ADM is included when computing the table data.
 
+    de: bool
+        If True Dark energy MCDF EOS is included when computing the table data.
+
     sampler: str
         The sampler used, either 'multinest' or 'ultranest'.
 
@@ -124,7 +128,7 @@ def compute_table_data(path, EOS, variable_params, static_params, dm=False, samp
         print(data_array)
         if mpi_rank == 0:
             print(f'Reading and printing data from {fname}')
-            print_table_data(data_array)
+            print_table_data(data_array,de)
             return
         else:
             return
@@ -148,7 +152,7 @@ def compute_table_data(path, EOS, variable_params, static_params, dm=False, samp
     samples = comm.scatter(samples, root=0)
 
     # Compute table data in each process
-    data_array = _compute_table_data_thread(samples, EOS, variable_params, static_params, dm, mpi_rank)
+    data_array = _compute_table_data_thread(samples, EOS, variable_params, static_params, dm, de, mpi_rank)
 
     # Gather the results from the different processes
     data_array = comm.gather(data_array, root=0)
@@ -156,13 +160,16 @@ def compute_table_data(path, EOS, variable_params, static_params, dm=False, samp
     if mpi_rank == 0:
         # Return the array to the expected shape (num_samples, 13)
         data_array = np.concatenate(data_array, axis=0)
-        assert(data_array.shape == (num_samples, 13))
+        if de is True:
+            assert(data_array.shape == (num_samples,10))
+        else:
+            assert(data_array.shape == (num_samples, 13))
 
         # Save and print
         np.savetxt(fname, data_array)
-        print_table_data(data_array)
+        print_table_data(data_array,de)
 
-def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm, thread_number):
+def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm, de, thread_number):
     '''
     Here the calculations of table data is done.
     Reading/writing of files and parallelization is done by compute_table_data(),
@@ -173,20 +180,35 @@ def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm,
 
     # Contains Mtov, Rtov, eps_cent TOV, rho_cent TOV, P_cent TOV,R 1.4, eps_cent 1.4, rho_cent 1.4, P_cent 1.4, R 2.0, eps_cent 2.0, rho_cent 2.0, P_cent 2.0.
     # NOTE: ALL VALUES ARE THEIR ADMIXED VERSIONS WHEN dm == True!!
-    data_array = np.zeros((num_samples,13))
+    # NOTE: If de == True, thjen data_array is shorter since rho_cent_TOV, rho_2, rho_14 physically don't make sense for a dark energy core.
 
-    for i in range(0, num_samples):
+    if not de:
+        data_array = np.zeros((num_samples,13))
+
+    else:
+        data_array = np.zeros((num_samples,10))
+
+    for i in tqdm(range(0, num_samples)):
         pr = samples[i][0:len(variable_params)]
         par = {e:pr[j] for j, e in enumerate(list(variable_params.keys()))}
         par.update(static_params)
-        EOS.update(par, max_edsc=True)
+
+        if not de:
+            EOS.update(par, max_edsc=True)
+            eps = np.logspace(14.2, np.log10(EOS.max_edsc), 50) #to account for change below
+
+        else:
+            EOS.update(par,max_edsc_de = True)
+            eps = np.linspace(EOS.min_edsc_de, EOS.max_edsc_de, 50)*rho_ns #Minimum & Maximum energy density with a Dark Energy core is computed
+                                                                            # in terms of n_0, hence the factor of rho_ns
+
 
         edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0)
-        eps = np.logspace(14.2, np.log10(EOS.max_edsc), 50)   #to account for change below
         M = np.zeros(len(eps))
         R = np.zeros(len(eps))
 
-        if not dm:
+        if not dm and not de:
+            edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0)
             max_rhoc = edsrho(EOS.max_edsc) / rho_ns #division by rho_ns gives max_rhoc in terms of n_c/n_0 as mass density and number density only differ by a factor the mass of baryon, which is canceled out in this fraction
             for j, e in enumerate(eps):
                 star = Star(e)
@@ -223,8 +245,9 @@ def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm,
             # Construct a row of data_array
             row = [EOS.max_M, EOS.Radius_max_M, np.log10(EOS.max_edsc), max_rhoc, np.log10(EOS.eos(EOS.max_edsc)),R_14, np.log10(eps_14), rho_14, np.log10(pres_14),R_2, np.log10(eps_2), rho_2, np.log10(pres_2)]
 
-        else:
+        elif dm and not de:
             edsrho_dm = UnivariateSpline(EOS.energydensities_dm, EOS.massdensities_dm, k=1, s=0, ext = 1)
+            edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0)
             epsdm_max = EOS.find_epsdm_cent(EOS.adm_fraction, EOS.max_edsc)
             max_rhocdm = edsrho_dm(epsdm_max) / rho_ns
             max_rhocb = edsrho(EOS.max_edsc) / rho_ns
@@ -235,10 +258,10 @@ def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm,
             Mdm = np.zeros(len(eps))
 
             for j, e in enumerate(eps):
-                epsdm_cent = EOS.find_epsdm_cent(EOS.adm_fraction,eps)
-                epsdm[i] = epsdm_cent
+                epsdm_cent = EOS.find_epsdm_cent(EOS.adm_fraction, e)
+                epsdm[j] = epsdm_cent
                 star = Star(e,epsdm_cent)
-                star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo) # EOS.two_fluid_tidal not needed in this section since only MR, so default value is used (False).
+                star.solve_structure(EOS.energydensities, EOS.pressures,eps_dm = EOS.energydensities_dm, pres_dm = EOS.pressures_dm, dm_halo = EOS.dm_halo) # EOS.two_fluid_tidal not needed in this section since only MR, so default value is used (False).
                 M[j] = star.Mrot
                 R[j] = star.Req
                 Rdm[j] = star.Rdm
@@ -249,7 +272,7 @@ def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm,
             Radius_max_M = R[index_max_M]
 
             MR = UnivariateSpline(M, R[indices], k=1, s=0, ext=1)
-            epsdm_Mdm = UnivariateSpline(Mdm[indicies], epsdm[indices], k=1, s=0, ext=1)
+            epsdm_Mdm = UnivariateSpline(Mdm[indices], epsdm[indices], k=1, s=0, ext=1)
             eps_total = eps + epsdm
             epsM = UnivariateSpline(M, eps_total[indices], k=1, s=0,ext = 1)
             eos_dm = UnivariateSpline(EOS.energydensities_dm, EOS.pressures_dm, k=1, s=0,ext = 1)
@@ -281,8 +304,50 @@ def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm,
                 rho_2 = edsrho(epsb_2) / rho_ns + edsrho_dm(epsdm_2) / rho_ns
                 pres_2 = EOS.eos(epsb_2) + eos_dm(epsdm_2)
 
+
             # Construct a row of data_array
             row = [max(M), Radius_max_M, np.log10(EOS.max_edsc + epsdm_max), max_rhoc, np.log10(EOS.eos(EOS.max_edsc) + eos_dm(epsdm_max)),R_14, np.log10(eps_14), rho_14, np.log10(pres_14),R_2, np.log10(eps_2), rho_2, np.log10(pres_2)]
+
+        elif not dm and de:
+            for j,e in enumerate(eps):
+                star = Star(e, 0.0, EOS.rho_plus, EOS.alpha, False, True)
+                star.solve_structure(EOS.energydensities, EOS.pressures, EOS.energydensities_de, EOS.pressures_de)
+                M[j] = star.Mrot
+                R[j] = star.Req
+
+            M, indices = np.unique(M, return_index=True)
+            MR = UnivariateSpline(M, R[indices], k=1, s=0, ext=1)
+            epsMde = UnivariateSpline(M, eps[indices], k=1, s=0,ext = 1)
+
+            R_14 = MR(1.4)
+            if R_14 == 0:
+                R_14 = np.nan # set to be nan so they don't impact the quantiles b/c we are using np.nanquantiles
+                epsde_14 = np.nan
+                presde_14 = np.nan
+            else:
+                epsde_14 = epsMde(1.4)
+                presde_14 = EOS.eos_de(epsde_14)
+
+            R_2 = MR(2.0)
+            if R_2 == 0:
+                R_2 = np.nan # see above for reasoning
+                epsde_2 = np.nan
+                presde_2 = np.nan
+
+            else:
+                epsde_2 = epsMde(2.0)
+                presde_2 = EOS.eos_de(epsde_2)
+
+            
+            max_M = max(M)
+            index_max_M = np.argmax(M)
+            Radius_max_M = R[index_max_M]
+
+            row = [max_M, Radius_max_M, np.log10(EOS.max_edsc_de*rho_ns), np.log10(EOS.eos_de(EOS.max_edsc_de*rho_ns)), R_14, np.log10(epsde_14), np.log10(presde_14), R_2, np.log10(epsde_2), np.log10(presde_2)]
+
+        else:
+            raise ValueError("dm and de cannot both be true at the same time!")
+
 
         for k in range(len(row)):
             # Some of the values in row may be arrays of shape (1,),
@@ -296,21 +361,36 @@ def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm,
         data_array[i,:] = row
     return data_array
 
-def print_table_data(data_array):
-    print('M_TOV: ', get_quantiles(data_array[:,0]))
-    print('R_TOV: ', get_quantiles(data_array[:,1]))
-    print('eps_cent TOV: ', get_quantiles(data_array[:,2]))
-    print('rho_cent TOV: ', get_quantiles(data_array[:,3]))
-    print('P_cent TOV: ', get_quantiles(data_array[:,4]))
-    print('R_1.4: ', get_quantiles(data_array[:,5]))
-    print('eps_cent 1.4: ', get_quantiles(data_array[:,6]))
-    print('rho_cent 1.4: ', get_quantiles(data_array[:,7]))
-    print('P_cent 1.4: ', get_quantiles(data_array[:,8]))
-    print('R_2.0: ', get_quantiles(data_array[:,9]))
-    print('eps_cent 2.0: ', get_quantiles(data_array[:,10]))
-    print('rho_cent 2.0: ', get_quantiles(data_array[:,11]))
-    print('P_cent 2.0: ', get_quantiles(data_array[:,12]))
-    print('Delta R = R_2.0 - R_1.4: ', get_quantiles(data_array[:,9] - data_array[:,5]))
+def print_table_data(data_array,de=False):
+
+    if de is False:
+        print('M_TOV: ', get_quantiles(data_array[:,0]))
+        print('R_TOV: ', get_quantiles(data_array[:,1]))
+        print('eps_cent TOV: ', get_quantiles(data_array[:,2]))
+        print('rho_cent TOV: ', get_quantiles(data_array[:,3]))
+        print('P_cent TOV: ', get_quantiles(data_array[:,4]))
+        print('R_1.4: ', get_quantiles(data_array[:,5]))
+        print('eps_cent 1.4: ', get_quantiles(data_array[:,6]))
+        print('rho_cent 1.4: ', get_quantiles(data_array[:,7]))
+        print('P_cent 1.4: ', get_quantiles(data_array[:,8]))
+        print('R_2.0: ', get_quantiles(data_array[:,9]))
+        print('eps_cent 2.0: ', get_quantiles(data_array[:,10]))
+        print('rho_cent 2.0: ', get_quantiles(data_array[:,11]))
+        print('P_cent 2.0: ', get_quantiles(data_array[:,12]))
+        print('Delta R = R_2.0 - R_1.4: ', get_quantiles(data_array[:,9] - data_array[:,5]))
+
+    else:
+        print('M_TOV: ', get_quantiles(data_array[:,0]))
+        print('R_TOV: ', get_quantiles(data_array[:,1]))
+        print('eps_cent TOV: ', get_quantiles(data_array[:,2]))
+        print('P_cent TOV: ', get_quantiles(data_array[:,3]))
+        print('R_1.4: ', get_quantiles(data_array[:,4]))
+        print('eps_cent 1.4: ', get_quantiles(data_array[:,5]))
+        print('P_cent 1.4: ', get_quantiles(data_array[:,6]))
+        print('R_2.0: ', get_quantiles(data_array[:,7]))
+        print('eps_cent 2.0: ', get_quantiles(data_array[:,8]))
+        print('P_cent 2.0: ', get_quantiles(data_array[:,9]))
+        print('Delta R = R_2.0 - R_1.4: ', get_quantiles(data_array[:,7] - data_array[:,4]))
 
 def load_equal_weighted_samples(path, sampler, identifier):
     # For Multinest, 'path' is the directory containing all the output files.
@@ -355,7 +435,7 @@ def recast_equal_weighted_samples_for_mpi(equal_weighted_samples, num_processes)
             samples[current_core].append(equal_weighted_samples[idx])
     return samples
 
-def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_masses, dm=False, sampler='multinest', identifier=''): #modified to also deal with m-r-t saving, pqcd included
+def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_masses, dm=False, de=False, sampler='multinest', identifier=''): #modified to also deal with m-r-t saving, pqcd included
     """
     Function to compute the posterior (and prior!) auxiliary data used to generate standard NEoST plots, such as, the pressures, (if dm = True)
     the baryonic pressure, mass-radius posteriors, and p-eps posteriors.
@@ -380,7 +460,10 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
         List determining if GW data is included. If None, just MR only.
 
     dm: bool
-        If True, ADM is included when computing the table data.
+        If True, ADM is included when computing the auxiliary data.
+
+    de: bool
+        If True, Dark energy MCDF EOS is included when computing the auxiliary data.
 
     sampler: str
         The sampler used, either 'multinest' or 'ultranest'.
@@ -412,7 +495,7 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
 
     # Scatter samples to the different processes and compute
     samples = comm.scatter(samples, root=0)
-    results = _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params, chirp_masses, dm, eos_is_fixed, mpi_rank)
+    results = _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params, chirp_masses, dm, de, eos_is_fixed, mpi_rank)
 
     # Gather
     results = comm.gather(results, root=0)
@@ -423,17 +506,22 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
         mass_radius = np.concatenate([result.get('mass_radius') for result in results])
         radii = np.concatenate([result.get('radii') for result in results], axis=1)
         pressures = np.concatenate([result.get('pressures') for result in results], axis=1)
-        pressures_rho = np.concatenate([result.get('pressures_rho') for result in results], axis=1)
-        cs = np.concatenate([result.get('cs') for result in results], axis=1)
-        aux_e = np.concatenate([result.get('aux_e') for result in results], axis=1)
-        aux_n = np.concatenate([result.get('aux_n') for result in results], axis=1)
         scattered = np.concatenate([result.get('scattered') for result in results])
-        mrt = np.concatenate([result.get('mrt') for result in results])
-        p_e_n_endpoints = np.concatenate([result.get('p_e_n_endpoints') for result in results])
-        max_pqcd_point = np.concatenate([result.get('max_pqcd_point') for result in results])
 
 
-        # Dark matter
+        if not de:
+            mrt = np.concatenate([result.get('mrt') for result in results])
+            p_e_n_endpoints = np.concatenate([result.get('p_e_n_endpoints') for result in results])
+            max_pqcd_point = np.concatenate([result.get('max_pqcd_point') for result in results])
+
+            pressures_rho = np.concatenate([result.get('pressures_rho') for result in results], axis=1)
+            cs = np.concatenate([result.get('cs') for result in results], axis=1)
+            aux_e = np.concatenate([result.get('aux_e') for result in results], axis=1)
+            aux_n = np.concatenate([result.get('aux_n') for result in results], axis=1)
+
+
+
+        #Dark Matter    
         energydensities_b = None
         energydensities_dm = None
         if dm:
@@ -442,20 +530,41 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
             pressures_b = np.concatenate([result.get('pressures_b') for result in results], axis=1)
             pressures_dm = np.concatenate([result.get('pressures_dm') for result in results], axis=1)
 
+        if de:
+            pressures_b = np.concatenate([result.get('pressures_b') for result in results], axis=1)
+            pressures_rho_b = np.concatenate([result.get('pressures_rho_b') for result in results], axis=1)
+
         # Filter out unphysical results
         mass_radius = mass_radius[mass_radius[:,1] != 0]
 
+
+        if not de:
         # Save everything
-        savedata = {'pressures.npy':pressures, 'pressures_rho.npy':pressures_rho, 'cs.npy':cs, 'aux_e.npy':aux_e, 'aux_n.npy':aux_n, 'radii.npy':radii, 'scattered.npy':scattered, 'mrt.npy':mrt, 'MR_prpr.txt':mass_radius, 'p_e_n_endpoints.txt':p_e_n_endpoints, 'max_pqcd_point':max_pqcd_point}
+            savedata = {'pressures.npy':pressures, 'pressures_rho.npy':pressures_rho, 'cs.npy':cs, 'aux_e.npy':aux_e, 'aux_n.npy':aux_n, 'radii.npy':radii, 'scattered.npy':scattered, 'mrt.npy':mrt, 'MR_prpr.txt':mass_radius, 'p_e_n_endpoints.txt':p_e_n_endpoints, 'max_pqcd_point':max_pqcd_point}
+
 
         if dm:
             savedata['pressures_baryon.npy'] = pressures_b
             savedata['pressures_dm.npy'] = pressures_dm
+
+        if de:
+            savedata = {'pressures.npy':pressures, 'radii.npy':radii, 'scattered.npy':scattered, 'MR_prpr.txt':mass_radius}
+            savedata['pressures_baryon.npy'] = pressures_b
+            savedata['pressures_rho_baryon.npy'] = pressures_rho_b
+
         if not eos_is_fixed:
             minradii, maxradii = calc_bands(masses, radii)
             savedata['minradii.npy'] = minradii
             savedata['maxradii.npy'] = maxradii
-            if dm:
+
+            if not dm and not de:
+                minpres, maxpres = calc_bands(energydensities, pressures)
+                minpres_rho, maxpres_rho = calc_bands(energydensities, pressures_rho)
+                savedata['minpres_rho.npy'] = minpres_rho
+                savedata['maxpres_rho.npy'] = maxpres_rho
+                savedata['minpres.npy'] = minpres
+                savedata['maxpres.npy'] = maxpres
+            elif dm and not de:
                 minpres, maxpres = calc_bands(energydensities_b, pressures)
                 minpres_rho, maxpres_rho = calc_bands(energydensities_b, pressures_rho)
                 minpres_b, maxpres_b = calc_bands(energydensities_b, pressures_b)
@@ -468,16 +577,23 @@ def compute_auxiliary_data(path, EOS, variable_params, static_params, chirp_mass
                 savedata['maxpres_baryon.npy'] = maxpres_b
                 savedata['minpres_dm.npy'] = minpres_dm
                 savedata['maxpres_dm.npy'] = maxpres_dm
-            else: ## had to comment this entire block out if working with min_pressure<14.2, unclear why
+            elif not dm and de:  
                 minpres, maxpres = calc_bands(energydensities, pressures)
-                minpres_rho, maxpres_rho = calc_bands(energydensities, pressures_rho)
-                savedata['minpres_rho.npy'] = minpres_rho
-                savedata['maxpres_rho.npy'] = maxpres_rho
+                minpres_b, maxpres_b = calc_bands(energydensities, pressures_b)
+                minpres_rho_b, maxpres_rho_b = calc_bands(energydensities, pressures_rho_b)
                 savedata['minpres.npy'] = minpres
                 savedata['maxpres.npy'] = maxpres
+                savedata['minpres_baryon.npy'] = minpres_b
+                savedata['maxpres_baryon.npy'] = maxpres_b
+                savedata['minpres_rho_baryon.npy'] = minpres_rho_b
+                savedata['maxpres_rho_baryon.npy'] = maxpres_rho_b
+
+            else:
+                raise ValueError("dm and de cannot both be true at the same time!")
+            
         save_auxiliary_data(path, identifier, savedata)
 
-def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params, chirp_masses, dm, eos_is_fixed, thread_number):  #non-DM case modified to save M/R/Tidal full curve for each EOS, pqcd included
+def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params, chirp_masses, dm, de, eos_is_fixed, thread_number): #non-DM case modified to save M/R/Tidal full curve for each EOS, pqcd included
     '''
     Here the calculations of auxiliary data is done.
     Reading/writing of files and parallelization is done by compute_auxiliary_data(),
@@ -489,9 +605,9 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
     # Grids
     # More points are added to account for larger energy density spread from ADM
     # total ADM [1e12,1e18] + baryonic energy densities [1e14.2,1e16]
-    num_grid_points = 200 if dm else 50                         ## normally 50, but increasing to 80 if working with initial energy density<14.2
+    num_grid_points = 200 if dm else 50                        
     masses = np.linspace(.2, 2.9, num_grid_points)
-    energydensities = np.logspace(14.2, 16, num_grid_points)    ## normally 14.2, temporarily changing it to 13.7 to check the intersection with BPS
+    energydensities = np.logspace(14.2, 16, num_grid_points)   
 
     mass_radius = np.zeros((num_samples, 2))
     radii = np.zeros((num_grid_points, num_samples))
@@ -519,14 +635,29 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
         pressures_b = np.zeros((num_grid_points, num_samples))
         pressures_rho_b = np.zeros((num_grid_points, num_samples))
 
-    for i in range(0, num_samples):
+    if de:
+        #There is no pressures_rho for the dark energy case since the dark energy EOS is a massless fluid, thus a mass density
+        #,and corresponding pressure, is not well defined. We can still specify the energy densities and pressures for the dark energy case.
+        #Moreover, we can also still compute the pressures_rho an pressures for the baryonic case to determine the impact of 
+        #including dark energy in the core of a neutron star. 
+        pressures_b = np.zeros((num_grid_points, num_samples)) 
+        pressures_rho_b = np.zeros((num_grid_points, num_samples))                                                                                                                          
+
+    for i in tqdm(range(0, num_samples)):
         pr = samples[i][0:len(variable_params)]
         par = {e:pr[j] for j, e in enumerate(list(variable_params.keys()))}
         par.update(static_params)
-        EOS.update(par, max_edsc=True)
+        if de:
+            EOS.update(par, max_edsc_de=True, max_edsc=True)
+            rhocs = np.logspace(np.log10(EOS.min_edsc_de*rho_ns), np.log10(EOS.max_edsc_de*rho_ns), 30)
+            #Defining the rhocs to be strictly above EOS.rho_plus as we do not want to consider a possible purely baryonic branch of the 
+            #mass-radius relation when including a dark energy core, as this would create twin-star configurations that Rutherford et al. 2026 does not consider.
+            #This part of the code (along with other specific parts; email Nathan Rutherford if wanting assistance) should be changed if a user want to consider possible twin star configurations. 
+        else:
+            EOS.update(par, max_edsc=True)
+            rhocs = np.logspace(14.5, np.log10(EOS.max_edsc), 30)
+            rhocsdm = np.zeros_like(rhocs)
 
-        rhocs = np.logspace(14.5, np.log10(np.asarray(EOS.max_edsc)), 30)
-        rhocsdm = np.zeros_like(rhocs)
 
         M = np.zeros(len(rhocs))
         R = np.zeros(len(rhocs))
@@ -535,7 +666,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
         scattered_elements = []
         mrt_elements = []
 
-        if not dm:
+        if not dm and not de:
             rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0)
             edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0)
             max_rhoc = edsrho(EOS.max_edsc)
@@ -591,7 +722,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             if EOS.pqcd_ext:
                 max_pqcd_point[i] = np.asarray(EOS.maximum_pqcd), EOS.ext, EOS.X                          ## for pqcd
 
-        else:
+        elif dm and not de:
             rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0, ext = 1)
             edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0, ext = 1)
             max_rhoc = edsrho(EOS.max_edsc)
@@ -641,7 +772,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
                 epsdm = EOS.find_epsdm_cent(EOS.adm_fraction,e)
                 rhocsdm[j] = epsdm
                 star = Star(e,epsdm)
-                star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo)
+                star.solve_structure(EOS.energydensities, EOS.pressures,eps_dm = EOS.energydensities_dm, pres_dm = EOS.pressures_dm, dm_halo = EOS.dm_halo)
                 M[j] = star.Mrot
                 R[j] = star.Req
 
@@ -669,7 +800,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             rhoc = np.random.rand() *(np.log10(EOS.max_edsc) - 14.6) + 14.6
             epsdm = EOS.find_epsdm_cent(EOS.adm_fraction,10**rhoc)
             star = Star(10**rhoc,epsdm)
-            star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo)
+            star.solve_structure(EOS.energydensities, EOS.pressures,eps_dm = EOS.energydensities_dm, pres_dm = EOS.pressures_dm, dm_halo = EOS.dm_halo)
             mass_radius[i] = star.Mrot, star.Req
 
             if EOS.reach_fraction == False:
@@ -678,7 +809,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             for j, e in enumerate(rhocpar):
                 epsdm = EOS.find_epsdm_cent(EOS.adm_fraction,e)
                 star = Star(e,epsdm)  #two_fluid_tidal not used here since chirp_masses are none, so compute two fluid tidal is waste of time
-                star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo)
+                star.solve_structure(EOS.energydensities, EOS.pressures,eps_dm = EOS.energydensities_dm, pres_dm = EOS.pressures_dm, dm_halo = EOS.dm_halo)
                 if EOS.reach_fraction == True:
                     scattered_elements.append([e + epsdm, EOS.eos(e) + eos_dm(epsdm), star.Mrot, star.Req, star.Rdm_halo])
                 if chirp_masses[j] is not None:
@@ -687,7 +818,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
                         rhoc = rhocM(M2)
                         epsdm = EOS.find_epsdm_cent(EOS.adm_fraction,rhoc)
                         star = Star(rhoc,epsdm)  #two_fluid_tidal used here since we need star.tidal
-                        star.solve_structure(EOS.energydensities, EOS.pressures,EOS.energydensities_dm, EOS.pressures_dm, EOS.dm_halo, EOS.two_fluid_tidal)
+                        star.solve_structure(EOS.energydensities, EOS.pressures,eps_dm = EOS.energydensities_dm, pres_dm = EOS.pressures_dm, dm_halo = EOS.dm_halo, two_fluid_tidal = EOS.two_fluid_tidal)
 
                         if EOS.reach_fraction == True:
                             scattered_elements.append([e + epsdm, EOS.eos(e) + eos_dm(epsdm), star.Mrot, star.Req, star.Rdm_halo])
@@ -696,12 +827,82 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
             if MR != 0:
                 radii[:,i] = MR(masses)
 
-    return_values = {'pressures':pressures, 'pressures_rho':pressures_rho,  'cs':cs, 'aux_e': aux_e, 'aux_n': aux_n, 'masses':masses, 'radii':radii, 'scattered':scattered, 'mrt':mrt, 'mass_radius':mass_radius, 'energydensities':energydensities, 'p_e_n_endpoints': p_e_n_endpoints, 'max_pqcd_point': max_pqcd_point}
+        elif not dm and de:
+
+            for j in range(len(energydensities)):
+                if EOS.rho_plus < energydensities[j]:
+                    if energydensities[j]/rho_ns < EOS.max_edsc_de:
+                        pressures[:,i][j] = EOS.eos_de(energydensities[j])
+                        #dark energy contribution for central energy densities in which rho_plus is smaller than it.
+                else:
+                    if energydensities[j]/rho_ns < EOS.max_edsc_de:
+                        pressures[:,i][j] = EOS.eos(energydensities[j])
+                        #baryonic contribution for central energy densities in which rho_plus is larger than it.
+
+
+            rhopres = UnivariateSpline(EOS.massdensities, EOS.pressures, k=1, s=0)
+            pressures_b[:,i][energydensities<EOS.max_edsc] = EOS.eos(energydensities[energydensities<EOS.max_edsc])
+            pressures_rho_b[:,i][indices] = rhopres(energydensities[indices])
+
+            for j,e in enumerate(rhocs):
+                star = Star(e, 0.0, EOS.rho_plus, EOS.alpha, False, True)
+                star.solve_structure(EOS.energydensities, EOS.pressures, EOS.energydensities_de, EOS.pressures_de)
+                M[j] = star.Mrot
+                R[j] = star.Req
+
+
+                M, indices = np.unique(M, return_index=True)
+                MR = UnivariateSpline(M, R[indices], k=1, s=0, ext=1)
+                rhocM = UnivariateSpline(M, rhocs[indices], k=1, s=0, ext=1)
+
+                for j, e in enumerate(rhocpar):
+                    if EOS.rho_plus < e:
+                        star = Star(e, 0.0, EOS.rho_plus, EOS.alpha, False, True)
+                        star.solve_structure(EOS.energydensities, EOS.pressures, EOS.energydensities_de, EOS.pressures_de)
+                        scattered_elements.append([e, EOS.eos_de(e), star.Mrot, star.Req, star.tidal])
+
+                    else:
+                        star = Star(e)
+                        star.solve_structure(EOS.energydensities, EOS.pressures)
+                        scattered_elements.append([e, EOS.eos(e), star.Mrot, star.Req, star.tidal])
+
+                    if chirp_masses[j] is not None:
+                        M2 = m1(chirp_masses[j], scattered_elements[j][2])
+                        rhoc = rhocM(M2)
+                        if EOS.rho_plus < rhoc:
+                            star = Star(rhoc, 0.0, EOS.rho_plus, EOS.alpha, False, True)
+                            star.solve_structure(EOS.energydensities, EOS.pressures, EOS.energydensities_de, EOS.pressures_de)
+                            scattered_elements.append([rhoc, EOS.eos_de(rhoc), star.Mrot, star.Req, star.tidal])
+                        else:
+                            star = Star(rhoc)
+                            star.solve_structure(EOS.energydensities, EOS.pressures)
+                            scattered_elements.append([rhoc, EOS.eos(rhoc), star.Mrot, star.Req, star.tidal])
+
+                scattered.append(scattered_elements)
+                radii[:,i] = MR(masses)
+                rhoc = np.random.rand() *(np.log10(EOS.max_edsc_de*rho_ns) - np.log10(EOS.rho_plus)) + np.log10(EOS.rho_plus)
+                star = Star(10**rhoc, 0.0, EOS.rho_plus, EOS.alpha, False, True)
+                star.solve_structure(EOS.energydensities, EOS.pressures, EOS.energydensities_de, EOS.pressures_de)
+                mass_radius[i] = star.Mrot, star.Req
+
+        else:
+            raise ValueError("dm and de cannot both be true at the same time!")
+        
+
+
+    if not de:
+        return_values = {'pressures':pressures, 'pressures_rho':pressures_rho,  'cs':cs, 'aux_e': aux_e, 'aux_n': aux_n, 'masses':masses, 'radii':radii, 'scattered':scattered, 'mrt':mrt, 'mass_radius':mass_radius, 'energydensities':energydensities, 'p_e_n_endpoints': p_e_n_endpoints, 'max_pqcd_point': max_pqcd_point}
     if dm:
         return_values['pressures_b'] = pressures_b
         return_values['pressures_dm'] = pressures_dm
         return_values['energydensities_b'] = energydensities_b
         return_values['energydensities_dm'] = energydensities_dm
+
+    if de:
+        return_values = {'pressures':pressures, 'masses':masses, 'radii':radii, 'scattered':scattered, 'mass_radius':mass_radius, 'energydensities':energydensities}
+        return_values['pressures_b'] = pressures_b
+        return_values['pressures_rho_b'] = pressures_rho_b
+
     return return_values
 
 

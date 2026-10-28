@@ -39,10 +39,22 @@ class BaseEoS():
 
     Methods
     -------
-    update(eos_params, max_edsc=True)
+    update(eos_params, max_edsc=True, max_edsc_de = False)
         Update the EoS object with a given set of parameters
     get_eos_crust()
         Construct the crust of the equation of state, with or without cEFT.
+    get_eos()
+        Construct the core of the equation of state, with or without cEFT.
+    find_max_edsc()
+        Find the maximum central energy density allowed by the EoS parameters.
+    find_max_edsc_de()
+        Find the maximum central energy density allowed by the EoS parameters describing a neutron star with a dark energy core defined by the MCDF EoS.
+    fchi_calc(epscent,epscent_dm)
+        Calculate the ADM mass-fraction given the baryonic and ADM central densities, respectively.
+    find_epsdm_cent(ADM_fraction,epscent)
+        Calculate the ADM central energy density given the baryonic central energy density and ADM mass-fraction. Uses a wide array of different intervals of central energy densities to determine the ADM central energy density as a root finding problem.
+    mass_radius()
+        Compute the mass-radius curve of the EoS.
     get_eos_crust_GP()
         Construct the crust of the equation of state, when Keller cEFT band has uncertainties calculated with Gaussian process, aka, for Goettling cEFT band
     plot()
@@ -157,10 +169,11 @@ class BaseEoS():
                 raise ValueError('The transition density should be between \
                     %.2f and 2.0 saturation density.' % self._rho_start_ceft)
 
+
             if self.pqcd_ext and global_imports._verbose:
                 print('Using NEoST with pQCD constraints.') #previous message displayed: 'Make sure the range of X is specified directly in log space, typically [0.5, 2.0].'
 
-    def update(self, eos_params, max_edsc=True):
+    def update(self, eos_params, max_edsc=True, max_edsc_de = False):
         """
         Method to update a given EoS object with specified parameters.
 
@@ -172,6 +185,11 @@ class BaseEoS():
         max_edsc: bool
             If True, compute the maximum central energy density allowed
             by this set of parameters (default is True).
+
+        max_edsc_de: bool
+                If True, compute the maximum central energy density allowed by the set of parameters describing a neutron star with a dark energy core defined by the MCDF EoS. 
+                The default is False, as this is a more computationally expensive calculation that is only relevant for users interested in the MCDF EoS.
+
 
         """
 
@@ -230,6 +248,12 @@ class BaseEoS():
             else:
                 self.max_edsc = 0.0
 
+
+
+        if max_edsc_de is True:
+            self.find_max_edsc_de()
+        else:
+            self.max_edsc_de = 0.0
 
     # Compute the crust EoS
     def get_eos_crust(self):
@@ -494,7 +518,14 @@ class BaseEoS():
 
     # Find maximum central energy density
     def find_max_edsc(self):
+        """ Compute the maximum central energy density allowed by the EoS parameters. This is done by first finding the maximum energy density for which the speed of sound is causal,
+          and then solving the TOV equations for a range of central energy densities up to this maximum to find the maximum mass configuration. The maximum central energy density is then set to 
+          be the central energy density of the maximum mass configuration, or the maximum energy density for which the speed of sound is causal, whichever is smaller.
 
+          Returns:
+            max_edsc (float): The maximum central energy density allowed by the EoS parameters in cgs units for mass-density, i.e., divided by the speed of light squared.
+        
+        """
         min_edsc0 = 14.3
         if self.rho_t is not None:  ## will only be none for tabulated EOS (check)
             eds = np.logspace(np.log10(self.rho_t), np.log10(4e16), 1000) #eds is in units of g/cm^3
@@ -557,6 +588,75 @@ class BaseEoS():
         self.centraleds = eds_c
         self.massradius = Ms
 
+
+
+    # Find maximum central dark energy energy density
+    def find_max_edsc_de(self):
+
+        min_edsc0 = (self.rho_plus/rho_ns + 0.1)
+        #Defining the min_edsc0 to be strictly above EOS.rho_plus as we do not want to consider a possible purely baryonic branch of the 
+            #mass-radius relation when including a dark energy core, as this would create twin-star configurations that Rutherford et al. 2026 does not consider.
+            #This part of the code (along with other specific parts; email Nathan Rutherford if wanting assistance) should be changed if a user want to consider possible twin star configurations. 
+
+        eds = np.linspace(min_edsc0,20,len(self.energydensities_de))*rho_ns
+        #eds = np.logspace(14.3, np.log10(4e16), 1000) #same as above
+
+
+        cs = self.A_param*c**2. + self.B/(self.energydensities_de**2.*c**2.) 
+        cs = cs/c**2. #dpde(eds)/c**2
+        acausal = 1.
+        #dpde = self.eos_de.derivative(1) No need to compute dp_de here as we have the functional form of the speed of sound squared due to the simplicity of the MCDF EOS model.
+
+        if len(eds[cs > acausal]) != 0:
+
+            # NEoST v1.0
+            #maximum = eds[np.where(eds == min(eds[cs > acausal]))[0] - 1] # NEoST v1.0
+
+            # Updated version to get rid of the numpy ragged arrays issue
+            #maximum = eds[np.where(eds == min(eds[cs > acausal]))[0] - 1]
+
+            tmp = np.where(eds == min(eds[cs > acausal]))[0] # The issue is that this is a tuple (of length 1), not a scalar
+            try:
+                assert(len(tmp) == 1)
+            except (AssertionError, ValueError):
+                raise ValueError('Inconsistency in BaseEoS.find_max_edsc(), possibly caused by this attempt to fix a numpy issue. You can try reverting to the earlier version (see right above where this message originates).')
+            idx = tmp[0] - 1
+            maximum = eds[idx] # End of updated version
+
+            if maximum/rho_ns < min_edsc0: # g/cm^3
+                maximum = (min_edsc0 + 0.1)*rho_ns
+
+        else:
+            maximum = max(eds)
+
+
+ 
+        eds_c = np.linspace(min_edsc0, maximum/rho_ns, 40)*rho_ns # g/cm^3
+        Ms = np.zeros((len(eds_c),3))
+        
+        for i, e in enumerate(eds_c):
+            star = Star(e,0.0,self.rho_plus, self.alpha, False, True)
+            star.solve_structure(self.energydensities, self.pressures, self.energydensities_de, self.pressures_de)
+            if star.Mrot < Ms[i - 1][0]:
+                break
+            Ms[i] = star.Mrot, star.Req, star.tidal
+
+        Ms = Ms[Ms[:,0] > 0.0]
+        eds_c = eds_c[0:len(Ms)]
+        test, idx = np.unique(Ms[:,0], return_index=True)
+        Ms = Ms[idx]
+
+        eds_c = eds_c[idx]
+ 
+        self.max_M = max(Ms[:,0])
+        index_max_M = np.argmax(Ms[:,0])
+        self.Radius_max_M = Ms[:,1][index_max_M]
+        self.max_edsc_de = max(eds_c)/rho_ns
+        self.min_edsc_de = self.rho_plus/rho_ns + 0.005 #Just a slight shift off rho_plus as the EOS stops to make sense if the energy density is exactly rho_plus
+        self.centraleds_de = eds_c/rho_ns
+        self.massradius_de = Ms
+
+        
     #### pQCD related functions
 
     # Finds maximum central density with pQCD
@@ -775,7 +875,10 @@ class BaseEoS():
 
         """
         star = Star(epscent, epscent_dm) 
-        star.solve_structure(self.energydensities, self.pressures, self.energydensities_dm, self.pressures_dm,self.dm_halo)
+        star.solve_structure(self.energydensities, self.pressures,
+                      eps_dm = self.energydensities_dm,
+                      pres_dm = self.pressures_dm,
+                      dm_halo = self.dm_halo)
         try:
             fchi = (star.Mdm/star.Mrot)*100
         except ZeroDivisionError:
@@ -798,6 +901,7 @@ class BaseEoS():
         epscent : float
             Baryonic central energy density in cgs units for mass-density, i.e., divided by the speed of light squared.
         """
+
         f = lambda y: self.f_chi_calc(epscent,y) - ADM_fraction
         x = 1 #variable to track which interval the solver fails/passes on
         try:
@@ -1157,7 +1261,7 @@ class BaseEoS():
             star.solve_structure(self.energydensities, self.pressures)
             res = star.Mb/Msun, star.Rns/1e+5, star.tidal 
         else:
-            star.solve_structure(self.energydensities, self.pressures, self.energydensities_dm, self.pressures_dm)
+            star.solve_structure(self.energydensities, self.pressures, eps_dm = self.energydensities_dm, pres_dm = self.pressures_dm, dm_halo = self.dm_halo)
             res = star.Mgrav,star.Req, star.Mdm,star.Rdm #? 
         return res
 
