@@ -21,8 +21,8 @@ Those involved in code maintenance and development (technical and scientific).
 **Current active members**
 
 * Melissa Mendes (melissa.mendes[at]physik.tu-darmstadt.de), TU Darmstadt
-* Nathan Rutherford (nathan.rutherford[at]unh.edu), University of New Hampshire
-* Tuomo Salmi (t.h.j.salmi[at]uva.nl), University of Amsterdam
+* Nathan Rutherford (nathan.rutherford[at]fqxi.org), Foundational Questions Institute (FQxI)
+* Tuomo Salmi (tuomo.salmi[at]helsinki.fi), University of Helsinki
 * Isak Svensson (isak.svensson[at]physik.tu-darmstadt.de), TU Darmstadt
 * Anna Watts (a.l.watts[at]uva.nl), University of Amsterdam
 

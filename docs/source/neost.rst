@@ -76,6 +76,16 @@ neost.tovsolvers.TidalDef module
    :undoc-members:
    :show-inheritance:
 
+
+
+neost.tovsolvers.TOVde_python module
+-----------------------------
+
+.. automodule:: neost.tovsolvers.TOVde_python
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 .. automodule:: neost.global_imports
    :members:
    :undoc-members:

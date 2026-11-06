@@ -36,6 +36,9 @@
    PP_with_ADM_example
    PP_with_ADM_prior_example
    ADM_MR_Tidal_tutorial
+   DE_MR_Tidal_tutorial
+   Dark_energy_posterior
+   Dark_energy_prior
    CS_example
    CS_prior_example
    Tabulated_example

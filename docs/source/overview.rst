@@ -98,7 +98,7 @@ See :doc:`Speed of Sound Example<CS_example>`.
 The user can alternatively choose to use a tabulated EoS model, in which case there are no free core EoS parameters.  See :doc:`Tabulated Example<Tabulated_example>`, which uses the `AP4 EoS model <https://ui.adsabs.harvard.edu/abs/1997PhRvC..56.2261A/abstract>`_.
 
 Additionally, the user can enable the presence of bosonic/fermionic asymmetric dark matter (ADM) from `Nelson et al. (2018) <https://ui.adsabs.harvard.edu/abs/2019JCAP...07..012N/abstract>`_. The Nelson et al. (2018) ADM model consideres an MeV/GeV mass-scale complex scalar/spin-1/2 dirac spinor particle with repulsive self-interactions mediative by an eV/MeV mass-scale vector gauge boson. These models were considered in the inferences of `Rutherford et al. (2023) <https://ui.adsabs.harvard.edu/abs/2023PhRvD.107j3051R/abstract>`_, which also outlines how the Bayesian inference with ADM is modified to compared to one with only baryonic matter. See :doc:`Piecewise Polytropic with Bosonic ADM Example<PP_with_ADM_example>`.
-
+Finally, the user can also enable the presence of a possible MCDF core following the framework outlined in Rutherford et al. (2026, in prep). However, the MCDF model is based on the model described in `Pretel et al. (2024) <https://inspirehep.net/literature/2847987>`_, which is a phenomenological model for a possible MCDF phase of matter that could exist in the cores of neutron stars. 
 
 
 Sampling
