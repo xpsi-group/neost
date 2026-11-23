@@ -1,0 +1,509 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>neost.tovsolvers.TOVde_python &mdash; NEoST 3.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=acc74ff5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            NEoST
+              <img src="../../../_static/neostlogo_small.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../applications.html">Publications</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../acknowledgements.html">Team and acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../citation.html">Citation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../history.html">History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../todo.html">Future</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../Start_here.html">Start here</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../PP_example.html">Piecewise Polytropic Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../PP_prior_example.html">Piecewise Polytropic Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../PP_with_ADM_example.html">Piecewise Polytropic with ADM Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../PP_with_ADM_prior_example.html">Piecewise Polytropic Prior with ADM Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ADM_MR_Tidal_tutorial.html">ADM M-R and M-Tidal Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CS_example.html">Speed of Sound Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CS_prior_example.html">Speed of Sound Prior Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Tabulated_example.html">Tabulated Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Tabulated_prior_example.html">Tabulated Prior Example</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">neost</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">NEoST</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">neost.tovsolvers.TOVde_python</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for neost.tovsolvers.TOVde_python</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numba</span><span class="w"> </span><span class="kn">import</span> <span class="n">jit</span><span class="p">,</span> <span class="n">double</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numba</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_ivp</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..</span><span class="w"> </span><span class="kn">import</span> <span class="n">global_imports</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_c</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_G</span>
+<span class="n">Msun</span> <span class="o">=</span> <span class="n">global_imports</span><span class="o">.</span><span class="n">_M_s</span>
+
+<div class="viewcode-block" id="pressure_epsilon">
+<a class="viewcode-back" href="../../../neost.html#neost.tovsolvers.TOVde_python.pressure_epsilon">[docs]</a>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pressure_epsilon</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">epsgrid</span><span class="p">,</span> <span class="n">presgrid</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">"""Convert pressure to energy density using a piecewise power-law interpolation.</span>
+
+<span class="sd">    This function is used by the TOV solver to obtain the energy density (epsilon)</span>
+<span class="sd">    corresponding to a given pressure `P`, based on precomputed tables of</span>
+<span class="sd">    pressure and energy density (`presgrid`, `epsgrid`). The interpolation</span>
+<span class="sd">    is done in log-space by assuming locally polytropic behavior between</span>
+<span class="sd">    adjacent grid points.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        P (float): Pressure value at which to evaluate the energy density.</span>
+<span class="sd">        epsgrid (np.ndarray): Grid of energy density values.</span>
+<span class="sd">        presgrid (np.ndarray): Grid of pressure values corresponding to `epsgrid`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: Interpolated energy density corresponding to `P`.</span>
+<span class="sd">    """</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">presgrid</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">eds</span> <span class="o">=</span> <span class="n">epsgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">P</span> <span class="o">/</span> <span class="n">presgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">3.</span> <span class="o">/</span> <span class="mf">5.</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">presgrid</span><span class="p">):</span>
+        <span class="n">eds</span> <span class="o">=</span> <span class="n">epsgrid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">P</span> <span class="o">/</span> <span class="n">presgrid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mf">3.</span> <span class="o">/</span> <span class="mf">5.</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">presgrid</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">/</span> <span class="n">presgrid</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">epsgrid</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">/</span> <span class="n">epsgrid</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">eds</span> <span class="o">=</span> <span class="n">epsgrid</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">P</span> <span class="o">/</span> <span class="n">presgrid</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">ci</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">eds</span></div>
+
+
+<div class="viewcode-block" id="epsilon_pressure">
+<a class="viewcode-back" href="../../../neost.html#neost.tovsolvers.TOVde_python.epsilon_pressure">[docs]</a>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">epsilon_pressure</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">epsgrid</span><span class="p">,</span> <span class="n">presgrid</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Convert energy density to pressure using a piecewise power-law interpolation. This is similar to `pressure_epsilon`, </span>
+<span class="sd">    but in the opposite direction and the argument P is replaced by E.</span>
+
+<span class="sd">    """</span>  
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">epsgrid</span><span class="p">,</span> <span class="n">E</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">pres</span> <span class="o">=</span> <span class="n">presgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">E</span> <span class="o">/</span> <span class="n">epsgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">5.</span> <span class="o">/</span> <span class="mf">3.</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">epsgrid</span><span class="p">):</span> 
+        <span class="n">pres</span> <span class="o">=</span> <span class="n">presgrid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">E</span> <span class="o">/</span> <span class="n">epsgrid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mf">5.</span> <span class="o">/</span> <span class="mf">3.</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">presgrid</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">/</span> <span class="n">presgrid</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">epsgrid</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">/</span> <span class="n">epsgrid</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">pres</span> <span class="o">=</span> <span class="n">presgrid</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">E</span> <span class="o">/</span> <span class="n">epsgrid</span><span class="p">[</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span><span class="o">**</span><span class="n">ci</span>
+    <span class="k">return</span> <span class="n">pres</span></div>
+
+
+<div class="viewcode-block" id="pressure_adind">
+<a class="viewcode-back" href="../../../neost.html#neost.tovsolvers.TOVde_python.pressure_adind">[docs]</a>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pressure_adind</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">epsgrid</span><span class="p">,</span> <span class="n">presgrid</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Calculate the adiabatic index using a piecewise power-law interpolation. This is used in the computation of the tidal deformability.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        P (float): Pressure value at which to evaluate the adiabatic index.</span>
+<span class="sd">        epsgrid (np.ndarray): Grid of energy density values.</span>
+<span class="sd">        presgrid (np.ndarray): Grid of pressure values corresponding to `epsgrid`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: Interpolated adiabatic index corresponding to `P`.</span>
+<span class="sd">    """</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">presgrid</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">eds</span> <span class="o">=</span> <span class="n">epsgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">P</span> <span class="o">/</span> <span class="n">presgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">3.</span> <span class="o">/</span> <span class="mf">5.</span><span class="p">)</span>
+        <span class="n">adind</span> <span class="o">=</span> <span class="mf">5.</span> <span class="o">/</span> <span class="mf">3.</span> <span class="o">*</span> <span class="n">presgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">eds</span> <span class="o">/</span> <span class="n">epsgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">5.</span> <span class="o">/</span> <span class="mf">3.</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">eds</span> <span class="o">*</span> <span class="p">(</span><span class="n">eds</span> <span class="o">+</span> <span class="n">P</span><span class="p">)</span> <span class="o">/</span> <span class="n">P</span>
+    <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">presgrid</span><span class="p">):</span>
+        <span class="n">eds</span> <span class="o">=</span> <span class="n">epsgrid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">P</span> <span class="o">/</span> <span class="n">presgrid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mf">3.</span> <span class="o">/</span> <span class="mf">5.</span><span class="p">)</span>
+        <span class="n">adind</span> <span class="o">=</span> <span class="mf">5.</span> <span class="o">/</span> <span class="mf">3.</span> <span class="o">*</span> <span class="n">presgrid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">eds</span> <span class="o">/</span> <span class="n">epsgrid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mf">5.</span> <span class="o">/</span> <span class="mf">3.</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">eds</span> <span class="o">*</span> <span class="p">(</span><span class="n">eds</span> <span class="o">+</span> <span class="n">P</span><span class="p">)</span> <span class="o">/</span> <span class="n">P</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">presgrid</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">/</span> <span class="n">presgrid</span><span class="p">[</span><span class="n">idx</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">epsgrid</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">/</span> <span class="n">epsgrid</span><span class="p">[</span><span class="n">idx</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">eds</span> <span class="o">=</span> <span class="n">epsgrid</span><span class="p">[</span><span class="n">idx</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">P</span> <span class="o">/</span> <span class="n">presgrid</span><span class="p">[</span><span class="n">idx</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">ci</span><span class="p">)</span>
+        <span class="n">adind</span> <span class="o">=</span> <span class="n">ci</span> <span class="o">*</span> <span class="n">presgrid</span><span class="p">[</span><span class="n">idx</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">eds</span> <span class="o">/</span> <span class="n">epsgrid</span><span class="p">[</span><span class="n">idx</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">ci</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">eds</span> <span class="o">*</span> <span class="p">(</span><span class="n">eds</span> <span class="o">+</span> <span class="n">P</span><span class="p">)</span> <span class="o">/</span> <span class="n">P</span>
+    <span class="k">return</span> <span class="n">adind</span></div>
+
+
+<div class="viewcode-block" id="TOV">
+<a class="viewcode-back" href="../../../neost.html#neost.tovsolvers.TOVde_python.TOV">[docs]</a>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">TOV</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">epsgrid</span><span class="p">,</span> <span class="n">presgrid</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Calculate the derivatives of the TOV equations at a given radius `r` and state `y`, using the provided energy density and pressure grids for interpolation.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            r (float): The radial coordinate at which to evaluate the derivatives.</span>
+<span class="sd">            y (np.ndarray): The state vector at radius `r`, containing the following components:</span>
+<span class="sd">                - y[0]: Pressure (P)</span>
+<span class="sd">                - y[1]: Mass enclosed within radius `r` (m)</span>
+<span class="sd">                - y[2]: Metric function h(r) related to the radial component of the metric</span>
+<span class="sd">                - y[3]: Metric function b(r) related to the time component of the metric</span>
+<span class="sd">                - y[4]: Metric function alpha(r) related to the time component of the metric</span>
+<span class="sd">            epsgrid (np.ndarray): Grid of energy density values for interpolation.</span>
+<span class="sd">            presgrid (np.ndarray): Grid of pressure values corresponding to `epsgrid` for interpolation.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: An array containing the derivatives [dp/dr, dm/dr, dh/dr, db/dr, dalpha/dr] at radius `r`.</span>
+<span class="sd">    """</span>
+
+    <span class="n">p</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">eps</span> <span class="o">=</span> <span class="n">pressure_epsilon</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">epsgrid</span><span class="p">,</span> <span class="n">presgrid</span><span class="p">)</span>
+    <span class="n">ad_index</span> <span class="o">=</span> <span class="n">pressure_adind</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">epsgrid</span><span class="p">,</span> <span class="n">presgrid</span><span class="p">)</span>
+
+    <span class="n">dpdr</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">eps</span> <span class="o">+</span> <span class="n">p</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">4.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">p</span><span class="p">)</span>
+    <span class="n">dpdr</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">dmdr</span> <span class="o">=</span> <span class="mf">4.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">eps</span>
+
+    <span class="n">dhdr</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">dfdr</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">r</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> \
+        <span class="p">(</span><span class="o">-</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="mf">5.</span> <span class="o">*</span> <span class="n">eps</span> <span class="o">+</span> <span class="mf">9.</span> <span class="o">*</span> <span class="n">p</span> <span class="o">+</span> <span class="p">(</span><span class="n">eps</span> <span class="o">+</span> <span class="n">p</span><span class="p">)</span><span class="o">**</span><span class="mf">2.</span> <span class="o">/</span>
+                        <span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="n">ad_index</span><span class="p">))</span> <span class="o">+</span> <span class="mf">3.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mf">2.</span> <span class="o">*</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">r</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span>
+         <span class="mf">4.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">r</span> <span class="o">*</span> <span class="n">p</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span> \
+        <span class="o">+</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">/</span> <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">r</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> \
+        <span class="p">(</span><span class="o">-</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">r</span> <span class="o">+</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">eps</span> <span class="o">-</span> <span class="n">p</span><span class="p">))</span>
+
+    <span class="n">dalphadr</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">4.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">p</span><span class="p">)</span> <span class="o">*</span>\
+        <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">dpdr</span><span class="p">,</span> <span class="n">dmdr</span><span class="p">,</span> <span class="n">dhdr</span><span class="p">,</span> <span class="n">dfdr</span><span class="p">,</span> <span class="n">dalphadr</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="TOV_eps">
+<a class="viewcode-back" href="../../../neost.html#neost.tovsolvers.TOVde_python.TOV_eps">[docs]</a>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">TOV_eps</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">epsgrid</span><span class="p">,</span> <span class="n">presgrid</span><span class="p">,</span> <span class="n">rho_minus</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">"""Calculate the derivatives of the TOV equations at a given radius `r` and state `y`, with a specified energy density cutoff `rho_minus` for the outer shell.</span>
+<span class="sd">        This is particularly useful for solvingn the TOV equations when there are two distinct regions in the star, such as a dark energy core and normal matter shell, where the energy density in the outer shell is capped at `rho_minus`.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            r (float): The radial coordinate at which to evaluate the derivatives.</span>
+<span class="sd">            y (np.ndarray): The state vector at radius `r`, containing the following components:</span>
+<span class="sd">                - y[0]: Pressure (P)</span>
+<span class="sd">                - y[1]: Mass enclosed within radius `r` (m)</span>
+<span class="sd">                - y[2]: Metric function h(r) related to the radial component of the metric</span>
+<span class="sd">                - y[3]: Metric function b(r) related to the time component of the metric</span>
+<span class="sd">                - y[4]: Metric function alpha(r) related to the time component of the metric</span>
+
+<span class="sd">            epsgrid (np.ndarray): Grid of energy density values for interpolation.</span>
+<span class="sd">            presgrid (np.ndarray): Grid of pressure values corresponding to `epsgrid` for interpolation.</span>
+<span class="sd">            rho_minus (float): The energy density cutoff for the outer shell.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: An array containing the derivatives [dp/dr, dm/dr, dh/dr, db/dr, dalpha/dr, deps/dr] at radius `r`.</span>
+<span class="sd">    """</span>
+
+    <span class="n">p</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">eps</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">eps</span> <span class="o">==</span> <span class="n">rho_minus</span><span class="p">:</span>
+        <span class="n">eps</span> <span class="o">=</span> <span class="n">rho_minus</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">eps</span> <span class="o">=</span> <span class="n">pressure_epsilon</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">epsgrid</span><span class="p">,</span> <span class="n">presgrid</span><span class="p">)</span>
+
+    <span class="n">ad_index</span> <span class="o">=</span> <span class="n">pressure_adind</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">epsgrid</span><span class="p">,</span> <span class="n">presgrid</span><span class="p">)</span>
+
+    <span class="n">dpdr</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">eps</span> <span class="o">+</span> <span class="n">p</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">4.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">p</span><span class="p">)</span>
+    <span class="n">dpdr</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">dmdr</span> <span class="o">=</span> <span class="mf">4.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">eps</span>
+
+    <span class="n">dhdr</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">dfdr</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">r</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> \
+        <span class="p">(</span><span class="o">-</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="mf">5.</span> <span class="o">*</span> <span class="n">eps</span> <span class="o">+</span> <span class="mf">9.</span> <span class="o">*</span> <span class="n">p</span> <span class="o">+</span> <span class="p">(</span><span class="n">eps</span> <span class="o">+</span> <span class="n">p</span><span class="p">)</span><span class="o">**</span><span class="mf">2.</span> <span class="o">/</span>
+                        <span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="n">ad_index</span><span class="p">))</span> <span class="o">+</span> <span class="mf">3.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mf">2.</span> <span class="o">*</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">r</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span>
+         <span class="mf">4.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">r</span> <span class="o">*</span> <span class="n">p</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span> \
+        <span class="o">+</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">/</span> <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">r</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> \
+        <span class="p">(</span><span class="o">-</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">r</span> <span class="o">+</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">eps</span> <span class="o">-</span> <span class="n">p</span><span class="p">))</span>
+
+    <span class="n">dalphadr</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">4.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">p</span><span class="p">)</span> <span class="o">*</span>\
+        <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">dpdr</span><span class="p">,</span> <span class="n">dmdr</span><span class="p">,</span> <span class="n">dhdr</span><span class="p">,</span> <span class="n">dfdr</span><span class="p">,</span> <span class="n">dalphadr</span><span class="p">,</span> <span class="n">eps</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="Q22">
+<a class="viewcode-back" href="../../../neost.html#neost.tovsolvers.TOVde_python.Q22">[docs]</a>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">Q22</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">q22</span> <span class="o">=</span> <span class="mf">3.</span> <span class="o">/</span> <span class="mf">2.</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="n">x</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">))</span> <span class="o">-</span>\
+        <span class="p">(</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="mf">5.</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">q22</span></div>
+
+
+<div class="viewcode-block" id="Q21">
+<a class="viewcode-back" href="../../../neost.html#neost.tovsolvers.TOVde_python.Q21">[docs]</a>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">Q21</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">q21</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">*</span>\
+        <span class="p">((</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mf">2.</span><span class="p">)</span> <span class="o">/</span>\
+         <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">-</span> <span class="mf">3.</span> <span class="o">*</span> <span class="n">x</span> <span class="o">/</span>\
+         <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="n">x</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">q21</span></div>
+
+
+
+<div class="viewcode-block" id="initial_conditions">
+<a class="viewcode-back" href="../../../neost.html#neost.tovsolvers.TOVde_python.initial_conditions">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">initial_conditions</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span> <span class="n">pcent</span><span class="p">,</span> <span class="n">adindcent</span><span class="o">=</span><span class="mf">2.</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Set the initial conditions for solving the structure equations. </span>
+
+<span class="sd">        Args: </span>
+<span class="sd">            epscent (float): The central energy density of the star in geometrized units (g/cm^3 converted to g/cm).</span>
+<span class="sd">            pcent (float): The central pressure of the star in geometrized units (g/(cm s^2) converted to g/(cm s^2)).</span>
+<span class="sd">            adindcent (float, optional): The adiabatic index at the center of the star. Default is 2, which corresponds to a relativistic degenerate gas.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: tuple containing:</span>
+
+<span class="sd">                - **dr** (*float*): The initial stepsize in cm. </span>
+<span class="sd">                - **intial**   (*array*): A np array storing the initial conditions.</span>
+
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">pcent</span><span class="p">,</span> <span class="s1">'__len__'</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span> <span class="s1">'__len__'</span><span class="p">):</span>
+            <span class="c1"># pcent and epscent are sometimes scalars and sometimes arrays of length 1,</span>
+            <span class="c1"># causing ragged arrays which numpy no longer accepts.</span>
+            <span class="c1"># Therefore, check if:</span>
+            <span class="c1"># 1. Either of them are arrays</span>
+            <span class="c1"># 2. If so, that both of them are</span>
+            <span class="c1"># 3. That they have the same shape</span>
+            <span class="c1"># 4. And that that shape is (1,).</span>
+            <span class="c1"># If this is true, convert them to scalars to avoid ragged arrays.</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">assert</span><span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">pcent</span><span class="p">,</span> <span class="s1">'__len__'</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span> <span class="s1">'__len__'</span><span class="p">))</span>
+                <span class="k">assert</span><span class="p">(</span><span class="n">pcent</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">epscent</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+                <span class="k">assert</span><span class="p">(</span><span class="n">pcent</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+            <span class="k">except</span> <span class="ne">AssertionError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'The python TOV solver has tried to create a ragged numpy array. This is no longer supported.'</span><span class="p">)</span>
+            <span class="n">pcent</span> <span class="o">=</span> <span class="n">pcent</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">epscent</span> <span class="o">=</span> <span class="n">epscent</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="mf">4.441e-16</span>
+        <span class="n">dr</span> <span class="o">=</span> <span class="mf">10.</span>
+
+        <span class="n">P0</span> <span class="o">=</span> <span class="n">pcent</span> <span class="o">-</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">3.</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">pcent</span> <span class="o">+</span> <span class="n">epscent</span><span class="p">)</span> <span class="o">*</span> \
+            <span class="p">(</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">pcent</span> <span class="o">+</span> <span class="n">epscent</span><span class="p">)</span> <span class="o">*</span> <span class="n">r</span><span class="o">**</span><span class="mf">2.</span>
+        <span class="n">m0</span> <span class="o">=</span> <span class="mf">4.</span> <span class="o">/</span> <span class="mf">3.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">epscent</span> <span class="o">*</span> <span class="n">r</span><span class="o">**</span><span class="mf">3.</span>
+        <span class="n">h0</span> <span class="o">=</span> <span class="n">r</span><span class="o">**</span><span class="mf">2.</span>
+        <span class="n">b0</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">r</span>
+
+        <span class="n">initial</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">P0</span><span class="p">,</span> <span class="n">m0</span><span class="p">,</span> <span class="n">h0</span><span class="p">,</span> <span class="n">b0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">dr</span><span class="p">,</span> <span class="n">initial</span></div>
+
+
+<div class="viewcode-block" id="tidal_deformability">
+<a class="viewcode-back" href="../../../neost.html#neost.tovsolvers.TOVde_python.tidal_deformability">[docs]</a>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">tidal_deformability</span><span class="p">(</span><span class="n">y2</span><span class="p">,</span> <span class="n">Mns</span><span class="p">,</span> <span class="n">Rns</span><span class="p">):</span>
+
+    <span class="n">C</span> <span class="o">=</span> <span class="n">Mns</span> <span class="o">/</span> <span class="n">Rns</span>
+    <span class="n">Eps</span> <span class="o">=</span> <span class="mf">4.</span> <span class="o">*</span> <span class="n">C</span><span class="o">**</span><span class="mf">3.</span> <span class="o">*</span> <span class="p">(</span><span class="mf">13.</span> <span class="o">-</span> <span class="mf">11.</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">+</span> <span class="n">C</span> <span class="o">*</span> <span class="p">(</span><span class="mf">3.</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">-</span> <span class="mf">2.</span><span class="p">)</span> <span class="o">+</span>
+                        <span class="mf">2.</span> <span class="o">*</span> <span class="n">C</span><span class="o">**</span><span class="mf">2.</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">y2</span><span class="p">))</span> <span class="o">+</span> \
+        <span class="mf">3.</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">C</span><span class="p">)</span><span class="o">**</span><span class="mf">2.</span> <span class="o">*</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">-</span> <span class="n">y2</span> <span class="o">+</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">C</span> <span class="o">*</span> <span class="p">(</span><span class="n">y2</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">))</span> <span class="o">*</span> \
+        <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">C</span><span class="p">)</span> <span class="o">+</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">C</span> <span class="o">*</span> <span class="p">(</span><span class="mf">6.</span> <span class="o">-</span> <span class="mf">3.</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">+</span> <span class="mf">3.</span> <span class="o">*</span> <span class="n">C</span> <span class="o">*</span> <span class="p">(</span><span class="mf">5.</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">-</span> <span class="mf">8.</span><span class="p">))</span>
+    <span class="n">tidal_def</span> <span class="o">=</span> <span class="mf">16.</span> <span class="o">/</span> <span class="p">(</span><span class="mf">15.</span> <span class="o">*</span> <span class="n">Eps</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">C</span><span class="p">)</span><span class="o">**</span><span class="mf">2.</span> <span class="o">*</span>\
+        <span class="p">(</span><span class="mf">2.</span> <span class="o">+</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">C</span> <span class="o">*</span> <span class="p">(</span><span class="n">y2</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">-</span> <span class="n">y2</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">tidal_def</span></div>
+
+
+
+<div class="viewcode-block" id="solveTOVde">
+<a class="viewcode-back" href="../../../neost.html#neost.tovsolvers.TOVde_python.solveTOVde">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">solveTOVde</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span> <span class="n">rho_plus</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">eos_eps</span><span class="p">,</span> <span class="n">eos_pres</span><span class="p">,</span> <span class="n">eos_epsde</span><span class="p">,</span> <span class="n">eos_presde</span><span class="p">,</span> <span class="n">atol</span><span class="p">,</span> <span class="n">rtol</span><span class="p">,</span> <span class="n">hmax</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span> <span class="c1">#assumed to be in cgs units as inputs eps has units of g/cm^3 and pres has units g/(cm s^2)</span>
+<span class="w">    </span><span class="sd">"""Solve the TOV equations for a star with a dark energy core and normal matter shell, given the central energy density of the core, the energy density of the shell, and the equation of state for both regions.</span>
+
+<span class="sd">    Args:        </span>
+<span class="sd">    </span>
+<span class="sd">        epscent (float): The central energy density of the dark energy core in cgs units (g/cm^3).</span>
+<span class="sd">        rho_plus (float): The energy density cut off for the dark energy core in cgs units (g/cm^3).</span>
+<span class="sd">        alpha (float): The ratio of the energy density cut offs defining the gap of the phase transition from dark energy to normal matter, i.e. rho_minus = alpha * rho_plus.</span>
+<span class="sd">        eos_eps (np.ndarray): An array of energy density values for the normal matter equation of state in cgs units (g/cm^3).</span>
+<span class="sd">        eos_pres (np.ndarray): An array of pressure values corresponding to `eos_eps` for the normal matter equation of state in cgs units (g/(cm s^2)).</span>
+<span class="sd">        eos_epsde (np.ndarray): An array of energy density values for the dark energy equation of state in cgs units (g/cm^3).</span>
+<span class="sd">        eos_presde (np.ndarray): An array of pressure values corresponding to `eos_epsde` for the dark energy equation of state in cgs units (g/(cm s^2)).</span>
+<span class="sd">        atol (float): Absolute tolerance for the ODE solver.</span>
+<span class="sd">        rtol (float): Relative tolerance for the ODE solver.</span>
+<span class="sd">        hmax (float): Maximum step size for the ODE solver.</span>
+<span class="sd">        step (float): Initial step size for the ODE solver.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: A tuple containing the following elements:</span>
+<span class="sd">            - **Mb** (*float*): The mass of the normal matter shell in grams.</span>
+<span class="sd">            - **Mde** (*float*): The mass of the dark energy core in grams.</span>
+<span class="sd">            - **Rde_core** (*float*): The radius of the dark energy core in centimeters. </span>
+<span class="sd">            - **Rns** (*float*): The radius of the neutron star (core + shell) in centimeters.</span>
+<span class="sd">            - **tidal** (*float*): The tidal deformability of the neutron star.</span>
+<span class="sd">            - **Gtt** (*np.ndarray*): An array containing the metric function Gtt as a function of radius in the core. The first column is the radius in centimeters, and the second column is Gtt.</span>
+<span class="sd">    """</span>
+
+    <span class="n">eos_pres</span><span class="p">,</span> <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">eos_pres</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span> <span class="n">return_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">eos_pres</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="n">eos_pres</span> <span class="o">*</span> <span class="n">G</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span> <span class="c1">#scaled into geometrized</span>
+    <span class="n">eos_eps</span> <span class="o">=</span> <span class="n">eos_eps</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">indices</span><span class="p">)]</span> <span class="o">*</span> <span class="n">G</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="c1">#scaled into geometrized</span>
+
+
+    <span class="c1">#clearing any nans since some pressure values are negative and np.unique will save a nan after taking log_10 of the array</span>
+    <span class="n">indx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">eos_presde</span><span class="p">))</span>
+    <span class="n">eos_presde</span> <span class="o">=</span> <span class="n">eos_presde</span><span class="p">[</span><span class="o">~</span><span class="n">indx</span><span class="p">]</span>
+    <span class="n">eos_epsde</span> <span class="o">=</span> <span class="n">eos_epsde</span><span class="p">[</span><span class="o">~</span><span class="n">indx</span><span class="p">]</span>
+
+
+    <span class="n">eos_presde</span><span class="p">,</span> <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">eos_presde</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">8</span><span class="p">),</span> <span class="n">return_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">eos_presde</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="n">eos_presde</span> <span class="o">*</span> <span class="n">G</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span> <span class="c1">#scaled into geometrized</span>
+    <span class="n">eos_epsde</span> <span class="o">=</span> <span class="n">eos_epsde</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">indices</span><span class="p">)]</span> <span class="o">*</span> <span class="n">G</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="c1">#scaled into geometrized</span>
+
+
+    <span class="c1"># Set initial conditions for solving the TOV equations ##</span>
+    <span class="n">epscent</span> <span class="o">=</span> <span class="n">epscent</span> <span class="o">*</span> <span class="n">G</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">pcent</span> <span class="o">=</span> <span class="n">epsilon_pressure</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span> <span class="n">eos_epsde</span><span class="p">,</span> <span class="n">eos_presde</span><span class="p">)</span>
+    <span class="n">adindcent</span> <span class="o">=</span> <span class="n">pressure_adind</span><span class="p">(</span><span class="n">pcent</span><span class="p">,</span> <span class="n">eos_epsde</span><span class="p">,</span> <span class="n">eos_presde</span><span class="p">)</span>
+
+    <span class="n">rho_plus</span> <span class="o">=</span> <span class="n">rho_plus</span> <span class="o">*</span> <span class="n">G</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">rho_minus</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">rho_plus</span>
+
+    <span class="n">p_plus</span> <span class="o">=</span> <span class="n">epsilon_pressure</span><span class="p">(</span><span class="n">rho_plus</span><span class="p">,</span> <span class="n">eos_epsde</span><span class="p">,</span> <span class="n">eos_presde</span><span class="p">)</span>
+
+    <span class="n">r</span> <span class="o">=</span> <span class="mf">4.441e-16</span>
+    <span class="n">rmax</span> <span class="o">=</span> <span class="mi">50</span> <span class="o">*</span> <span class="mf">1e5</span>
+    <span class="n">dr</span><span class="p">,</span> <span class="n">initial</span> <span class="o">=</span> <span class="n">initial_conditions</span><span class="p">(</span><span class="n">epscent</span><span class="p">,</span> <span class="n">pcent</span><span class="p">,</span> <span class="n">adindcent</span><span class="p">)</span>
+
+    <span class="c1"># print('Pcent, P0')</span>
+    <span class="c1"># print(epscent*np.power(c,2) / G, pcent*np.power(c,4) / G,initial[0]*np.power(c,4) / G)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">epsgrid</span><span class="p">,</span><span class="n">presgird</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Event function to stop the integration when the pressure drops to p_plus, which defines the boundary of the dark energy core."""</span>
+        <span class="k">return</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">p_plus</span>
+    <span class="n">stop</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">stop</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
+
+    <span class="c1"># Integrate the TOV equations</span>
+    <span class="n">sol_in</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">TOV</span><span class="p">,</span> <span class="n">t_span</span><span class="o">=</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">rmax</span><span class="p">),</span> <span class="n">y0</span><span class="o">=</span><span class="n">initial</span><span class="p">,</span>
+                       <span class="n">method</span><span class="o">=</span><span class="s1">'RK45'</span><span class="p">,</span> <span class="n">t_eval</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">eos_epsde</span><span class="p">,</span> <span class="n">eos_presde</span><span class="p">),</span> <span class="n">events</span> <span class="o">=</span> <span class="n">stop</span><span class="p">,</span>
+                       <span class="n">max_step</span><span class="o">=</span><span class="mf">10000.</span><span class="p">)</span>
+
+    <span class="n">Mde</span> <span class="o">=</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">y</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># in geometrized units</span>
+    <span class="n">Rde_core</span> <span class="o">=</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1">#in units of cm</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop2</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">epsgrid</span><span class="p">,</span><span class="n">presgird</span><span class="p">,</span><span class="n">rho_minus</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">stop</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">stop</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
+
+    <span class="n">sol_shell</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">TOV_eps</span><span class="p">,</span><span class="n">t_span</span> <span class="o">=</span> <span class="p">(</span><span class="n">Rde_core</span><span class="p">,</span> <span class="n">rmax</span><span class="p">),</span> <span class="n">y0</span> <span class="o">=</span> <span class="p">[</span><span class="n">sol_in</span><span class="o">.</span><span class="n">y</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="n">Mde</span><span class="p">,</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">y</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">y</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">y</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">4</span><span class="p">],</span> <span class="n">rho_minus</span><span class="p">],</span>
+                          <span class="n">method</span><span class="o">=</span><span class="s1">'RK45'</span><span class="p">,</span> <span class="n">t_eval</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">eos_eps</span><span class="p">,</span> <span class="n">eos_pres</span><span class="p">,</span> <span class="n">rho_minus</span><span class="p">),</span> <span class="n">events</span> <span class="o">=</span> <span class="n">stop2</span><span class="p">,</span>
+                          <span class="n">max_step</span> <span class="o">=</span> <span class="mf">10000.</span><span class="p">)</span>
+    
+
+    <span class="n">Mb</span> <span class="o">=</span> <span class="n">sol_shell</span><span class="o">.</span><span class="n">y</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">Rns</span> <span class="o">=</span>  <span class="n">sol_shell</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">Rns</span> <span class="o">*</span> <span class="n">sol_shell</span><span class="o">.</span><span class="n">y</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="o">/</span> <span class="n">sol_shell</span><span class="o">.</span><span class="n">y</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+    
+    <span class="n">tidal</span> <span class="o">=</span> <span class="n">tidal_deformability</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">Mb</span><span class="p">,</span> <span class="n">Rns</span><span class="p">)</span>
+
+    <span class="c1">#Gtt is wrong, but not going to use so can leave for now</span>
+    <span class="n">Gtt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">sol_in</span><span class="o">.</span><span class="n">t</span><span class="p">),</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">Gtt</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">t</span> <span class="c1">#radius in cm</span>
+    <span class="n">Gtt</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">sol_in</span><span class="o">.</span><span class="n">y</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">Mb</span> <span class="o">/</span> <span class="n">Rns</span><span class="p">))</span>
+
+    <span class="n">Mb</span> <span class="o">=</span> <span class="n">Mb</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">G</span> <span class="c1">#now in units of grams</span>
+    <span class="n">Mde</span> <span class="o">=</span> <span class="n">Mde</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">G</span> <span class="c1">#now in units of grams</span>
+
+    <span class="n">Mb</span> <span class="o">=</span> <span class="n">Mb</span> <span class="o">-</span> <span class="n">Mde</span>
+
+    <span class="k">return</span> <span class="n">Mb</span><span class="p">,</span> <span class="n">Mde</span><span class="p">,</span> <span class="n">Rde_core</span><span class="p">,</span> <span class="n">Rns</span><span class="p">,</span> <span class="n">tidal</span><span class="p">,</span> <span class="n">Gtt</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2026 the NEoST Core Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
