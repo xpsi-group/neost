@@ -15,6 +15,30 @@ Msun = global_imports._M_s
 
 @jit(nopython=True)
 def TOV_complete(r, Z, epsgrid_dm, presgrid_dm, epsgrid, presgrid):
+    """
+    Calculate the derivatives of the mass and pressure for both the baryonic and dark matter components, as well as the metric function alpha, at a given radius `r` and state vector `Z`. This function is used to solve the complete TOV equations for a neutron star with a dark matter component. The state vector `Z` contains the following components:
+    - Z[0]: Mass of the baryonic component enclosed within radius `r` (mb)
+    - Z[1]: Mass of the dark matter component enclosed within radius `r` (mchi)
+    - Z[2]: Pressure of the baryonic component at radius `r` (pb)
+    - Z[3]: Pressure of the dark matter component at radius `r` (pchi)
+    - Z[4]: Metric function alpha(r) related to the time component of the metric
+
+    Args:
+        r (float): Radial coordinate at which to evaluate the derivatives.
+        Z (np.ndarray): The state vector at radius `r`, containing the components described above.
+        epsgrid_dm (np.ndarray): Grid of energy density values for the dark matter component in geometrized units (g/cm^3 converted to g/cm).
+        presgrid_dm (np.ndarray): Grid of pressure values for the dark matter component in geometrized units (g/(cm s^2) converted to g/(cm s^2)).
+        epsgrid (np.ndarray): Grid of energy density values for the baryonic component in geometrized units (g/cm^3 converted to g/cm).
+        presgrid (np.ndarray): Grid of pressure values for the baryonic component in geometrized units (g/(cm s^2) converted to g/(cm s^2)).
+
+    Returns:
+        np.ndarray: An array containing the derivatives of the mass and pressure for both components, as well as the derivative of the metric function alpha, in the following order:
+        - dmbdr: Derivative of the mass of the baryonic component with respect to radius (dmb/dr)
+        - dmchidr: Derivative of the mass of the dark matter component with respect to radius (dmchi/dr)
+        - dpbdr: Derivative of the pressure of the baryonic component with respect to radius (dpb/dr)
+        - dpchidr: Derivative of the pressure of the dark matter component with respect to radius (dpchi/dr)
+        - dalphadr: Derivative of the metric function alpha with respect to radius (dalpha/dr)
+    """
     mb = Z[0]
     mchi = Z[1]
     M = mb + mchi
@@ -33,6 +57,22 @@ def TOV_complete(r, Z, epsgrid_dm, presgrid_dm, epsgrid, presgrid):
 
 @jit(nopython=True)
 def TOV_single(r, Z, epsgrid, presgrid):
+    """
+    Calculate the derivatives for the TOV equations. This function is used to solve the single-fluid TOV equations for either the baryonic or dark matter component after the complete TOV equations have been solved and one of the components has dropped to zero pressure. The state vector `Z` contains the following components:
+    - Z[0]: Mass of the component enclosed within radius `r`
+    - Z[1]: Pressure of the component at radius `r`
+
+    Args:
+        r (float): Radial coordinate at which to evaluate the derivatives.
+        Z (np.ndarray): The state vector at radius `r`, containing the components described above   (mass and pressure of the remaining component). 
+        epsgrid (np.ndarray): Grid of energy density values for the component in geometrized units (g/cm^3 converted to g/cm).
+        presgrid (np.ndarray): Grid of pressure values for the component in geometrized units (g/(cm s^2) converted to g/(cm s^2)).
+    Returns:
+        np.ndarray: An array containing the derivatives of the mass and pressure for the remaining component, as well as the derivative of the metric function alpha, in the following order:
+        - dmbdr: Derivative of the mass of the component with respect to radius (dm/dr)
+        - dpbdr: Derivative of the pressure of the component with respect to radius (dp/dr) 
+        - dalphadr: Derivative of the metric function alpha with respect to radius (dalpha/dr)
+    """
     mb = Z[0]
     pb = Z[1]
     P = pb
@@ -72,6 +112,38 @@ def PofE(E, epsgrid, presgrid):
 
 
 def solveTOVdm(epscent, epscent_dm, eps, pres, eps_dm, pres_dm, dm_halo, two_fluid_tidal, atol, rtol, hmax, step):
+
+    """Solve the TOV equations for a neutron star with a dark matter component, which can be either a core or a halo. The TOV equations are solved in two steps: first, we solve the complete 
+    TOV equations for both the baryonic and dark matter components until the pressure of either component drops to
+     zero. Then, we solve the single-fluid TOV equations for the remaining component until its pressure drops to
+    zero. The function returns the mass and radius of the neutron star, as well as the mass and radius of the 
+    dark matter core and halo (if present), and the tidal deformability if requested.
+    
+    Args:        epscent (float): The central energy density of the baryonic component in cgs units (g/cm^3).
+        epscent_dm (float): The central energy density of the dark matter component in cgs units (g/cm^3).
+        eps (np.ndarray): Grid of energy density values for the baryonic component in cgs units (g/cm^3).
+        pres (np.ndarray): Grid of pressure values for the baryonic component in cgs units (g/(cm s^2)).
+        eps_dm (np.ndarray): Grid of energy density values for the dark matter component in cgs units (g/cm^3).
+        pres_dm (np.ndarray): Grid of pressure values for the dark matter component in cgs units (g/(cm s^2)).
+        dm_halo (bool): Whether to solve for a dark matter halo (True) or just a dark matter core (False).
+        two_fluid_tidal (bool): Whether to calculate the tidal deformability using the two-fluid TOV equations (True) or just the single-fluid TOV equations (False).
+        atol (float): Absolute tolerance for the ODE solver.
+        rtol (float): Relative tolerance for the ODE solver.
+        hmax (float): Maximum step size for the ODE solver.
+        step (float): Initial step size for the ODE solver.
+
+        Returns:
+        tuple: tuple containing:
+            - **Mb** (*float*): The mass of the baryonic component of the neutron star in grams.
+            - **Rns** (*float*): The radius of the neutron star in centimeters.
+            - **Mdm_core** (*float*): The mass of the dark matter core in grams.
+            - **Mdm_halo** (*float*): The mass of the dark matter halo in grams. If there is no halo, this will be zero.
+            - **Rdm_core** (*float*): The radius of the dark matter core in centimeters. If there is no core, this will be zero.
+            - **Rdm_halo** (*float*): The radius of the dark matter halo in centimeters. If there is no halo, this will be zero.
+            - **tidal** (*float*): The tidal deformability of the neutron star. If `two_fluid_tidal` is False, this will be zero.
+
+    
+    """
     
 
     #Scaling the baryonic and dark matter equations of state from cgs (g/cm^3 for the energy densities and g/(cm s^2) for pressure) to geometrized units

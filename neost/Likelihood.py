@@ -31,12 +31,33 @@ class Likelihood():
         likelihoods = []
         pr_dict = self.prior.pr
 
+
         constraints = self.prior.EOS.check_constraints()
         
         if constraints is False:
             return -1e101
 
-        for i in range(self.prior.number_stars):            
+        for i in range(self.prior.number_stars):  
+            if self.prior.EOS.adm_type == 'Dark Energy':
+
+                if pr_dict['rhoc_' + str(i + 1)] < np.log10(self.prior.EOS.rho_plus):
+                    return -1e101
+                #Defining the rhocs to be strictly above EOS.rho_plus as we do not want to consider a possible purely baryonic branch of the 
+            #mass-radius relation when including a dark energy core, as this would create twin-star configurations that Rutherford et al. 2026 does not consider.
+            #This part of the code (along with other specific parts; email Nathan Rutherford if wanting assistance) should be changed if a user want to consider possible twin star configurations. 
+                
+                star = Star(10**(pr_dict['rhoc_' + str(i + 1)]), 0.0, self.prior.EOS.rho_plus, self.prior.EOS.alpha, False, True)
+                star.solve_structure(self.prior.EOS.energydensities, self.prior.EOS.pressures, self.prior.EOS.energydensities_de, self.prior.EOS.pressures_de)
+
+
+                #print('DE:', star.Mrot, star.Mdmcore, star.Req)
+                Mgrav = star.Mrot
+                Mde_core = star.Mdmcore
+                Req = star.Req
+                Rde_core = star.Rdm_core
+                tidal = star.tidal
+                Rdm_halo = 0.0   
+
             if self.prior.EOS.adm_type == 'Bosonic':
                 epsdm_cent = self.prior.EOS.find_epsdm_cent(ADM_fraction=pr_dict['adm_fraction'],
                                                             epscent = 10**(pr_dict['rhoc_' + str(i + 1)]))
@@ -47,14 +68,18 @@ class Likelihood():
                     star = Star(10**(pr_dict['rhoc_' + str(i + 1)]), epsdm_cent)
                     star.solve_structure(self.prior.EOS.energydensities,
                                      self.prior.EOS.pressures,
-                                     self.prior.EOS.energydensities_dm,
-                                     self.prior.EOS.pressures_dm,
-                                     self.prior.EOS.dm_halo,
-                                     self.prior.EOS.two_fluid_tidal)
+                                     eps_dm = self.prior.EOS.energydensities_dm,
+                                     pres_dm = self.prior.EOS.pressures_dm,
+                                     dm_halo = self.prior.EOS.dm_halo,
+                                     two_fluid_tidal = self.prior.EOS.two_fluid_tidal)
+
+
+
                     Mgrav = star.Mrot
                     Req = star.Req
                     Rdm_halo = star.Rdm_halo
                     tidal = star.tidal
+
                 
             if self.prior.EOS.adm_type == 'Fermionic':
                 #Hard cut-off imposed as all stars within these boxes have masses well below 1 Msun [~0.4 Msun down to ~0.001 Msun], thus this will save computation time if the code doesn't even have to compute them.
@@ -75,10 +100,10 @@ class Likelihood():
                         star = Star(10**(pr_dict['rhoc_' + str(i + 1)]), epsdm_cent)
                         star.solve_structure(self.prior.EOS.energydensities, 
                                             self.prior.EOS.pressures,
-                                            self.prior.EOS.energydensities_dm,
-                                            self.prior.EOS.pressures_dm,
-                                            self.prior.EOS.dm_halo,
-                                            self.prior.EOS.two_fluid_tidal)
+                                            eps_dm = self.prior.EOS.energydensities_dm,
+                                            pres_dm = self.prior.EOS.pressures_dm,
+                                            dm_halo = self.prior.EOS.dm_halo,
+                                            two_fluid_tidal = self.prior.EOS.two_fluid_tidal)
                 
                         Mgrav = star.Mrot
                         Req = star.Req
@@ -164,6 +189,28 @@ class Likelihood():
                 
                 if(star.Mrot < 1.):
                     return -1e101
+                
+
+        if self.prior.EOS.adm_type == 'Dark Energy':
+                
+                
+                # max_edsc_de = self.prior.EOS.max_edsc_de * rho_ns
+                # star = Star(max_edsc_de, 0.0, self.prior.EOS.rho_plus, self.prior.EOS.alpha, False, True)
+                # star.solve_structure(self.prior.EOS.energydensities, self.prior.EOS.pressures, self.prior.EOS.energydensities_de, self.prior.EOS.pressures_de)
+
+
+                # if(star.Mrot < 1 or star.Mrot > 3 or star.Req > 16):
+                #     return -1e101
+                
+                for i in range(self.prior.number_stars):
+                    if pr_dict['rhoc_' + str(i + 1)] <= np.log10(self.prior.EOS.rho_plus):
+                        return -1e101
+                        
+                    star = Star(10**(pr_dict['rhoc_' + str(i + 1)]), 0.0, self.prior.EOS.rho_plus, self.prior.EOS.alpha, False, True)
+                    star.solve_structure(self.prior.EOS.energydensities, self.prior.EOS.pressures, self.prior.EOS.energydensities_de, self.prior.EOS.pressures_de)
+
+                    if(star.Mrot < 1 or star.Mrot > 3 or star.Req > 16):
+                        return -1e101
 
         if self.prior.EOS.adm_type == 'Bosonic' or self.prior.EOS.adm_type == 'Fermionic':
             if (pr_dict['mchi'] >= pow(10,6) and pr_dict['gchi_over_mphi'] <= pow(10,-3.5) and pr_dict['adm_fraction'] >= 0.01):
@@ -184,10 +231,10 @@ class Likelihood():
                 star = Star(self.prior.EOS.max_edsc,epsdm_cent)
                 star.solve_structure(self.prior.EOS.energydensities,
                                     self.prior.EOS.pressures,
-                                    self.prior.EOS.energydensities_dm,
-                                    self.prior.EOS.pressures_dm,
-                                    self.prior.EOS.dm_halo,
-                                    self.prior.EOS.two_fluid_tidal)
+                                    eps_dm = self.prior.EOS.energydensities_dm,
+                                    pres_dm = self.prior.EOS.pressures_dm,
+                                    dm_halo = self.prior.EOS.dm_halo,
+                                    two_fluid_tidal = self.prior.EOS.two_fluid_tidal)
                 if(star.Mrot < 1.):
                     return -1e101
 
@@ -204,10 +251,10 @@ class Likelihood():
                     star = Star(10**(pr_dict['rhoc_' + str(i + 1)]), epsdm_cent)
                     star.solve_structure(self.prior.EOS.energydensities,
                                     self.prior.EOS.pressures,
-                                    self.prior.EOS.energydensities_dm,
-                                    self.prior.EOS.pressures_dm,
-                                    self.prior.EOS.dm_halo,
-                                    self.prior.EOS.two_fluid_tidal)
+                                    eps_dm = self.prior.EOS.energydensities_dm,
+                                    pres_dm = self.prior.EOS.pressures_dm,
+                                    dm_halo = self.prior.EOS.dm_halo,
+                                    two_fluid_tidal = self.prior.EOS.two_fluid_tidal)
                     if(star.Mrot < 1.):
                         return -1e101
 

@@ -24,6 +24,17 @@ cdef double Msun = global_imports._M_s
 cdef double ry
 
 cdef int binarySearch(double arr[], int low, int high, double key) nogil:
+    """Perform a binary search to find the index of the largest value in `arr` that is less than or equal to `key`.
+
+    Args:
+        arr (double[]): A sorted array of double values.
+        low (int): The starting index of the search range.
+        high (int): The ending index of the search range.
+        key (double): The value to search for.
+
+    Returns:
+        int: The index of the largest value in `arr` that is less than or equal to `key`. If `key` is smaller than the smallest value in `arr`, returns 0. If `key` is larger than the largest value in `arr`, returns `high`.
+    """
     cdef int mid 
     while high > low:
         mid = (low + high) / 2
@@ -38,6 +49,21 @@ cdef int binarySearch(double arr[], int low, int high, double key) nogil:
 
 # in terms of r
 cdef double pressure_epsilon(double pressure, double eps[], double pres[], int idx) nogil:
+    """
+    Calculate the energy density corresponding to a given pressure. This function uses a piecewise power-law 
+    interpolation based on the provided `eps` and `pres` arrays, which represent the energy density and pressure 
+    values of the equation of state (EOS) grid, respectively. The `idx` parameter indicates the index in the EOS 
+    grid that corresponds to the given pressure.
+    Args:        
+        pressure (double): The pressure for which to calculate the energy density, in geometrized units (g/(cm s^2) converted to g/(cm s^2)).
+        eps (double): An array of energy density values corresponding to the EOS grid, in geometrized units (g/cm^3 converted to g/cm).
+        pres (double): An array of pressure values corresponding to the EOS grid, in geometrized units (g/(cm s^2) converted to g/(cm s^2)).
+        idx (int): The index in the EOS grid that corresponds to the given pressure. This index is obtained using a binary search on the `pres` array.
+
+    Returns:
+        double: The energy density corresponding to the given pressure, calculated using piecewise power-law interpolation
+    """
+
     if idx == 0:
         eds = eps[0] * pow(pressure / pres[0], 3. / 5.)
     if idx > 0:
@@ -46,6 +72,21 @@ cdef double pressure_epsilon(double pressure, double eps[], double pres[], int i
     return eds
 
 cdef double epsilon_pressure(double epsilon, double pres[], double eps[], int idx) nogil: 
+
+    """
+    Calculate the pressure corresponding to a given energy density. This function uses a piecewise power-law 
+    interpolation based on the provided `eps` and `pres` arrays, which represent the energy density and pressure 
+    values of the equation of state (EOS) grid, respectively. The `idx` parameter indicates the index in the EOS grid that corresponds to the given energy density.
+    Args:        
+        epsilon (double): The energy density for which to calculate the pressure, in geometrized units (g/cm^3 converted to g/cm).
+        pres (double): An array of pressure values corresponding to the EOS grid, in geometrized units (g/(cm s^2) converted to g/(cm s^2)).
+        eps (double): An array of energy density values corresponding to the EOS grid, in geometrized units (g/cm^3 converted to g/cm).
+        idx (int): The index in the EOS grid that corresponds to the given energy density. This index is obtained using a binary search on the `eps` array.
+
+    Returns:
+        double: The pressure corresponding to the given energy density, calculated using piecewise power-law interpolation
+    """
+
     if idx==0:
         pressure = pres[0]*pow(epsilon/eps[0], 5./3.)
     if idx>0.:
@@ -66,6 +107,36 @@ cdef double pressure_adind(double pressure, double eps[], double pres[], int idx
 
 cdef int TOV(double r, const double y[], double f[], void * par) noexcept nogil: # noexcept required for Cython3, it indicates that exceptions raised by this function will not be propagated to calling python functions. A warning will be printed, however.
 #All inputs are assumed to be in geometrized units
+
+    """
+    Calculate the derivatives of the TOV equations at a given radius `r` and state vector `y`. 
+    This function is designed to be used with a numerical ODE solver, such as those provided by the 
+    GNU Scientific Library (GSL). The function computes the derivatives of the pressure, mass, and metric
+     functions based on the current state of the system and the equation of state (EOS) parameters.
+
+     Args:
+        r (double): The radial coordinate at which to evaluate the derivatives, in geometrized units (cm).
+        y (double[]): The state vector at radius `r`, containing the following components:
+                - y[0]: Pressure (P) in geometrized units (g/(cm s^2) converted to g/(cm s^2))
+                - y[1]: Mass enclosed within radius `r` (m) in geometrized units (g converted to cm)
+                - y[2]: Metric function h(r) related to the radial component of the metric
+                - y[3]: Metric function b(r) related to the time component of the metric
+                - y[4]: Metric function alpha(r) related to the time component of the metric
+        f (double[]): An array to store the computed derivatives, where:
+                - f[0]: dP/dr, the derivative of pressure with respect to radius
+                - f[1]: dm/dr, the derivative of mass with respect to radius
+                - f[2]: dh/dr, the derivative of metric function h with respect to radius
+                - f[3]: db/dr, the derivative of metric function b with respect to radius
+                - f[4]: dalpha/dr, the derivative of metric function alpha with respect to radius
+        par (void*): A pointer to additional parameters needed for the calculation. This should point to an array containing:
+                - par[0]: A pointer to an array of energy density values corresponding to the EOS grid, in geometrized units.
+                - par[1]: A pointer to an array of pressure values corresponding to the EOS grid, in geometrized units.
+                - par[2]: A pointer to a double containing the number of points in the EOS grid.
+
+        Returns:
+            int: A status code indicating the success of the computation. Returns `GSL_SUCCESS` if the derivatives were computed successfully.
+    """
+
     cdef double p
     cdef double eps
     cdef double ad_index
@@ -105,10 +176,10 @@ def initial_conditions(double rhocent, double pcent, adindcent=2.):
         Set the initial conditions for solving the structure equations. 
 
         Args: 
-            eos (object): An object that takes energy density as input and outputs pressure, both in geometrized units.
-            w0 (float): The initial value of the rotational drag. Not known a priori, but can be calculated after the TOV equations are solved.
-            j0 (float): The initial value of j. Not known a priori, but can be calculated after the TOV equations are solved.
-            static (bool): Calculate initial conditions for a static star (True) or a rotating star (False). 
+            rhocent (float): The central energy density of the star in geometrized units (g/cm^3 converted to g/cm).
+            pcent (float): The central pressure of the star in geometrized units (g/(cm s^2) converted to g/(cm s^2)).
+            adindcent (float, optional): The adiabatic index at the center of the star. Default is 2, which 
+            corresponds to a relativistic degenerate gas.
 
         Returns:
             tuple: tuple containing:
@@ -144,6 +215,34 @@ cdef double tidal_deformability(double y2, double Mns, double Rns) nogil:
 
 def solveTOVr(double rhocent, eos_eps, eos_pres, double atol, 
               double rtol, double hmax, double step):
+
+
+    """    
+    
+    Solve the TOV equations for a given central energy density and equation of state (EOS) defined by
+     `eos_eps` and `eos_pres`. The function integrates the TOV equations from the center of the star 
+     (where the radius is small) outward until the pressure drops below a specified minimum value. The function returns the mass, radius, tidal deformability, and metric function values at each radius.
+
+     Args:
+        rhocent (float): The central energy density of the star in cgs units (g/cm^3).
+        eos_eps (np.ndarray): An array of energy density values for the EOS grid in cgs units (g/cm^3).
+        eos_pres (np.ndarray): An array of pressure values for the EOS grid in cgs units (g/(cm s^2)).
+        atol (float): The absolute tolerance for the ODE solver.
+        rtol (float): The relative tolerance for the ODE solver.
+        hmax (float): The maximum step size for the ODE solver in cm.
+        step (float): The initial step size for the ODE solver in cm.
+
+
+    Returns:        tuple: A tuple containing the following elements:
+            - Mb (float): The mass of the neutron star in grams.
+            - Rns (float): The radius of the neutron star in cm.
+            - tidal (float): The tidal deformability of the neutron star (dimensionless).
+            - Gtt (np.ndarray): A 2D array containing the radius and the metric function values at each radius. 
+            The first column contains the radius in cm, and the second column contains the metric function values 
+            (g_tt) in geometrized units.
+
+    """
+            
 
     cdef int i
     cdef double Pmin = 1e4 * G * pow(c,-4)

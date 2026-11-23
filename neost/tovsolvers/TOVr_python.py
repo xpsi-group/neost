@@ -10,7 +10,24 @@ G = global_imports._G
 Msun = global_imports._M_s
 
 @jit(nopython=True)
-def pressure_epsilon(P, epsgrid, presgrid):
+def pressure_epsilon(P, epsgrid, presgrid):    
+    
+    """Convert pressure to energy density using a piecewise power-law interpolation.
+
+    This function is used by the TOV solver to obtain the energy density (epsilon)
+    corresponding to a given pressure `P`, based on precomputed tables of
+    pressure and energy density (`presgrid`, `epsgrid`). The interpolation
+    is done in log-space by assuming locally polytropic behavior between
+    adjacent grid points.
+
+    Args:
+        P (float): Pressure value at which to evaluate the energy density.
+        epsgrid (np.ndarray): Grid of energy density values.
+        presgrid (np.ndarray): Grid of pressure values corresponding to `epsgrid`.
+
+    Returns:
+        float: Interpolated energy density corresponding to `P`.
+    """
     idx = np.searchsorted(presgrid, P)
     if idx == 0:
         eds = epsgrid[0] * np.power(P / presgrid[0], 3. / 5.)
@@ -23,6 +40,10 @@ def pressure_epsilon(P, epsgrid, presgrid):
 
 @jit(nopython=True)
 def epsilon_pressure(E, epsgrid, presgrid):
+    """Convert energy density to pressure using a piecewise power-law interpolation. This is similar to `pressure_epsilon`, 
+    but in the opposite direction and the argument P is replaced by E.
+
+    """    
     idx = np.searchsorted(epsgrid, E)
     if idx == 0:
         pres = presgrid[0] * np.power(E / epsgrid[0], 5. / 3.)
@@ -35,6 +56,17 @@ def epsilon_pressure(E, epsgrid, presgrid):
 
 @jit(nopython=True)
 def pressure_adind(P, epsgrid, presgrid):
+    """Calculate the adiabatic index using a piecewise power-law interpolation. This is used in the computation of the tidal deformability.
+
+    Args:
+        P (float): Pressure value at which to evaluate the adiabatic index.
+        epsgrid (np.ndarray): Grid of energy density values.
+        presgrid (np.ndarray): Grid of pressure values corresponding to `epsgrid`.
+
+    Returns:
+        float: Interpolated adiabatic index corresponding to `P`.
+    """
+
     idx = np.searchsorted(presgrid, P)
     if idx == 0:
         eds = epsgrid[0] * np.power(P / presgrid[0], 3. / 5.)
@@ -50,6 +82,24 @@ def pressure_adind(P, epsgrid, presgrid):
 
 @jit(nopython=True)
 def TOV(r, y, epsgrid, presgrid):
+    """Calculate the derivatives for the TOV equations, including the perturbations for the tidal deformability.
+
+
+    Args:
+        r (float): Radial coordinate at which to evaluate the derivatives.
+        y (np.ndarray): The state vector at radius `r`, containing the following components:
+                - y[0]: Pressure (P)
+                - y[1]: Mass enclosed within radius `r` (m)
+                - y[2]: Metric function h(r) related to the radial component of the metric
+                - y[3]: Metric function b(r) related to the time component of the metric
+                - y[4]: Metric function alpha(r) related to the time component of the metric
+
+        epsgrid (np.ndarray): Grid of energy density values for interpolation.
+        presgrid (np.ndarray): Grid of pressure values for interpolation.
+
+    Returns:        
+            np.ndarray: Array containing the derivatives [dP/dr, dm/dr, dh/dr, db/dr, dalpha/dr].
+    """
 
     p = y[0]
     eps = pressure_epsilon(p, epsgrid, presgrid)
@@ -94,10 +144,9 @@ def initial_conditions(epscent, pcent, adindcent=2.):
         Set the initial conditions for solving the structure equations. 
 
         Args: 
-            eos (object): An object that takes energy density as input and outputs pressure, both in cgs units.
-            w0 (float): The initial value of the rotational drag. Not known a priori, but can be calculated after the TOV equations are solved.
-            j0 (float): The initial value of j. Not known a priori, but can be calculated after the TOV equations are solved.
-            static (bool): Calculate initial conditions for a static star (True) or a rotating star (False). 
+            epscent (float): The central energy density of the star in geometrized units (g/cm^3 converted to g/cm).
+            pcent (float): The central pressure of the star in geometrized units (g/(cm s^2) converted to g/(cm s^2)).
+            adindcent (float, optional): The adiabatic index at the center of the star. Default is 2, which corresponds to a relativistic degenerate gas.
 
         Returns:
             tuple: tuple containing:
@@ -139,6 +188,7 @@ def initial_conditions(epscent, pcent, adindcent=2.):
 
 @jit(nopython=True)
 def tidal_deformability(y2, Mns, Rns):
+    """Calculate the tidal deformability from the value of y2 at the surface of the star, as well as the mass and radius of the star."""
 
     C = Mns / Rns
     Eps = 4. * C**3. * (13. - 11. * y2 + C * (3. * y2 - 2.) +
@@ -153,6 +203,26 @@ def tidal_deformability(y2, Mns, Rns):
 
 def solveTOVr(epscent, eos_eps, eos_pres, atol, rtol, hmax, step): #assumed to be in cgs units as inputs eps has units of g/cm^3 and pres has units g/(cm s^2)
 
+    """Solve the TOV equations for a given central energy density and equation of state, including the perturbations for the tidal deformability.
+
+
+    Args:   
+            epscent (float): The central energy density of the star in cgs units (g/cm^3).
+            eos_eps (np.ndarray): Grid of energy density values for interpolation, in cgs units (g/cm^3).
+            eos_pres (np.ndarray): Grid of pressure values for interpolation, in cgs units (g/(cm s^2)).
+            atol (float): Absolute tolerance for the ODE solver.
+            rtol (float): Relative tolerance for the ODE solver.
+            hmax (float): Maximum step size for the ODE solver.
+            step (float): Initial step size for the ODE solver. 
+
+            Returns: 
+            tuple: tuple containing:
+
+                - **Mb** (*float*): The baryonic mass of the star in grams, which is then converted to solar masses in Star.py.
+                - **Rns** (*float*): The radius of the star in cm.
+                - **tidal** (*float*): The tidal deformability of the star (dimensionless).
+                - **Gtt** (*np.ndarray*): A 2D array containing the radius and the value of Gtt at each radius, where Gtt is the metric perturbation used in the calculation of the tidal deformability.
+    """
     eos_pres, indices = np.unique(np.log10(eos_pres).round(decimals=3), return_index=True)
     eos_pres = 10**eos_pres * G * np.power(c,-4) #scaled into geometrized
     eos_eps = eos_eps[np.sort(indices)] * G * np.power(c,-2) #scaled into geometrized
