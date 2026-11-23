@@ -200,7 +200,7 @@ def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm,
         else:
             EOS.update(par,max_edsc_de = True)
             eps = np.linspace(EOS.min_edsc_de, EOS.max_edsc_de, 50)*rho_ns #Minimum & Maximum energy density with a Dark Energy core is computed
-                                                                            # in terms of n_0, hence the factor of rho_ns
+                                                                            # in terms of rho_0, hence the factor of rho_ns
 
 
         edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0)

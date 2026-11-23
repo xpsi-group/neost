@@ -72,8 +72,9 @@ class Prior():
             self.EOS.update({k: pr[k] for k in tuple(self.EOS.param_names)},
                         max_edsc_de=True)
             
-            min_edsc = self.EOS.min_edsc_de*rho_ns
-            max_edsc = self.EOS.max_edsc_de*rho_ns
+            min_edsc = self.EOS.min_edsc_de*rho_ns 
+            max_edsc = self.EOS.max_edsc_de*rho_ns #Minimum & Maximum energy density with a Dark Energy core is computed
+                                                                            # in terms of n_0, hence the factor of rho_ns
             
         self.pr = pr
 
