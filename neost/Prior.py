@@ -56,9 +56,10 @@ class Prior():
 
         pr.update(self.static_params)
 
+        if self.standard_normal_ceft:
+            pr.update({'ceft': self.standard_normal.ppf(pr.get('ceft'))})
+
         if self.dark_energy is False:
-            if self.standard_normal_ceft:
-                pr.update({'ceft': self.standard_normal.ppf(pr.get('ceft'))})
 
             self.EOS.update({k: pr[k] for k in tuple(self.EOS.param_names)},
                             max_edsc=True)
@@ -67,8 +68,6 @@ class Prior():
             max_edsc = self.EOS.max_edsc    
             
         else:
-            if self.standard_normal_ceft:
-                pr.update({'ceft': self.standard_normal.ppf(pr.get('ceft'))})
 
             self.EOS.update({k: pr[k] for k in tuple(self.EOS.param_names)},
                         max_edsc_de=True)

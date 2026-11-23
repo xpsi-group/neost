@@ -12,7 +12,7 @@ import seaborn as sns
 from scipy.interpolate import UnivariateSpline
 from scipy.stats import gaussian_kde
 import corner
-from tqdm import tqdm
+
 
 # Local imports
 import neost
@@ -128,7 +128,7 @@ def compute_table_data(path, EOS, variable_params, static_params, dm=False, de=F
         print(data_array)
         if mpi_rank == 0:
             print(f'Reading and printing data from {fname}')
-            print_table_data(data_array,de)
+            print_table_data(data_array)
             return
         else:
             return
@@ -167,7 +167,7 @@ def compute_table_data(path, EOS, variable_params, static_params, dm=False, de=F
 
         # Save and print
         np.savetxt(fname, data_array)
-        print_table_data(data_array,de)
+        print_table_data(data_array)
 
 def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm, de, thread_number):
     '''
@@ -180,7 +180,7 @@ def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm,
 
     # Contains Mtov, Rtov, eps_cent TOV, rho_cent TOV, P_cent TOV,R 1.4, eps_cent 1.4, rho_cent 1.4, P_cent 1.4, R 2.0, eps_cent 2.0, rho_cent 2.0, P_cent 2.0.
     # NOTE: ALL VALUES ARE THEIR ADMIXED VERSIONS WHEN dm == True!!
-    # NOTE: If de == True, thjen data_array is shorter since rho_cent_TOV, rho_2, rho_14 physically don't make sense for a dark energy core.
+    # NOTE: If de == True, then data_array is shorter since rho_cent_TOV, rho_2, rho_14 physically don't make sense for a dark energy core.
 
     if not de:
         data_array = np.zeros((num_samples,13))
@@ -188,7 +188,7 @@ def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm,
     else:
         data_array = np.zeros((num_samples,10))
 
-    for i in tqdm(range(0, num_samples)):
+    for i in range(0, num_samples):
         pr = samples[i][0:len(variable_params)]
         par = {e:pr[j] for j, e in enumerate(list(variable_params.keys()))}
         par.update(static_params)
@@ -208,7 +208,6 @@ def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm,
         R = np.zeros(len(eps))
 
         if not dm and not de:
-            edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0)
             max_rhoc = edsrho(EOS.max_edsc) / rho_ns #division by rho_ns gives max_rhoc in terms of n_c/n_0 as mass density and number density only differ by a factor the mass of baryon, which is canceled out in this fraction
             for j, e in enumerate(eps):
                 star = Star(e)
@@ -247,7 +246,6 @@ def _compute_table_data_thread(samples, EOS, variable_params, static_params, dm,
 
         elif dm and not de:
             edsrho_dm = UnivariateSpline(EOS.energydensities_dm, EOS.massdensities_dm, k=1, s=0, ext = 1)
-            edsrho = UnivariateSpline(EOS.energydensities, EOS.massdensities, k=1, s=0)
             epsdm_max = EOS.find_epsdm_cent(EOS.adm_fraction, EOS.max_edsc)
             max_rhocdm = edsrho_dm(epsdm_max) / rho_ns
             max_rhocb = edsrho(EOS.max_edsc) / rho_ns
@@ -643,7 +641,7 @@ def _compute_auxiliary_data_thread(samples, EOS, variable_params, static_params,
         pressures_b = np.zeros((num_grid_points, num_samples)) 
         pressures_rho_b = np.zeros((num_grid_points, num_samples))                                                                                                                          
 
-    for i in tqdm(range(0, num_samples)):
+    for i in range(0, num_samples):
         pr = samples[i][0:len(variable_params)]
         par = {e:pr[j] for j, e in enumerate(list(variable_params.keys()))}
         par.update(static_params)
